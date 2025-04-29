@@ -3,13 +3,19 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private Vector2 moveDir;
-    private Rigidbody rb;
-    [Header("StandardMovement")]
+    [Header("Front and back Movement")]
+    internal Vector2 moveDir;
     private Vector2 _smoothedMoveDir;
     [SerializeField]private float _moveSpeed;
     private Vector2 _smoothedMoveVelocity;
 
+    [Header("Jumping")] internal bool isGrounded;
+    private bool isDoubleJumping;
+  [SerializeField]  private int jumpHeight;
+    private Rigidbody rb;
+    private RaycastHit raycastHit;
+    
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -19,19 +25,30 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(Physics.Raycast(transform.position, -transform.up, out raycastHit,1 ))
+        {
+            isGrounded = true;
+        }
+        else
+        {
+            isGrounded = false;
+        }
     }
 
     private void FixedUpdate()
     {
         smoothMovement();
         movePlayer();
+        TryJump();
+        rb.AddForce(Physics.gravity * ((5 - 1) * rb.mass));
+        
     }
 
     private void movePlayer()
     {
         rb.linearVelocity = _smoothedMoveDir * _moveSpeed;
     }
+    
 
     private void smoothMovement()
     {
@@ -43,8 +60,18 @@ public class PlayerMovement : MonoBehaviour
         moveDir = newDir.normalized;
     }
 
-    public void TryJump()
+    public bool TryJump()
     {
-        
+        if (isGrounded)
+        {
+            rb.AddForce(transform.up * jumpHeight, ForceMode.Impulse);
+            return true;
+        }
+        return false;
+    }
+
+    public void TryCrouch()
+    {
+       
     }
 }
