@@ -9,7 +9,6 @@ using UnityEngine.Serialization;
 public class InputReader : MonoBehaviour
 {
     PlayerController player;
-    PlayerMovement playerMovement;
     public enum InputResult
     {
         None,
@@ -21,6 +20,9 @@ public class InputReader : MonoBehaviour
         UpRight,
         DownLeft,
         DownRight,
+        Punch,
+        Kick
+        
     }
     InputResult[] directionMap = new InputResult[]
     {
@@ -33,10 +35,9 @@ public class InputReader : MonoBehaviour
         InputResult.Down,      
         InputResult.DownRight  
     };
-    Vector2 playerInput;
+   internal Vector2 playerInput;
     
    [SerializeField] internal List<InputResult> inputsVisual = new List<InputResult>();
-   PlayerController.playerState curState;
 
    public float ReturnCurrentFrame(float currentFrame)
     {
@@ -52,12 +53,16 @@ public class InputReader : MonoBehaviour
       
     }
 
-   
+    public InputResult GetLastInput()
+    {
+        if (inputsVisual.Count == 0) return InputResult.None;
+        return inputsVisual[^1];
+    }
+
 
     private void Awake()
     {
         player = GetComponent<PlayerController>();
-        playerMovement = GetComponent<PlayerMovement>();
         
     }
 
@@ -71,7 +76,7 @@ public class InputReader : MonoBehaviour
 
         private void Update()
         {
-            playerInput = new Vector2(player.playerMoveX, player.playerMoveY);
+            playerInput = new Vector2(player.playerMove.x, player.playerMove.y);
 
             if (playerInput.magnitude < 0.1f)
             {
@@ -84,9 +89,9 @@ public class InputReader : MonoBehaviour
 
             float threshold = 0.5f;
 
-            InputResult newInput;
+            InputResult newInput = InputResult.None;
 
-            print(new Vector2(x, y));
+//            print(new Vector2(x, y));
             if (Mathf.Abs(x) > threshold && Mathf.Abs(y) > threshold)
             {
               
@@ -95,12 +100,12 @@ public class InputReader : MonoBehaviour
                 else if (x < 0 && y < 0) newInput = InputResult.DownLeft;
                 else newInput = InputResult.DownRight;
             }
-            else if (Mathf.Abs(x) > Mathf.Abs(y))
+            else if (Mathf.Abs(x) > threshold)
             {
               
                 newInput = (x > 0) ? InputResult.Right : InputResult.Left;
             }
-            else
+            else if(Mathf.Abs(y) > threshold)
             {
                 // Vertical
                 newInput = (y > 0) ? InputResult.Up : InputResult.Down;

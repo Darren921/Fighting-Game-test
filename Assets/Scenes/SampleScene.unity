@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 185236202}
   - component: {fileID: 185236206}
   - component: {fileID: 185236207}
-  - component: {fileID: 185236208}
+  - component: {fileID: 185236210}
   - component: {fileID: 185236209}
   m_Layer: 0
   m_Name: Cylinder
@@ -255,7 +255,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 120
@@ -272,20 +272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f1743014679bc0499174aa45e187372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &185236208
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 185236201}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ae8186b676001c49ae4050b9e128dbc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _moveSpeed: 13
-  jumpHeight: 10
+  _moveSpeed: 10
 --- !u!114 &185236209
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -299,6 +286,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputsVisual: 
+--- !u!114 &185236210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 185236201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf0ecddf6b0179148ad52b4aec41fa47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentState:
+    rid: -2
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
