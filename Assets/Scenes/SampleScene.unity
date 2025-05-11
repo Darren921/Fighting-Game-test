@@ -285,7 +285,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a36ba01377b4db49953ec8b144526b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputsVisual: 
+  MovementinputsVisual: 
+  AttackinputsVisual: 
 --- !u!114 &185236210
 MonoBehaviour:
   m_ObjectHideFlags: 0

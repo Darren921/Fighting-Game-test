@@ -9,7 +9,7 @@ using UnityEngine.Serialization;
 public class InputReader : MonoBehaviour
 {
     PlayerController player;
-    public enum InputResult
+    public enum MovementInputResult
     {
         None,
         Up,
@@ -20,43 +20,63 @@ public class InputReader : MonoBehaviour
         UpRight,
         DownLeft,
         DownRight,
-        Punch,
-        Kick
-        
     }
-    InputResult[] directionMap = new InputResult[]
+    public enum AttackInputResult
     {
-        InputResult.Right,     
-        InputResult.UpRight,   
-        InputResult.Up,        
-        InputResult.UpLeft,    
-        InputResult.Left,      
-        InputResult.DownLeft,  
-        InputResult.Down,      
-        InputResult.DownRight  
+        None,
+        Punch,
+        Kick,
+        Slash
+    }
+    MovementInputResult[] directionMap = new MovementInputResult[]
+    {
+        MovementInputResult.Right,     
+        MovementInputResult.UpRight,   
+        MovementInputResult.Up,        
+        MovementInputResult.UpLeft,    
+        MovementInputResult.Left,      
+        MovementInputResult.DownLeft,  
+        MovementInputResult.Down,      
+        MovementInputResult.DownRight  
     };
-   internal Vector2 playerInput;
-    
-   [SerializeField] internal List<InputResult> inputsVisual = new List<InputResult>();
+    MovementInputResult currentMoveInput = MovementInputResult.None;
+    AttackInputResult currentAttackInput = AttackInputResult.None;
+   [SerializeField] internal List<MovementInputResult> MovementinputsVisual = new List<MovementInputResult>();
+   [SerializeField] internal List<AttackInputResult> AttackinputsVisual = new List<AttackInputResult>();
+
+
+
 
    public float ReturnCurrentFrame(float currentFrame)
     {
         return Time.frameCount - currentFrame;
     }
   
-    public IEnumerator AddInput(InputResult result, float curframe)
+    public IEnumerator AddMovementInput(MovementInputResult result, float curframe)
     {
+        if(currentMoveInput == result) yield break;
+        currentMoveInput = result;
         curframe = ReturnCurrentFrame(curframe);
-        inputsVisual.Add(result);
+        MovementinputsVisual.Add(result);
        yield return  new WaitForSeconds(0.2f);
-       inputsVisual.Remove(result);
+       MovementinputsVisual.Remove(result);
       
     }
-
-    public InputResult GetLastInput()
+    public IEnumerator AddAttackInput(AttackInputResult result, float frameCount)
     {
-        if (inputsVisual.Count == 0) return InputResult.None;
-        return inputsVisual[^1];
+        if(currentAttackInput == result) yield break;
+        currentAttackInput = result;
+        frameCount = ReturnCurrentFrame(frameCount);
+        AttackinputsVisual.Add(result);
+        yield return  new WaitForSeconds(0.2f);
+        AttackinputsVisual.Remove(result);    }
+    public MovementInputResult GetLastInput()
+    {
+      return currentMoveInput;
+    }
+    public  AttackInputResult GetLastAttackInput()
+    {
+        return currentAttackInput;
     }
 
 
@@ -76,47 +96,55 @@ public class InputReader : MonoBehaviour
 
         private void Update()
         {
-            playerInput = new Vector2(player.playerMove.x, player.playerMove.y);
+            CheckAttackInput();
+            CheckMovementInput();
+        }
+
+        private void CheckAttackInput()
+        {
+            if(!player.isAttacking) StartCoroutine(AddAttackInput(AttackInputResult.None, Time.frameCount));
+        }
+
+
+        private void CheckMovementInput()
+        {
+            var  playerInput = new Vector2(player.playerMove.x, player.playerMove.y);
 
             if (playerInput.magnitude < 0.1f)
             {
-                StartCoroutine(AddInput(InputResult.None, Time.frameCount));
+                StartCoroutine(AddMovementInput(MovementInputResult.None, Time.frameCount));
                 return;
             }
+            
 
             float x = playerInput.x;
             float y = playerInput.y;
 
             float threshold = 0.5f;
 
-            InputResult newInput = InputResult.None;
+            MovementInputResult newInput = MovementInputResult.None;
 
 //            print(new Vector2(x, y));
             if (Mathf.Abs(x) > threshold && Mathf.Abs(y) > threshold)
             {
               
-                if (x > 0 && y > 0) newInput = InputResult.UpRight;
-                else if (x < 0 && y > 0) newInput = InputResult.UpLeft;
-                else if (x < 0 && y < 0) newInput = InputResult.DownLeft;
-                else newInput = InputResult.DownRight;
+                if (x > 0 && y > 0) newInput = MovementInputResult.UpRight;
+                else if (x < 0 && y > 0) newInput = MovementInputResult.UpLeft;
+                else if (x < 0 && y < 0) newInput = MovementInputResult.DownLeft;
+                else newInput = MovementInputResult.DownRight;
             }
             else if (Mathf.Abs(x) > threshold)
             {
               
-                newInput = (x > 0) ? InputResult.Right : InputResult.Left;
+                newInput = (x > 0) ? MovementInputResult.Right : MovementInputResult.Left;
             }
             else if(Mathf.Abs(y) > threshold)
             {
                 // Vertical
-                newInput = (y > 0) ? InputResult.Up : InputResult.Down;
+                newInput = (y > 0) ? MovementInputResult.Up : MovementInputResult.Down;
             }
 
-            StartCoroutine(AddInput(newInput,Time.frameCount));
+            StartCoroutine(AddMovementInput(newInput,Time.frameCount));
         }
-
-    
-
-    
-  
 }
 
