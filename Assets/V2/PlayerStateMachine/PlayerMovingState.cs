@@ -1,13 +1,15 @@
 using UnityEngine;
-[System.Serializable]
-
 public class PlayerMovingState : PlayerBaseState
 {
     internal Vector2 moveDir;
     private Vector2 _smoothedMoveDir;
     private Vector2 _smoothedMoveVelocity;
+    private Vector3 move;
 
-    internal override void EnterState(PlayerStateManager playerStateManager) { }
+    internal override void EnterState(PlayerStateManager playerStateManager)
+    {
+        Debug.Log("Entered PlayerMovingState");
+    }
 
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
@@ -21,6 +23,7 @@ public class PlayerMovingState : PlayerBaseState
                 playerStateManager.SwitchState(playerStateManager.JumpingState);
                 break;
             case < 0:
+                Debug.Log("Switched to crouch state (M.S)");
                 playerStateManager.SwitchState(playerStateManager.CrouchingState);
                 break;
         }
@@ -36,7 +39,7 @@ public class PlayerMovingState : PlayerBaseState
 
     private void movePlayer(PlayerController player)
     {
-        Vector3 move = new Vector3(_smoothedMoveDir.x, 0, 0) * (player._moveSpeed * Time.fixedDeltaTime);
+        move = new Vector3(_smoothedMoveDir.x, 0, 0) * (player._moveSpeed * Time.fixedDeltaTime);
         player.transform.position += move;
     }
 
@@ -50,7 +53,12 @@ public class PlayerMovingState : PlayerBaseState
         moveDir = newDir.normalized;
     }
     internal override void ExitState(PlayerStateManager playerStateManager,PlayerController player)
-    { 
+    {
+        move = Vector3.zero;
+        _smoothedMoveDir = Vector2.zero;
+        setMoveDir(new Vector2(0, 0));
+        moveDir = Vector2.zero;
+        _smoothedMoveVelocity = Vector2.zero;
         Debug.Log("Player Exit Move State");
     }
 

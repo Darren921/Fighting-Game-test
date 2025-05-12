@@ -1,12 +1,12 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-
 public class PlayerNeutralState : PlayerBaseState
 {
     
     internal override void EnterState(PlayerStateManager playerStateManager)
     {
+        
     }
 
     internal override void UpdateState(PlayerStateManager playerStateManager,PlayerController playerController)

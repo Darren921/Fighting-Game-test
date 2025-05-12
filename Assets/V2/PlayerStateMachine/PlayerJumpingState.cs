@@ -31,8 +31,6 @@ public class PlayerJumpingState : PlayerBaseState
         if (isGrounded)
         {
             velocity = 0f;
-            Vector2 surface = Physics.ClosestPoint(player.transform.position, _collider, raycastHit.point, player.transform.rotation);
-            player.transform.position = new Vector3(player.transform.position.x, surface.y, player.transform.position.z);
         }
         
         if (player.playerMove.y > 0 && isGrounded)
@@ -40,8 +38,10 @@ public class PlayerJumpingState : PlayerBaseState
             TryJump(player);
         }
         //This moves the jump (do not touch )
-        player.transform.Translate(new Vector3(xJumpVal,velocity,0) * Time.deltaTime); 
-
+        if (!isGrounded)
+        {
+            player.transform.Translate(new Vector3(xJumpVal, velocity, 0) * Time.deltaTime);
+        }
         //Transitioning states 
         switch (isGrounded)
         {
@@ -87,7 +87,8 @@ public class PlayerJumpingState : PlayerBaseState
 
     internal override void ExitState(PlayerStateManager playerStateManager,  PlayerController player)
     {
-        player.transform.position = player.transform.position;
+        velocity = 0f;
+        xJumpVal = 0f;
         Debug.Log("Exiting playerJumpingState");
     }
 }
