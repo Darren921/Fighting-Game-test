@@ -23,8 +23,28 @@ public class InputReader : MonoBehaviour
     {
         None,
         Punch,
+        PunchUp,
+        PunchDown,
+        PunchLeft,
+        PunchRight,
         Kick,
-        Slash
+        KickUp,
+        KickDown,
+        KickLeft,
+        KickRight,
+        Slash,
+        SlashUp,
+        SlashDown,
+        SlashLeft,
+        SlashRight,
+        HeavySlash,
+        HeavySlashUp,
+        HeavySlashDown,
+        HeavySlashLeft,
+        HeavySlashRight,
+        
+        
+        
     }
     MovementInputResult[] directionMap = new MovementInputResult[]
     {
@@ -64,9 +84,10 @@ public class InputReader : MonoBehaviour
     {
         if(currentAttackInput == result) yield break;
         currentAttackInput = result;
-        frameCount = ReturnCurrentFrame(frameCount);
         AttackinputsVisual.Add(result);
-        yield return  new WaitForSeconds(0.2f);
+//        print(result.ToString());
+        frameCount = ReturnCurrentFrame(frameCount);
+        yield return new WaitUntil(() => Time.frameCount - frameCount > 3);
         AttackinputsVisual.Remove(result);    }
     public MovementInputResult GetLastInput()
     {
@@ -100,7 +121,7 @@ public class InputReader : MonoBehaviour
 
         private void CheckAttackInput()
         {
-            if(!player.isAttacking) StartCoroutine(AddAttackInput(AttackInputResult.None, Time.frameCount));
+            if(!player.isAttacking && currentAttackInput != AttackInputResult.None) StartCoroutine(AddAttackInput(AttackInputResult.None, Time.frameCount));
         }
 
 

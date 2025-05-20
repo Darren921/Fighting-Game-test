@@ -8,25 +8,50 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     private Controls.PlayerActions m_Player;
     internal InputReader _inputReader;
     internal PlayerStateManager stateManager;
-    private float playerMoveX;
-    private float playerMoveY;
-    public  Vector2 playerMove {get; private set;}
+   [SerializeField] private CharacterSO characterData;
+    private Coroutine AttackCheck; 
+    public Vector2 playerMove {get; private set;}
     internal float verticalVelocity;
-    [SerializeField] internal float _moveSpeed;
 
-    public bool isAttacking{get; private set;}
+    #region Attack Check Variables  
+    public bool isAttacking{get; internal set;}
     public bool isPunching {get; private set;}
     public bool isKicking {get; private set;}
     public bool isSlashing {get; private set;}
-
     
+    public bool isHeavySlashing {get; private set;}
 
+ 
+    #endregion
+    
+    #region Changeable Move Variables
+    internal float _moveSpeed;
+
+    #endregion
+
+    internal bool isGrounded;
+
+    #region Changeable Jump Variables
+
+    internal float jumpHeight; //Switch to player character data S.O when created 5 
+    internal float raycastDistance = 1;  // 1
+    internal float gravScale; // (Hold for now )  character data affects gravity 5 
+    #endregion
+    
     void Awake()
     {
         _inputReader = GetComponent<InputReader>();
         controls = new Controls();
         m_Player = controls.Player;
         stateManager = GetComponent<PlayerStateManager>();
+        SetUpCharacterVariables();
+    }
+
+    private void SetUpCharacterVariables()
+    {
+        jumpHeight = characterData.jumpHeight;
+        gravScale = characterData.gravScale;
+        _moveSpeed = characterData.moveSpeed;
     }
 
     void OnDestroy() => controls.Dispose();
@@ -34,20 +59,17 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     void OnEnable()
     {
         m_Player.Enable();
-        m_Player.MoveX.performed += OnMoveX;
-        m_Player.MoveX.canceled += OnMoveX;
-        m_Player.MoveY.performed += OnMoveY;
-        m_Player.MoveY.canceled += OnMoveY;
-        // m_Player.Move.performed += OnMove;
-        // m_Player.Move.performed += OnMove;
+        // m_Player.MoveX.performed += OnMoveX;
+        // m_Player.MoveX.canceled += OnMoveX;
+        // m_Player.MoveY.performed += OnMoveY;
+        // m_Player.MoveY.canceled += OnMoveY;
+        m_Player.Move.performed += OnMove;
+        m_Player.Move.canceled += OnMove;
 
-        
-        m_Player.Punch.performed += OnPunch;
-        m_Player.Punch.canceled += OnPunch;
-        m_Player.Kick.performed += OnKick;
-        m_Player.Kick.canceled += OnKick;
 
-        
+        m_Player.Attack.performed += OnAttack;
+
+
     }
 
 
@@ -55,59 +77,42 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     private void Update()
     {
-        playerMove = new Vector2(playerMoveX, playerMoveY);
-        isAttacking = isKicking || isSlashing || isPunching;
     } 
     public void OnMove(InputAction.CallbackContext context)
     {
-        // playerMove = context.ReadValue<Vector2>();
+        playerMove = context.ReadValue<Vector2>();
         // print(playerMove);    
-        //
-        // StartCoroutine(playerMove.x > 0 ?
-        //     _inputReader.AddInput(InputReader.InputResult.Right, Time.frameCount) :
-        //     _inputReader.AddInput(InputReader.InputResult.Left, Time.frameCount)); 
-        //
-        // StartCoroutine(playerMove.y > 0 ?
-        //     _inputReader.AddInput(InputReader.InputResult.Up, Time.frameCount) :
-        //     _inputReader.AddInput(InputReader.InputResult.Down, Time.frameCount));
     }
 
     public void OnMoveX(InputAction.CallbackContext context)
     {
-        playerMoveX = context.ReadValue<float>();
-        StartCoroutine(playerMoveX > 0 ?
-            _inputReader.AddMovementInput(InputReader.MovementInputResult.Right, Time.frameCount) :
-            _inputReader.AddMovementInput(InputReader.MovementInputResult.Left, Time.frameCount));
+        // playerMoveX = context.ReadValue<float>();
     }
 
     public void OnMoveY(InputAction.CallbackContext context)
     {
-        playerMoveY = context.ReadValue<float>();
-        StartCoroutine(playerMoveY > 0 ?
-            _inputReader.AddMovementInput(InputReader.MovementInputResult.Up, Time.frameCount) :
-            _inputReader.AddMovementInput(InputReader.MovementInputResult.Down, Time.frameCount));
+        // playerMoveY = context.ReadValue<float>();
     }
 
-    public void OnPunch(InputAction.CallbackContext context)
+    public void OnAttack(InputAction.CallbackContext context)
     {
-         isPunching = context.ReadValueAsButton();
-         if (context.performed)
-             StartCoroutine(_inputReader.AddAttackInput(InputReader.AttackInputResult.Punch, Time.frameCount));
-    }
-    
-    public void OnKick(InputAction.CallbackContext context)
-    {
-        isKicking = context.ReadValueAsButton();
-        if (context.performed)
-            StartCoroutine(_inputReader.AddAttackInput(InputReader.AttackInputResult.Kick, Time.frameCount));
+        var attackVal = ReturnAttackType(context.ReadValue<float>());
+        AttackCheck = StartCoroutine(_inputReader.AddAttackInput(attackVal, Time.frameCount));
+        isAttacking = true;
+        
     }
 
-    public void OnSlash(InputAction.CallbackContext context)
+    private InputReader.AttackInputResult ReturnAttackType(float attackVal)
     {
-        isSlashing = context.ReadValueAsButton();
-        if (context.performed)
-            StartCoroutine(_inputReader.AddAttackInput(InputReader.AttackInputResult.Slash, Time.frameCount));
-    }
+        var attackValAsInt = (int) attackVal;
+        var attackResult = attackValAsInt switch
+        {
+            1 => InputReader.AttackInputResult.Punch,
+            2 => InputReader.AttackInputResult.Kick,
+            3 => InputReader.AttackInputResult.Slash,
+            _ => InputReader.AttackInputResult.None
+        };
 
-  
+        return attackResult ;
+    }
 }

@@ -1,7 +1,7 @@
 using UnityEngine;
 public class PlayerMovingState : PlayerBaseState
 {
-    internal Vector2 moveDir;
+    private Vector2 moveDir;
     private Vector2 _smoothedMoveDir;
     private Vector2 _smoothedMoveVelocity;
     private Vector3 move;
@@ -15,16 +15,16 @@ public class PlayerMovingState : PlayerBaseState
     {
      
         if (player.playerMove == Vector2.zero)
-            playerStateManager.SwitchState(playerStateManager.NeutralState);
+            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Neutral);
 
         switch (player.playerMove.y)
         {
             case > 0:
-                playerStateManager.SwitchState(playerStateManager.JumpingState);
+                playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Jumping);
                 break;
             case < 0:
                 Debug.Log("Switched to crouch state (M.S)");
-                playerStateManager.SwitchState(playerStateManager.CrouchingState);
+                playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Crouching);
                 break;
         }
     }

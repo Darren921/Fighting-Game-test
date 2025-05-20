@@ -16,13 +16,13 @@ public class PlayerCrouchingState : PlayerBaseState
         }
         if (playerController.playerMove is { y: 0, x: 0 })
         {
-            playerStateManager.SwitchState(playerStateManager.NeutralState);
+            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Neutral);
         }
 
         if (!isCrouching && playerController.playerMove.x != 0)
         {
             Debug.Log("Switched to Move state (C.S)");
-            playerStateManager.SwitchState(playerStateManager.MovingState);
+            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Moving);
         }
           
     }
