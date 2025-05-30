@@ -9,18 +9,20 @@ public class PlayerJumpingState : PlayerBaseState
     private Collider _collider;
     #endregion
     private float xJumpVal; // check Try jump method for changes 
+    private LayerMask groundLayerMask;
 
-    
+
     internal override void EnterState(PlayerStateManager playerStateManager)
     {
         _collider = playerStateManager.GetComponent<Collider>();
+        groundLayerMask = LayerMask.GetMask("Ground");
     }
 
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
         //
         velocity += Physics.gravity.y * player.gravScale * Time.deltaTime;
-        player.isGrounded = Physics.Raycast(player.transform.position, -player.transform.up, out raycastHit, player.raycastDistance) && velocity < 0;
+        player.isGrounded = Physics.Raycast(player.transform.position, -player.transform.up, out raycastHit, player.raycastDistance,groundLayerMask) && velocity < 0;
 
         // Checking if the player is grounded and resetting position and velocity 
         if (  player.isGrounded)

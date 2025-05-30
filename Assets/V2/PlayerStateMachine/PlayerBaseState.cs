@@ -1,4 +1,4 @@
-
+[System.Serializable]
 public abstract class PlayerBaseState
 {
  internal  abstract void EnterState(PlayerStateManager playerStateManager);

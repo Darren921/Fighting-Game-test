@@ -22,29 +22,21 @@ public class InputReader : MonoBehaviour
     public enum AttackInputResult
     {
         None,
-        Punch,
+        Light,
         PunchUp,
         PunchDown,
         PunchLeft,
         PunchRight,
-        Kick,
+        Medium,
         KickUp,
         KickDown,
         KickLeft,
         KickRight,
-        Slash,
+        Heavy,
         SlashUp,
         SlashDown,
         SlashLeft,
         SlashRight,
-        HeavySlash,
-        HeavySlashUp,
-        HeavySlashDown,
-        HeavySlashLeft,
-        HeavySlashRight,
-        
-        
-        
     }
     MovementInputResult[] directionMap = new MovementInputResult[]
     {

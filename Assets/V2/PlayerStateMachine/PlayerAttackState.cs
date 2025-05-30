@@ -1,25 +1,25 @@
-using System;
-using System.Collections;
+
 using System.Collections.Generic;
 using UnityEngine;
+[System.Serializable]
 public class PlayerAttackState : PlayerBaseState
 {
+   
+
     private Dictionary<( InputReader.MovementInputResult, InputReader.AttackInputResult), InputReader.AttackInputResult> attackMoveActions = new()
     {
-            { (InputReader.MovementInputResult.None,InputReader.AttackInputResult.Punch), InputReader.AttackInputResult.Punch },
-            { ( InputReader.MovementInputResult.None,InputReader.AttackInputResult.Kick), InputReader.AttackInputResult.Kick },
-            { ( InputReader.MovementInputResult.None,InputReader.AttackInputResult.Slash), InputReader.AttackInputResult.Slash },
-            { ( InputReader.MovementInputResult.None,InputReader.AttackInputResult.HeavySlash), InputReader.AttackInputResult.HeavySlash },
+            { (InputReader.MovementInputResult.None,InputReader.AttackInputResult.Light), InputReader.AttackInputResult.Light },
+            { ( InputReader.MovementInputResult.None,InputReader.AttackInputResult.Medium), InputReader.AttackInputResult.Medium },
+            { ( InputReader.MovementInputResult.None,InputReader.AttackInputResult.Heavy), InputReader.AttackInputResult.Heavy },
 
     };
     
-    bool isOnCooldown ;
     
     
     
     internal override void EnterState(PlayerStateManager playerStateManager)
     {
-       isOnCooldown = false;
+        playerStateManager.player.animator.SetTrigger(playerStateManager.player.Attacking);
     }
 
     private void Slash(PlayerController player)
@@ -32,48 +32,59 @@ public class PlayerAttackState : PlayerBaseState
     private void Kick(PlayerController player)
     {
         Debug.Log("Kick");
+        player.animator.SetBool(player.Kick,true);
 
     }
 
     private void Punch(PlayerController player)
     {
         Debug.Log("Punch");
+        player.animator.SetBool(player.Punch,true);
     }
 
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
-        var inputReader = playerStateManager.playerController._inputReader;
-        var Lastmove = inputReader.GetLastInput();
-        var Lastattack = inputReader.GetLastAttackInput();
+        var inputReader = playerStateManager.player._inputReader;
+        var lastmove = inputReader.GetLastInput();
+        var lastattack = inputReader.GetLastAttackInput();
      
-        if (  attackMoveActions.TryGetValue((Lastmove, Lastattack), out var action))
+        if (  attackMoveActions.TryGetValue((lastmove, lastattack), out var action))
         {
     
             switch (action)
             {
-                case InputReader.AttackInputResult.Punch:
+                case InputReader.AttackInputResult.Light:
                     Punch(player);
                     break;
-                case InputReader.AttackInputResult.Kick:
+                case InputReader.AttackInputResult.Medium:
                     Kick(player);
                     break;
-                case InputReader.AttackInputResult.Slash:
+                case InputReader.AttackInputResult.Heavy:
                     Slash(player);
-                    break;
-                case InputReader.AttackInputResult.HeavySlash:
                     break;
                 case InputReader.AttackInputResult.None:
                     Debug.Log("No action");
                     break;
             }
         }
-            if (player.playerMove == Vector2.zero)
-                playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Neutral);
-            else
-                playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Moving);
-     
+        if(player.playerMove == Vector2.zero && !player.isAttacking)
+        {
+            Debug.Log("going to neut");
+            playerStateManager.SwitchState( PlayerStateManager.PlayerStateType.Neutral);
+        }
+        else if (player.playerMove != Vector2.zero && !player.isAttacking)
+        {
+            Debug.Log("going to moving");
+            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Moving);
+        }
+
+        
+
+       
+           
     }
 
+    
     internal override void FixedUpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
        
@@ -81,6 +92,7 @@ public class PlayerAttackState : PlayerBaseState
 
     internal override void ExitState(PlayerStateManager playerStateManager, PlayerController player)
     {
-        player.isAttacking = false;
+    
+
     }
 }

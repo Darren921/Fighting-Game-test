@@ -1,9 +1,17 @@
 
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 {
+    public int Attacking => Animator.StringToHash("Attacking");
+    public int Punch => Animator.StringToHash("Punch");
+    public int Kick => Animator.StringToHash("Kick");
+    public int Move = Animator.StringToHash("Move");
+
     private Controls controls;
     private Controls.PlayerActions m_Player;
     internal InputReader _inputReader;
@@ -11,8 +19,9 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
    [SerializeField] private CharacterSO characterData;
     private Coroutine AttackCheck; 
     public Vector2 playerMove {get; private set;}
-    internal float verticalVelocity;
-
+    internal Animator animator;
+    internal bool isGrounded;
+    
     #region Attack Check Variables  
     public bool isAttacking{get; internal set;}
     public bool isPunching {get; private set;}
@@ -26,58 +35,65 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     
     #region Changeable Move Variables
     internal float _moveSpeed;
-
     #endregion
-
-    internal bool isGrounded;
+    
 
     #region Changeable Jump Variables
 
     internal float jumpHeight; //Switch to player character data S.O when created 5 
     internal float raycastDistance = 1;  // 1
     internal float gravScale; // (Hold for now )  character data affects gravity 5 
+    internal  float velocity;
+    internal Rigidbody rb;
+
     #endregion
     
     void Awake()
     {
         _inputReader = GetComponent<InputReader>();
-        controls = new Controls();
-        m_Player = controls.Player;
+        animator = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody>();
         stateManager = GetComponent<PlayerStateManager>();
+
+      
+    }
+    
+    public void InitializePlayer(InputDevice device)
+    {
+        controls = new Controls();
+        controls.devices = new[] { device };
+        m_Player = controls.Player;
+
+        m_Player.Enable();
+        m_Player.SetCallbacks(this);
+
         SetUpCharacterVariables();
     }
-
     private void SetUpCharacterVariables()
     {
         jumpHeight = characterData.jumpHeight;
         gravScale = characterData.gravScale;
         _moveSpeed = characterData.moveSpeed;
     }
-
-    void OnDestroy() => controls.Dispose();
-
-    void OnEnable()
-    {
-        m_Player.Enable();
-        // m_Player.MoveX.performed += OnMoveX;
-        // m_Player.MoveX.canceled += OnMoveX;
-        // m_Player.MoveY.performed += OnMoveY;
-        // m_Player.MoveY.canceled += OnMoveY;
-        m_Player.Move.performed += OnMove;
-        m_Player.Move.canceled += OnMove;
-
-
-        m_Player.Attack.performed += OnAttack;
-
-
-    }
-
-
+    
     void OnDisable() => m_Player.Disable();
+    public void SetAttacking()
+    {
+       isAttacking = false;
+       animator.SetBool(Attacking, false);
+       animator.SetBool(Punch , false);
+       animator.SetBool(Kick , false);
+    }
+    
+    void OnCollisionEnter(Collision collision)
+    {
+        
+    }    
 
     private void Update()
     {
-    } 
+    }
+    
     public void OnMove(InputAction.CallbackContext context)
     {
         playerMove = context.ReadValue<Vector2>();
@@ -107,9 +123,9 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         var attackValAsInt = (int) attackVal;
         var attackResult = attackValAsInt switch
         {
-            1 => InputReader.AttackInputResult.Punch,
-            2 => InputReader.AttackInputResult.Kick,
-            3 => InputReader.AttackInputResult.Slash,
+            1 => InputReader.AttackInputResult.Light,
+            2 => InputReader.AttackInputResult.Medium,
+            3 => InputReader.AttackInputResult.Heavy,
             _ => InputReader.AttackInputResult.None
         };
 

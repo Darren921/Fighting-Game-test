@@ -1,4 +1,6 @@
 using UnityEngine;
+[System.Serializable]
+
 public class PlayerMovingState : PlayerBaseState
 {
     private Vector2 moveDir;
@@ -8,12 +10,13 @@ public class PlayerMovingState : PlayerBaseState
 
     internal override void EnterState(PlayerStateManager playerStateManager)
     {
-        Debug.Log("Entered PlayerMovingState");
+      //  Debug.Log("Entered PlayerMovingState");
+        playerStateManager.player.animator.SetBool(playerStateManager.player.Move, true);
+
     }
 
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
-     
         if (player.playerMove == Vector2.zero)
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Neutral);
 
@@ -23,7 +26,7 @@ public class PlayerMovingState : PlayerBaseState
                 playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Jumping);
                 break;
             case < 0:
-                Debug.Log("Switched to crouch state (M.S)");
+        //        Debug.Log("Switched to crouch state (M.S)");
                 playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Crouching);
                 break;
         }
@@ -31,17 +34,19 @@ public class PlayerMovingState : PlayerBaseState
 
     internal override void FixedUpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
+        setMoveDir(new Vector2(player.playerMove.x, 0));
         smoothMovement();
         movePlayer(player);
-        setMoveDir(new Vector2(player.playerMove.x, 0));
     }
 
 
     private void movePlayer(PlayerController player)
     {
         move = new Vector3(_smoothedMoveDir.x, 0, 0) * (player._moveSpeed * Time.fixedDeltaTime);
-        player.transform.position += move;
+            player.rb.MovePosition(player.transform.position + move);
+    
     }
+
 
     private void smoothMovement()
     {
@@ -59,7 +64,9 @@ public class PlayerMovingState : PlayerBaseState
         setMoveDir(new Vector2(0, 0));
         moveDir = Vector2.zero;
         _smoothedMoveVelocity = Vector2.zero;
-        Debug.Log("Player Exit Move State");
+    //    Debug.Log("Player Exit Move State");
+        playerStateManager.player.animator.SetBool(player.Move, false);
+
     }
 
 }
