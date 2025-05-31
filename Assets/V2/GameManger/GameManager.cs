@@ -68,6 +68,22 @@ public class GameManager : MonoBehaviour
         // Update is called once per frame
         void Update()
         {
-        
+            checkIfReversed();
         }
+
+        private void checkIfReversed()
+        {
+            if (players[1].transform.position.x < players[0].transform.position.x)
+            {
+                players[0].reversed = true;
+                players[1].reversed = false;
+            }
+            else
+            {
+                players[0].reversed = false;
+                players[1].reversed = true;
+
+            }
+        }
+
 }

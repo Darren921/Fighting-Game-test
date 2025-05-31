@@ -23,20 +23,14 @@ public class InputReader : MonoBehaviour
     {
         None,
         Light,
-        PunchUp,
-        PunchDown,
-        PunchLeft,
-        PunchRight,
+        LightLeft,
+        LightRight,
         Medium,
-        KickUp,
-        KickDown,
-        KickLeft,
-        KickRight,
+        MediumLeft,
+        MediumRight,
         Heavy,
-        SlashUp,
-        SlashDown,
-        SlashLeft,
-        SlashRight,
+        HeavyLeft,
+        HeavyRight,
     }
     MovementInputResult[] directionMap = new MovementInputResult[]
     {

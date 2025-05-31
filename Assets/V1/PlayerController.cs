@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 {
     public int Attacking => Animator.StringToHash("Attacking");
-    public int Punch => Animator.StringToHash("Punch");
+    public int Light => Animator.StringToHash("Light");
     public int Kick => Animator.StringToHash("Kick");
     public int Move = Animator.StringToHash("Move");
 
@@ -29,9 +29,9 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     public bool isSlashing {get; private set;}
     
     public bool isHeavySlashing {get; private set;}
-
- 
     #endregion
+
+    internal bool reversed;
     
     #region Changeable Move Variables
     internal float _moveSpeed;
@@ -54,7 +54,6 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
         stateManager = GetComponent<PlayerStateManager>();
-
       
     }
     
@@ -81,7 +80,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     {
        isAttacking = false;
        animator.SetBool(Attacking, false);
-       animator.SetBool(Punch , false);
+       animator.SetBool(Light , false);
        animator.SetBool(Kick , false);
     }
     
@@ -92,6 +91,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     private void Update()
     {
+        
     }
     
     public void OnMove(InputAction.CallbackContext context)

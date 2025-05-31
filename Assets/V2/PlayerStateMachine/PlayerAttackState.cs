@@ -9,7 +9,11 @@ public class PlayerAttackState : PlayerBaseState
     private Dictionary<( InputReader.MovementInputResult, InputReader.AttackInputResult), InputReader.AttackInputResult> attackMoveActions = new()
     {
             { (InputReader.MovementInputResult.None,InputReader.AttackInputResult.Light), InputReader.AttackInputResult.Light },
+            { (InputReader.MovementInputResult.Left,InputReader.AttackInputResult.Light), InputReader.AttackInputResult.LightLeft },
+
             { ( InputReader.MovementInputResult.None,InputReader.AttackInputResult.Medium), InputReader.AttackInputResult.Medium },
+            { (InputReader.MovementInputResult.Left,InputReader.AttackInputResult.Medium), InputReader.AttackInputResult.MediumLeft },
+
             { ( InputReader.MovementInputResult.None,InputReader.AttackInputResult.Heavy), InputReader.AttackInputResult.Heavy },
 
     };
@@ -21,7 +25,11 @@ public class PlayerAttackState : PlayerBaseState
     {
         playerStateManager.player.animator.SetTrigger(playerStateManager.player.Attacking);
     }
-
+    private void Light(PlayerController player)
+    {
+        Debug.Log("Light");
+        player.animator.SetBool(player.Light,true);
+    }
     private void Slash(PlayerController player)
     {
         
@@ -36,11 +44,7 @@ public class PlayerAttackState : PlayerBaseState
 
     }
 
-    private void Punch(PlayerController player)
-    {
-        Debug.Log("Punch");
-        player.animator.SetBool(player.Punch,true);
-    }
+  
 
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
@@ -54,7 +58,7 @@ public class PlayerAttackState : PlayerBaseState
             switch (action)
             {
                 case InputReader.AttackInputResult.Light:
-                    Punch(player);
+                    Light(player);
                     break;
                 case InputReader.AttackInputResult.Medium:
                     Kick(player);
