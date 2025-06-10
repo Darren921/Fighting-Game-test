@@ -8,10 +8,10 @@ public class PlayerMovingState : PlayerBaseState
     private Vector2 _smoothedMoveVelocity;
     private Vector3 move;
 
-    internal override void EnterState(PlayerStateManager playerStateManager)
+    internal override void EnterState(PlayerStateManager playerStateManager,PlayerController player)
     {
       //  Debug.Log("Entered PlayerMovingState");
-        playerStateManager.player.animator.SetBool(playerStateManager.player.Move, true);
+        playerStateManager.player.animator.SetBool(player.Move, true);
 
     }
 
@@ -20,6 +20,10 @@ public class PlayerMovingState : PlayerBaseState
         if (player.playerMove == Vector2.zero)
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Neutral);
 
+        if (player.IsAttacking)
+        {
+            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Attack);
+        }
         switch (player.playerMove.y)
         {
             case > 0:
@@ -42,9 +46,17 @@ public class PlayerMovingState : PlayerBaseState
 
     private void movePlayer(PlayerController player)
     {
-        move = new Vector3(_smoothedMoveDir.x, 0, 0) * (player._moveSpeed * Time.fixedDeltaTime);
-            player.rb.MovePosition(player.transform.position + move);
-    
+        if (player.IsWalking)
+        {
+            move = new Vector3(_smoothedMoveDir.x, 0, 0) * (player.WalkSpeed * Time.fixedDeltaTime);
+        }
+        else if (player.IsRunning)
+        {
+            move = new Vector3(_smoothedMoveDir.x, 0, 0) * (player.RunSpeed * Time.fixedDeltaTime);
+        }
+       
+        player.rb.MovePosition(player.transform.position + move);
+
     }
 
 

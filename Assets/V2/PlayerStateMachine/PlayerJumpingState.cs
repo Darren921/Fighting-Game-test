@@ -1,33 +1,34 @@
+using Unity.VisualScripting;
 using UnityEngine;
 public class PlayerJumpingState : PlayerBaseState
 {
     
     #region Standard Jump Variables
     [Header("Jumping")]
-    private RaycastHit raycastHit;
     float velocity;
-    private Collider _collider;
     #endregion
     private float xJumpVal; // check Try jump method for changes 
     private LayerMask groundLayerMask;
+    private Collider collider;
 
-
-    internal override void EnterState(PlayerStateManager playerStateManager)
+    internal override void EnterState(PlayerStateManager playerStateManager,PlayerController player)
     {
-        _collider = playerStateManager.GetComponent<Collider>();
-        groundLayerMask = LayerMask.GetMask("Ground");
+       collider = player.GetComponent<Collider>();
     }
 
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
+        player.gravityManager.ApplyGravity(player);
         //
-        velocity += Physics.gravity.y * player.gravScale * Time.deltaTime;
-        player.isGrounded = Physics.Raycast(player.transform.position, -player.transform.up, out raycastHit, player.raycastDistance,groundLayerMask) && velocity < 0;
+        player.isGrounded = player.gravityManager.CheckifGrounded(player);
 
         // Checking if the player is grounded and resetting position and velocity 
-        if (  player.isGrounded)
+        if ( player.isGrounded)
         {
-            velocity = 0f;
+            player.gravityManager.ResetVelocity();
+            Vector3 closestPoint = player.gravityManager.raycastHit.collider.ClosestPoint(player.transform.position);
+            Vector3 snappedPosition = new Vector3(player.transform.position.x, closestPoint.y + 1, player.transform.position.z);
+            player.transform.position = snappedPosition;
         }
         
         if (player.playerMove.y > 0 && player.isGrounded)
@@ -37,8 +38,15 @@ public class PlayerJumpingState : PlayerBaseState
         //This moves the jump (do not touch )
         if (!player.isGrounded)
         {
+            velocity = player.gravityManager.GetVelocity();
             player.transform.Translate(new Vector3(xJumpVal, velocity, 0) * Time.deltaTime);
         }
+
+        if (!player.isGrounded && player.IsAttacking)
+        {
+            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Attack);
+        }
+        
         //Transitioning states 
         switch (player.isGrounded)
         {
@@ -60,17 +68,17 @@ public class PlayerJumpingState : PlayerBaseState
 
     private void TryJump(PlayerController player)
     {
-        velocity = Mathf.Sqrt(player.jumpHeight * -2 * (Physics.gravity.y * player.gravScale));
-        switch (player._inputReader.GetLastInput())
+        velocity = player.gravityManager.SetJumpVelocity(player);
+        switch (player.InputReader.GetLastInput())
         {
             case InputReader.MovementInputResult.Up:
                 xJumpVal = 0;
                 break;
             case InputReader.MovementInputResult.UpRight:
-                xJumpVal = 5f;
+                xJumpVal = 5;
                 break;
             case InputReader.MovementInputResult.UpLeft:
-                xJumpVal = -5f;
+                xJumpVal = -5;
                 break;
             default:
                 xJumpVal = 0;
@@ -86,7 +94,7 @@ public class PlayerJumpingState : PlayerBaseState
 
     internal override void ExitState(PlayerStateManager playerStateManager,  PlayerController player)
     {
-        velocity = 0f;
+        player.gravityManager.ResetVelocity();
         xJumpVal = 0f;
         Debug.Log("Exiting playerJumpingState");
     }

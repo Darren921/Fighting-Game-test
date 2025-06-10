@@ -7,14 +7,16 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 {
-    public int Attacking => Animator.StringToHash("Attacking");
+    public   int Attacking => Animator.StringToHash("Attacking");
     public int Light => Animator.StringToHash("Light");
-    public int Kick => Animator.StringToHash("Kick");
+    public int Medium => Animator.StringToHash("Med");
     public int Move = Animator.StringToHash("Move");
-
+    public int Left = Animator.StringToHash("Left");
+    public  int Right = Animator.StringToHash("Right");
+    public  int Airborne = Animator.StringToHash("Airborne");
     private Controls controls;
     private Controls.PlayerActions m_Player;
-    internal InputReader _inputReader;
+    internal InputReader InputReader;
     internal PlayerStateManager stateManager;
    [SerializeField] private CharacterSO characterData;
     private Coroutine AttackCheck; 
@@ -23,20 +25,23 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     internal bool isGrounded;
     
     #region Attack Check Variables  
-    public bool isAttacking{get; internal set;}
-    public bool isPunching {get; private set;}
-    public bool isKicking {get; private set;}
-    public bool isSlashing {get; private set;}
+    public bool IsAttacking{get; private set;}
+    public bool IsPunching {get; private set;}
+    public bool IsKicking {get; private set;}
+    public bool IsSlashing {get; private set;}
     
-    public bool isHeavySlashing {get; private set;}
+    public bool IsHeavySlashing {get; private set;}
     #endregion
 
-    internal bool reversed;
+    internal bool Reversed;
     
     #region Changeable Move Variables
-    internal float _moveSpeed;
+    internal float WalkSpeed ;
+    internal float RunSpeed ;
+    internal bool IsWalking;
+    internal bool IsRunning;
     #endregion
-    
+    InputAction _runAction;
 
     #region Changeable Jump Variables
 
@@ -47,10 +52,14 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     internal Rigidbody rb;
 
     #endregion
-    
+    internal bool isCrouching;
+
+    internal GravityManager gravityManager;
     void Awake()
     {
-        _inputReader = GetComponent<InputReader>();
+        gravityManager = GetComponent<GravityManager>();
+        isGrounded = true;
+        InputReader = GetComponent<InputReader>();
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
         stateManager = GetComponent<PlayerStateManager>();
@@ -59,29 +68,35 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     
     public void InitializePlayer(InputDevice device)
     {
+
         controls = new Controls();
         controls.devices = new[] { device };
         m_Player = controls.Player;
-
+        m_Player.Move.performed += OnMove; 
+        m_Player.Move.canceled += OnMove;
+        m_Player.Attack.performed += OnAttack;
+        m_Player.Run.performed += OnRun;
+        m_Player.Run.canceled += OnRun;
         m_Player.Enable();
-        m_Player.SetCallbacks(this);
-
         SetUpCharacterVariables();
     }
     private void SetUpCharacterVariables()
     {
         jumpHeight = characterData.jumpHeight;
         gravScale = characterData.gravScale;
-        _moveSpeed = characterData.moveSpeed;
+        WalkSpeed = characterData.walkSpeed;
+        RunSpeed =  characterData.runSpeed;
     }
     
     void OnDisable() => m_Player.Disable();
     public void SetAttacking()
     {
-       isAttacking = false;
+       IsAttacking = false;
        animator.SetBool(Attacking, false);
        animator.SetBool(Light , false);
-       animator.SetBool(Kick , false);
+       animator.SetBool(Medium , false);
+       animator.SetBool(Left , false);
+       animator.SetBool(Right , false);
     }
     
     void OnCollisionEnter(Collision collision)
@@ -96,31 +111,45 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     
     public void OnMove(InputAction.CallbackContext context)
     {
+      
         playerMove = context.ReadValue<Vector2>();
-        // print(playerMove);    
-    }
 
-    public void OnMoveX(InputAction.CallbackContext context)
-    {
-        // playerMoveX = context.ReadValue<float>();
-    }
+        if (context.canceled || playerMove == Vector2.zero)
+        {
+            IsWalking = false;
+            IsRunning = false;
+            return;
+        }
 
-    public void OnMoveY(InputAction.CallbackContext context)
-    {
-        // playerMoveY = context.ReadValue<float>();
+        if (!IsRunning)
+        {
+            IsWalking = true;
+        }
+     
     }
-
+    
     public void OnAttack(InputAction.CallbackContext context)
     {
+        print("Attacking");
         var attackVal = ReturnAttackType(context.ReadValue<float>());
-        AttackCheck = StartCoroutine(_inputReader.AddAttackInput(attackVal, Time.frameCount));
-        isAttacking = true;
+        AttackCheck = StartCoroutine(InputReader.AddAttackInput(attackVal, Time.frameCount));
+        IsAttacking = true;
         
+    }
+
+    public void OnRun(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+        IsRunning = true;
+        IsWalking = false;
+
+
     }
 
     private InputReader.AttackInputResult ReturnAttackType(float attackVal)
     {
         var attackValAsInt = (int) attackVal;
+        print(attackValAsInt);
         var attackResult = attackValAsInt switch
         {
             1 => InputReader.AttackInputResult.Light,

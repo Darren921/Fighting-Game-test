@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
 
     private List<InputDevice> availableDevices = new ();
 
+    private int minDistance = 1;
 
     private void Awake()
     {
@@ -73,17 +74,35 @@ public class GameManager : MonoBehaviour
 
         private void checkIfReversed()
         {
+            float distance = Mathf.Abs(players[0].transform.position.x - players[1].transform.position.x);
+
+            if (distance < minDistance)
+                return;
+
             if (players[1].transform.position.x < players[0].transform.position.x)
             {
-                players[0].reversed = true;
-                players[1].reversed = false;
+                players[0].Reversed = true;
+                players[1].Reversed = false;
             }
             else
             {
-                players[0].reversed = false;
-                players[1].reversed = true;
-
+                players[0].Reversed = false;
+                players[1].Reversed = true;
             }
+
+            UpdatePlayerDirection(players[0]);
+            UpdatePlayerDirection(players[1]);
         }
 
+        private void UpdatePlayerDirection(PlayerController player)
+        {
+            if (player.isGrounded || player.IsAttacking)
+            {
+                var targetYRotation = player.Reversed ? 180f : 0f;
+                var rotation = player.transform.eulerAngles;
+                rotation.y = targetYRotation;
+                player.transform.eulerAngles = rotation;
+            }
+          
+        }
 }

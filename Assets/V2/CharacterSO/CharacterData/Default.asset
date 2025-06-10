@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Default
   m_EditorClassIdentifier: 
   health: 100
-  moveSpeed: 10
+  walkSpeed: 10
+  runSpeed: 15
   jumpHeight: 5
   gravScale: 5

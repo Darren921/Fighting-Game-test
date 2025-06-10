@@ -1,36 +1,40 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerNeutralState : PlayerBaseState
 {
     private static readonly int Neutral = Animator.StringToHash("Neutral");
+    private Coroutine idleCoroutine;
 
-    internal override void EnterState(PlayerStateManager playerStateManager)
+    internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player )
     {
         
-        playerStateManager.player.StartCoroutine(CheckIfIdle(playerStateManager.player)) ;
-
+        idleCoroutine = player.StartCoroutine(CheckIfIdle(player));
     }
 
     internal override void UpdateState(PlayerStateManager playerStateManager,PlayerController player)
     {
+
+        if (player.IsAttacking)
+        {
+            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Attack);
+        }
         
         if (player.playerMove !=  Vector2.zero)
         {
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Moving);
         }
 
-        if (player.isAttacking)
-        {
-            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Attack);
-        }
+       
     }
 
     private IEnumerator CheckIfIdle(PlayerController player)
     {
         yield return new WaitForSeconds(3f);
+        Debug.Log("Idle");
         player.animator.SetBool(Neutral,true);
     } 
 
@@ -41,9 +45,14 @@ public class PlayerNeutralState : PlayerBaseState
 
     internal override void ExitState(PlayerStateManager playerStateManager,PlayerController player)
     {
-        player.animator.SetBool(Neutral,false);
 
-        player.StopAllCoroutines();
+        if (idleCoroutine != null)
+        {
+            player.StopCoroutine(idleCoroutine);
+            idleCoroutine = null;
+            player.animator.SetBool(Neutral,false);
+
+        }
 
         Debug.Log("Exit PlayerNeutralState");
     }

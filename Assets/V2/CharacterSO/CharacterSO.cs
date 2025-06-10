@@ -4,7 +4,8 @@ using UnityEngine;
 public class CharacterSO : ScriptableObject
 {
     public int health;
-    public int moveSpeed;
+    public int walkSpeed;
+    public int runSpeed;
     public int jumpHeight;
     public int gravScale;
 }

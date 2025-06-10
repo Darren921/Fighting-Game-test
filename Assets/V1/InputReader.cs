@@ -32,17 +32,7 @@ public class InputReader : MonoBehaviour
         HeavyLeft,
         HeavyRight,
     }
-    MovementInputResult[] directionMap = new MovementInputResult[]
-    {
-        MovementInputResult.Right,     
-        MovementInputResult.UpRight,   
-        MovementInputResult.Up,        
-        MovementInputResult.UpLeft,    
-        MovementInputResult.Left,      
-        MovementInputResult.DownLeft,  
-        MovementInputResult.Down,      
-        MovementInputResult.DownRight  
-    };
+
     MovementInputResult currentMoveInput = MovementInputResult.None;
     AttackInputResult currentAttackInput = AttackInputResult.None;
    [SerializeField] internal List<MovementInputResult> MovementinputsVisual = new List<MovementInputResult>();
@@ -107,9 +97,8 @@ public class InputReader : MonoBehaviour
 
         private void CheckAttackInput()
         {
-            if(!player.isAttacking && currentAttackInput != AttackInputResult.None) StartCoroutine(AddAttackInput(AttackInputResult.None, Time.frameCount));
+            if(!player.IsAttacking && currentAttackInput != AttackInputResult.None) StartCoroutine(AddAttackInput(AttackInputResult.None, Time.frameCount));
         }
-
 
         private void CheckMovementInput()
         {
@@ -124,6 +113,11 @@ public class InputReader : MonoBehaviour
 
             float x = playerInput.x;
             float y = playerInput.y;
+           
+            if (player.Reversed)
+            {
+                x = -x;
+            }
 
             float threshold = 0.5f;
 

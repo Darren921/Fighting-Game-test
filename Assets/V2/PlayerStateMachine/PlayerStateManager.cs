@@ -33,7 +33,7 @@ public class PlayerStateManager : MonoBehaviour
     {
         player = GetComponent<PlayerController>();
         currentState = _states[PlayerStateType.Neutral];
-        currentState.EnterState(this);
+        currentState.EnterState(this,player);
     }
 
     void Update()
@@ -52,7 +52,7 @@ public class PlayerStateManager : MonoBehaviour
         {
             currentState?.ExitState(this,player);
             currentState = state;
-            currentState?.EnterState(this);
+            currentState?.EnterState(this,player);
 
         }
       
