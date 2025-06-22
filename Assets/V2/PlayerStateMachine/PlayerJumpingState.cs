@@ -8,61 +8,54 @@ public class PlayerJumpingState : PlayerBaseState
     float velocity;
     #endregion
     private float xJumpVal; // check Try jump method for changes 
-    private LayerMask groundLayerMask;
     private Collider collider;
+    private bool Jumping;
 
     internal override void EnterState(PlayerStateManager playerStateManager,PlayerController player)
     {
        collider = player.GetComponent<Collider>();
+       player.animator.SetBool(player.Jump, true);
     }
 
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
-        player.gravityManager.ApplyGravity(player);
         //
-        player.isGrounded = player.gravityManager.CheckifGrounded(player);
-
+       
         // Checking if the player is grounded and resetting position and velocity 
-        if ( player.isGrounded)
-        {
-            player.gravityManager.ResetVelocity();
-            Vector3 closestPoint = player.gravityManager.raycastHit.collider.ClosestPoint(player.transform.position);
-            Vector3 snappedPosition = new Vector3(player.transform.position.x, closestPoint.y + 1, player.transform.position.z);
-            player.transform.position = snappedPosition;
-        }
         
         if (player.playerMove.y > 0 && player.isGrounded)
         {
-            TryJump(player);
-        }
-        //This moves the jump (do not touch )
-        if (!player.isGrounded)
-        {
-            velocity = player.gravityManager.GetVelocity();
-            player.transform.Translate(new Vector3(xJumpVal, velocity, 0) * Time.deltaTime);
-        }
+            Jumping = true;
 
+        } 
+
+        if (player.isGrounded)
+        {
+            player.animator.SetBool(player.Jump, false);
+        }
+        else if (!player.isGrounded)
+        {
+            player.animator.SetBool(player.Jump, true);
+
+        } 
         if (!player.isGrounded && player.IsAttacking)
         {
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Attack);
         }
         
         //Transitioning states 
-        switch (player.isGrounded)
+      
+        
+        if (player.isGrounded && player.playerMove.y == 0)
         {
-            case true when player.playerMove.y == 0:
-            {
-                if (player.playerMove == Vector2.zero)
-                    playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Neutral);
-                else if (player.playerMove.x != 0 && player.playerMove.y == 0)
-                    playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Moving);
-                break;
-            }
-            case true when player.playerMove.y < 0:
-                playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Crouching);
-                break;
-            
-            
+            if (player.playerMove == Vector3.zero)
+                playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Neutral);
+            else if (player.playerMove.x != 0 && player.playerMove.y == 0)
+                playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Moving);
+        }
+        else if (player.isGrounded && player.playerMove.y < 0)
+        {
+            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Crouching);
         }
     }
 
@@ -75,27 +68,42 @@ public class PlayerJumpingState : PlayerBaseState
                 xJumpVal = 0;
                 break;
             case InputReader.MovementInputResult.UpRight:
-                xJumpVal = 5;
+                xJumpVal = 3;
                 break;
             case InputReader.MovementInputResult.UpLeft:
-                xJumpVal = -5;
+                xJumpVal = -3;
                 break;
             default:
                 xJumpVal = 0;
                 break;
         }
+        player.rb.linearVelocity = new Vector3(xJumpVal, velocity, 0);
     }
 
 
     internal override void FixedUpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
+        if (Jumping)
+        {
+            TryJump(player);
+            Jumping = false;
+        }
 
+        if (!player.isGrounded)
+        {
+            player.gravityManager.ApplyGravity(player);
+        }
     }
 
     internal override void ExitState(PlayerStateManager playerStateManager,  PlayerController player)
     {
-        player.gravityManager.ResetVelocity();
+        if (!player.IsAttacking)
+        {
+            Debug.Log("Reseting velo");
+            player.gravityManager.ResetVelocity();
+        }
+        player.animator.SetBool(player.Jump, false);
         xJumpVal = 0f;
-        Debug.Log("Exiting playerJumpingState");
+       Debug.Log("Exiting playerJumpingState");
     }
 }

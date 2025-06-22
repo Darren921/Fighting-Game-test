@@ -14,9 +14,15 @@ public class GravityManager : MonoBehaviour
    }
 
   public  bool CheckifGrounded(PlayerController player)
-   {
-     return Physics.Raycast(player.transform.position, -player.transform.up, out raycastHit, player.raycastDistance,
-         groundLayerMask) && velocity < 0;
+  {
+      var grounded = Physics.Raycast(player.transform.position, -player.transform.up, out raycastHit,
+          player.raycastDistance, groundLayerMask);
+
+      if (raycastHit.collider is not  null)
+      {
+        // print(raycastHit.collider.gameObject.name);
+      }
+      return grounded;
    }
 
    public void ApplyGravity(PlayerController player)

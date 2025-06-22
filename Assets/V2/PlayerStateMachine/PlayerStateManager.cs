@@ -8,25 +8,29 @@ public class PlayerStateManager : MonoBehaviour
         Crouching,
         Jumping,
         Moving,
-        Attack
+        Attack,
+        CrouchMove
     }
-    private readonly Dictionary<PlayerStateType, PlayerBaseState> _states = new ()
-    {
-        { PlayerStateType.Neutral, new PlayerNeutralState() },
-        { PlayerStateType.Crouching, new PlayerCrouchingState() },
-        { PlayerStateType.Jumping, new PlayerJumpingState() },
-        { PlayerStateType.Moving, new PlayerMovingState() },
-        { PlayerStateType.Attack, new PlayerAttackState() },  
-    };
+
+    private  Dictionary<PlayerStateType, PlayerBaseState> _states;
     public string CurrentStateName => currentState?.GetType().Name; 
     [SerializeReference] internal PlayerBaseState currentState;
+    [SerializeReference] internal PlayerBaseState previousState;
     internal  PlayerController player;
    
 
 
    void Awake()
    {
-    
+    _states = new ()
+    {
+        { PlayerStateType.Neutral, new PlayerNeutralState() },
+        { PlayerStateType.Crouching, new PlayerCrouchingState() },
+        { PlayerStateType.Jumping, new PlayerJumpingState() },
+        { PlayerStateType.Moving, new PlayerMovingState() },
+        { PlayerStateType.Attack, new PlayerAttackState() },
+        { PlayerStateType.CrouchMove , new PlayerCrouchMoveState()}
+    };
    }
    
     void Start()
@@ -51,10 +55,18 @@ public class PlayerStateManager : MonoBehaviour
         if (_states.TryGetValue(newType, out var state))
         {
             currentState?.ExitState(this,player);
+            
             currentState = state;
             currentState?.EnterState(this,player);
 
         }
       
     }
+
+    public void SwitchToLastState(PlayerStateType newType)
+    {
+  //      newType = _states.
+        
+    }
+    
 }

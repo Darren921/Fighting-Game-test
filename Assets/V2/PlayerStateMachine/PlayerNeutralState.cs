@@ -11,7 +11,6 @@ public class PlayerNeutralState : PlayerBaseState
 
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player )
     {
-        
         idleCoroutine = player.StartCoroutine(CheckIfIdle(player));
     }
 
@@ -23,14 +22,13 @@ public class PlayerNeutralState : PlayerBaseState
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Attack);
         }
         
-        if (player.playerMove !=  Vector2.zero)
+        if (player.playerMove !=  Vector3.zero)
         {
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Moving);
         }
 
-       
     }
-
+     
     private IEnumerator CheckIfIdle(PlayerController player)
     {
         yield return new WaitForSeconds(3f);
@@ -38,14 +36,19 @@ public class PlayerNeutralState : PlayerBaseState
         player.animator.SetBool(Neutral,true);
     } 
 
-    internal override void FixedUpdateState(PlayerStateManager playerStateManager,PlayerController playerController)
+    internal override void FixedUpdateState(PlayerStateManager playerStateManager,PlayerController player)
     {
-       
+        if (!player.isGrounded)
+        {
+            player.gravityManager.ApplyGravity(player);
+            
+            player.rb.linearVelocity  = new Vector3(player.rb.linearVelocity.x,player.gravityManager.GetVelocity(),0);
+        }
+      
     }
 
     internal override void ExitState(PlayerStateManager playerStateManager,PlayerController player)
     {
-
         if (idleCoroutine != null)
         {
             player.StopCoroutine(idleCoroutine);

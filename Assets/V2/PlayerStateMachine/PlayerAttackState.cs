@@ -20,28 +20,28 @@ public class PlayerAttackState : PlayerBaseState
             { ( InputReader.MovementInputResult.None,InputReader.AttackInputResult.Heavy), InputReader.AttackInputResult.Heavy },
 
     };
-    bool Airborne  = false;
     
     
     
     
     internal override void EnterState(PlayerStateManager playerStateManager,PlayerController player)
     {
-        playerStateManager.player.animator.SetBool(playerStateManager.player.Attacking, true);
+    //   if(player.animator.GetBool(player.Attacking) playerStateManager.SwitchState(playerStateManager.previousState);)
+           player.animator.SetBool(player.Attacking, true);
     }
     private void Light(PlayerController player, InputReader.MovementInputResult move)
     {           
-        Debug.Log("light");
+//        Debug.Log("light");
         player.animator.SetBool(player.Light,true);
         if  (!player.animator.IsInTransition(0))
         {
            Debug.Log(move);
             switch (move)
             {
-                case InputReader.MovementInputResult.Right or InputReader.MovementInputResult.UpRight:
+                case InputReader.MovementInputResult.Right or InputReader.MovementInputResult.UpRight or InputReader.MovementInputResult.DownRight:
                     player.animator.SetBool(player.Right, true);
                     break; 
-                case InputReader.MovementInputResult.Left or InputReader.MovementInputResult.UpLeft:
+                case InputReader.MovementInputResult.Left or InputReader.MovementInputResult.UpLeft or InputReader.MovementInputResult.DownLeft:
                     player.animator.SetBool(player.Left, true);
                     break;
                 case InputReader.MovementInputResult.None:
@@ -53,7 +53,7 @@ public class PlayerAttackState : PlayerBaseState
 
     private void Medium(PlayerController player, InputReader.MovementInputResult move)
     {
-        Debug.Log("light");
+   //     Debug.Log("light");
 
         player.animator.SetBool(player.Medium,true);
         if  (!player.animator.IsInTransition(0))
@@ -89,18 +89,10 @@ public class PlayerAttackState : PlayerBaseState
         if (!player.isGrounded)
         {
             player.animator.SetBool(player.Airborne,true);
-            player.gravityManager.ApplyGravity(player);
-            
-            player.transform.Translate(new Vector3(0,player.gravityManager.GetVelocity(), 0) * Time.deltaTime);
-
         }
         else
         {
             player.animator.SetBool(player.Airborne,false);
-            player.gravityManager.ResetVelocity();
-            Vector3 closestPoint = player.gravityManager.raycastHit.collider.ClosestPoint(player.transform.position);
-            Vector3 snappedPosition = new Vector3(player.transform.position.x, closestPoint.y + 1, player.transform.position.z);
-            player.transform.position = snappedPosition;
         }
 
        
@@ -109,8 +101,8 @@ public class PlayerAttackState : PlayerBaseState
         var inputReader = playerStateManager.player.InputReader;
         var lastmove = inputReader.GetLastInput();
         var lastattack = inputReader.GetLastAttackInput();
-        Debug.Log(lastmove.ToString());
-        Debug.Log(lastattack.ToString());
+//        Debug.Log(lastmove.ToString());
+//        Debug.Log(lastattack.ToString());
 
         /*if ( attackMoveActions.TryGetValue((lastmove, lastattack), out var action))
         {
@@ -146,12 +138,12 @@ public class PlayerAttackState : PlayerBaseState
             case InputReader.AttackInputResult.Heavy:
                 break;
         }
-        if(player.playerMove == Vector2.zero && !player.IsAttacking)
+        if(player.playerMove == Vector3.zero && !player.IsAttacking)
         {
             Debug.Log("going to neut");
             playerStateManager.SwitchState( PlayerStateManager.PlayerStateType.Neutral);
         }
-        else if (player.playerMove != Vector2.zero && !player.IsAttacking)
+        else if (player.playerMove != Vector3.zero && !player.IsAttacking)
         {
             Debug.Log("going to moving");
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Moving);
@@ -166,7 +158,10 @@ public class PlayerAttackState : PlayerBaseState
     
     internal override void FixedUpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
-       
+        if (!player.isGrounded)
+        {
+            player.gravityManager.ApplyGravity(player);
+        }
     }
 
     internal override void ExitState(PlayerStateManager playerStateManager, PlayerController player)

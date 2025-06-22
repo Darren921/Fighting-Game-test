@@ -4,16 +4,12 @@ public class PlayerCrouchingState : PlayerBaseState
 {
     internal override void EnterState(PlayerStateManager playerStateManager,PlayerController player)
     {
-        player.isCrouching = true;
         Debug.Log("Entering PlayerCrouchingState");
     }
 
     internal override void UpdateState(PlayerStateManager playerStateManager,PlayerController player)
     {
-        if (player.playerMove.y == 0)
-        {
-            player.isCrouching = false;
-        }
+    
         if (player.playerMove is { y: 0, x: 0 })
         {
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Neutral);
@@ -23,6 +19,11 @@ public class PlayerCrouchingState : PlayerBaseState
         {
             Debug.Log("Switched to Move state (C.S)");
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Moving);
+        }
+
+        if (player.isCrouching && player.playerMove.x != 0)
+        {
+            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.CrouchMove);
         }
 
         if (player.isCrouching && player.IsAttacking)

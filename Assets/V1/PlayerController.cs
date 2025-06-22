@@ -13,14 +13,16 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     public int Move = Animator.StringToHash("Move");
     public int Left = Animator.StringToHash("Left");
     public  int Right = Animator.StringToHash("Right");
-    public  int Airborne = Animator.StringToHash("Airborne");
+    public int Airborne = Animator.StringToHash("Airborne");
+    public  int Crouch = Animator.StringToHash("Crouching");
+    public  int Jump = Animator.StringToHash("Jumping");
     private Controls controls;
     private Controls.PlayerActions m_Player;
     internal InputReader InputReader;
     internal PlayerStateManager stateManager;
    [SerializeField] private CharacterSO characterData;
     private Coroutine AttackCheck; 
-    public Vector2 playerMove {get; private set;}
+    public Vector3 playerMove {get; private set;}
     internal Animator animator;
     internal bool isGrounded;
     
@@ -46,7 +48,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     #region Changeable Jump Variables
 
     internal float jumpHeight; //Switch to player character data S.O when created 5 
-    internal float raycastDistance = 1;  // 1
+    internal float raycastDistance = 1.5f;  // 1
     internal float gravScale; // (Hold for now )  character data affects gravity 5 
     internal  float velocity;
     internal Rigidbody rb;
@@ -106,15 +108,21 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     private void Update()
     {
-        
+        isGrounded = gravityManager.CheckifGrounded(this);
+        animator.SetBool(Airborne, !isGrounded);
+        animator.SetBool(Crouch, isCrouching);
+        animator.SetBool(Move, playerMove.x != 0);
+       
+        isCrouching = playerMove.y < 0;
+
     }
     
     public void OnMove(InputAction.CallbackContext context)
     {
       
-        playerMove = context.ReadValue<Vector2>();
+        playerMove = context.ReadValue<Vector3>();
 
-        if (context.canceled || playerMove == Vector2.zero)
+        if (context.canceled || playerMove.x == 0)
         {
             IsWalking = false;
             IsRunning = false;
@@ -130,7 +138,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     
     public void OnAttack(InputAction.CallbackContext context)
     {
-        print("Attacking");
+//        print("Attacking");
         var attackVal = ReturnAttackType(context.ReadValue<float>());
         AttackCheck = StartCoroutine(InputReader.AddAttackInput(attackVal, Time.frameCount));
         IsAttacking = true;
@@ -149,7 +157,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     private InputReader.AttackInputResult ReturnAttackType(float attackVal)
     {
         var attackValAsInt = (int) attackVal;
-        print(attackValAsInt);
+//        print(attackValAsInt);
         var attackResult = attackValAsInt switch
         {
             1 => InputReader.AttackInputResult.Light,

@@ -1,42 +1,30 @@
 using UnityEngine;
 
-[System.Serializable]
-public class PlayerMovingState : PlayerBaseState
+public class PlayerCrouchMoveState : PlayerBaseState
 {
     private Vector3 moveDir;
     private Vector3 _smoothedMoveDir;
     private Vector3 _smoothedMoveVelocity;
-
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player)
     {
+        
     }
 
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
-        if (player.playerMove == Vector3.zero)
+        switch (player.isCrouching)
         {
-            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Neutral);
-            return;
-        }
-
-        if (player.playerMove.x != 0 && player.isCrouching)
-        {
-            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.CrouchMove);
-        }
-
-        if (player.IsAttacking)
-        {
-            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Attack);
-            return;
-        }
-
-        switch (player.playerMove.y)
-        {
-            case > 0:
-                playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Jumping);
-                break;
-            case < 0  :
+            case true when player.playerMove.x == 0:
                 playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Crouching);
+                break;
+            case false when player.playerMove.x != 0:
+                playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Moving);
+                break;
+            case false when player.playerMove.x == 0:
+                playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Neutral);
+                break;
+            case true when player.playerMove.x != 0 && player.IsAttacking:
+                playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Attack);
                 break;
         }
     }
@@ -73,4 +61,6 @@ public class PlayerMovingState : PlayerBaseState
         _smoothedMoveDir = Vector3.zero;
 
     }
+
+   
 }

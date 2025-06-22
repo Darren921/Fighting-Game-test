@@ -114,11 +114,7 @@ public class InputReader : MonoBehaviour
             float x = playerInput.x;
             float y = playerInput.y;
            
-            if (player.Reversed)
-            {
-                x = -x;
-            }
-
+         
             float threshold = 0.5f;
 
             MovementInputResult newInput = MovementInputResult.None;

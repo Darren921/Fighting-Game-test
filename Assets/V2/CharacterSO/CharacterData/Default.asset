@@ -16,4 +16,4 @@ MonoBehaviour:
   walkSpeed: 10
   runSpeed: 15
   jumpHeight: 5
-  gravScale: 5
+  gravScale: 1
