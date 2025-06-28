@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class InputReader : MonoBehaviour
 {
-    PlayerController player;
     public enum MovementInputResult
     {
         None,
@@ -32,9 +31,9 @@ public class InputReader : MonoBehaviour
         HeavyLeft,
         HeavyRight,
     }
-
-    MovementInputResult currentMoveInput = MovementInputResult.None;
-    AttackInputResult currentAttackInput = AttackInputResult.None;
+    PlayerController player;
+  public  MovementInputResult currentMoveInput { get; private set; }
+  public  AttackInputResult currentAttackInput  { get; private set; }
    [SerializeField] internal List<MovementInputResult> MovementinputsVisual = new List<MovementInputResult>();
    [SerializeField] internal List<AttackInputResult> AttackinputsVisual = new List<AttackInputResult>();
 
@@ -46,25 +45,29 @@ public class InputReader : MonoBehaviour
         return Time.frameCount - currentFrame;
     }
   
-    public IEnumerator AddMovementInput(MovementInputResult result, float curframe)
+    public IEnumerator AddMovementInput(MovementInputResult result, float frameCount)
     {
+        //updates current move input and removes past ones in 3 frames 
         if(currentMoveInput == result) yield break;
         currentMoveInput = result;
-        curframe = ReturnCurrentFrame(curframe);
         MovementinputsVisual.Add(result);
-       yield return  new WaitForSeconds(0.2f);
+        frameCount = ReturnCurrentFrame(frameCount);
+        yield return new WaitUntil(() => Time.frameCount - frameCount > 3);
        MovementinputsVisual.Remove(result);
       
     }
     public IEnumerator AddAttackInput(AttackInputResult result, float frameCount)
     {
+        //updates current attack input and removes past ones in 3 frames 
+
         if(currentAttackInput == result) yield break;
         currentAttackInput = result;
         AttackinputsVisual.Add(result);
 //        print(result.ToString());
         frameCount = ReturnCurrentFrame(frameCount);
         yield return new WaitUntil(() => Time.frameCount - frameCount > 3);
-        AttackinputsVisual.Remove(result);    }
+        AttackinputsVisual.Remove(result);    
+    }
     public MovementInputResult GetLastInput()
     {
       return currentMoveInput;

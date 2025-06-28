@@ -12,6 +12,7 @@ public class PlayerNeutralState : PlayerBaseState
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player )
     {
         idleCoroutine = player.StartCoroutine(CheckIfIdle(player));
+      
     }
 
     internal override void UpdateState(PlayerStateManager playerStateManager,PlayerController player)
@@ -27,13 +28,20 @@ public class PlayerNeutralState : PlayerBaseState
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Moving);
         }
 
+        if (player.isBackDashing)
+        {
+            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Dash);
+        }
+
     }
      
     private IEnumerator CheckIfIdle(PlayerController player)
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(1f);
         Debug.Log("Idle");
         player.animator.SetBool(Neutral,true);
+        player.IsRunning = false;
+        player.IsWalking = false;
     } 
 
     internal override void FixedUpdateState(PlayerStateManager playerStateManager,PlayerController player)

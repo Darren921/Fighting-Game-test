@@ -9,7 +9,8 @@ public class PlayerStateManager : MonoBehaviour
         Jumping,
         Moving,
         Attack,
-        CrouchMove
+        CrouchMove,
+        Dash
     }
 
     private  Dictionary<PlayerStateType, PlayerBaseState> _states;
@@ -29,7 +30,8 @@ public class PlayerStateManager : MonoBehaviour
         { PlayerStateType.Jumping, new PlayerJumpingState() },
         { PlayerStateType.Moving, new PlayerMovingState() },
         { PlayerStateType.Attack, new PlayerAttackState() },
-        { PlayerStateType.CrouchMove , new PlayerCrouchMoveState()}
+        { PlayerStateType.CrouchMove , new PlayerCrouchMoveState()},
+        { PlayerStateType.Dash , new PlayerDashState() }
     };
    }
    
@@ -55,7 +57,7 @@ public class PlayerStateManager : MonoBehaviour
         if (_states.TryGetValue(newType, out var state))
         {
             currentState?.ExitState(this,player);
-            
+            previousState = currentState;
             currentState = state;
             currentState?.EnterState(this,player);
 
@@ -63,9 +65,12 @@ public class PlayerStateManager : MonoBehaviour
       
     }
 
-    public void SwitchToLastState(PlayerStateType newType)
+    public void SwitchToLastState()
     {
-  //      newType = _states.
+        currentState?.ExitState(this,player);
+        var temp = currentState;
+        currentState = previousState;
+        currentState?.EnterState(this,player);
         
     }
     

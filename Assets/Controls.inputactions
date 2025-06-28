@@ -29,7 +29,16 @@
                     "id": "388614fa-6664-4fc4-99be-1e7e23edc97b",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "MultiTap(tapTime=0.3,tapDelay=0.3,tapCount=1,pressPoint=0.5)",
+                    "interactions": "MultiTap(tapTime=0.3,tapDelay=0.2,tapCount=1)",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "BackDash",
+                    "type": "Button",
+                    "id": "562915e8-8d77-42e5-8653-2860691d6610",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "MultiTap(tapTime=0.3,tapDelay=0.4,pressPoint=0.5)",
                     "initialStateCheck": true
                 }
             ],
@@ -284,6 +293,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Run",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3c3c138c-9c39-4c89-998b-b65583c9e93a",
+                    "path": "<Keyboard>/d",
+                    "interactions": "MultiTap(tapTime=0.2,tapDelay=0.75,pressPoint=0.5)",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "BackDash",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

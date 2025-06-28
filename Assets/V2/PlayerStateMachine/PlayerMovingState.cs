@@ -15,7 +15,7 @@ public class PlayerMovingState : PlayerBaseState
     {
         if (player.playerMove == Vector3.zero)
         {
-            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Neutral);
+            playerStateManager.SwitchToLastState();
             return;
         }
 
@@ -50,10 +50,10 @@ public class PlayerMovingState : PlayerBaseState
 
     private void applyVelocity(PlayerController player)
     {
-        float speed = player.IsRunning ? player.RunSpeed : player.WalkSpeed;
-        Vector3 velocity = new Vector3(_smoothedMoveDir.x * speed, player.rb.linearVelocity.y);
+        var speed = player.IsRunning ? player.RunSpeed : player.WalkSpeed;
+        var velocity = new Vector3(_smoothedMoveDir.x * speed, player.rb.linearVelocity.y);
 //        Debug.Log($"{player.name} applying velocity: {velocity}");
-        player.rb.linearVelocity = velocity;
+        player.rb.linearVelocity = velocity;    
     }
 
     private void smoothMovement()

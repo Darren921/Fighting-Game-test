@@ -29,14 +29,14 @@ public class PlayerJumpingState : PlayerBaseState
 
         } 
 
-        if (player.isGrounded)
+        switch (player.isGrounded)
         {
-            player.animator.SetBool(player.Jump, false);
-        }
-        else if (!player.isGrounded)
-        {
-            player.animator.SetBool(player.Jump, true);
-
+            case true:
+                player.animator.SetBool(player.Jump, false);
+                break;
+            case false:
+                player.animator.SetBool(player.Jump, true);
+                break;
         } 
         if (!player.isGrounded && player.IsAttacking)
         {
@@ -62,21 +62,13 @@ public class PlayerJumpingState : PlayerBaseState
     private void TryJump(PlayerController player)
     {
         velocity = player.gravityManager.SetJumpVelocity(player);
-        switch (player.InputReader.GetLastInput())
+        xJumpVal = player.InputReader.GetLastInput() switch
         {
-            case InputReader.MovementInputResult.Up:
-                xJumpVal = 0;
-                break;
-            case InputReader.MovementInputResult.UpRight:
-                xJumpVal = 3;
-                break;
-            case InputReader.MovementInputResult.UpLeft:
-                xJumpVal = -3;
-                break;
-            default:
-                xJumpVal = 0;
-                break;
-        }
+            InputReader.MovementInputResult.Up => 0,
+            InputReader.MovementInputResult.UpRight => 3,
+            InputReader.MovementInputResult.UpLeft => -3,
+            _ => 0
+        };
         player.rb.linearVelocity = new Vector3(xJumpVal, velocity, 0);
     }
 

@@ -99,8 +99,8 @@ public class PlayerAttackState : PlayerBaseState
          
         
         var inputReader = playerStateManager.player.InputReader;
-        var lastmove = inputReader.GetLastInput();
-        var lastattack = inputReader.GetLastAttackInput();
+        var lastmove = inputReader.currentMoveInput;
+        var lastattack = inputReader.currentAttackInput;
 //        Debug.Log(lastmove.ToString());
 //        Debug.Log(lastattack.ToString());
 
