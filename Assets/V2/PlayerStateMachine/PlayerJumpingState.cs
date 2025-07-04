@@ -19,16 +19,13 @@ public class PlayerJumpingState : PlayerBaseState
 
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
-        //
-       
-        // Checking if the player is grounded and resetting position and velocity 
-        
+        //check to see if player is jumping 
         if (player.playerMove.y > 0 && player.isGrounded)
         {
             Jumping = true;
 
-        } 
-
+        }
+        // Toggling animation 
         switch (player.isGrounded)
         {
             case true:
@@ -38,20 +35,19 @@ public class PlayerJumpingState : PlayerBaseState
                 player.animator.SetBool(player.Jump, true);
                 break;
         } 
+        
+        //Transitioning states 
         if (!player.isGrounded && player.IsAttacking)
         {
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Attack);
         }
         
-        //Transitioning states 
-      
-        
         if (player.isGrounded && player.playerMove.y == 0)
         {
             if (player.playerMove == Vector3.zero)
                 playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Neutral);
-            else if (player.playerMove.x != 0 && player.playerMove.y == 0)
-                playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Moving);
+            else if (player.IsWalking && player.playerMove.y == 0)
+                playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Walking);
         }
         else if (player.isGrounded && player.playerMove.y < 0)
         {
@@ -61,8 +57,9 @@ public class PlayerJumpingState : PlayerBaseState
 
     private void TryJump(PlayerController player)
     {
+        // jumping based off on custom  gravity to ensure the player jumps to same height each time 
         velocity = player.gravityManager.SetJumpVelocity(player);
-        xJumpVal = player.InputReader.GetLastInput() switch
+        xJumpVal = player.InputReader.currentMoveInput switch
         {
             InputReader.MovementInputResult.Up => 0,
             InputReader.MovementInputResult.UpRight => 3,
@@ -75,6 +72,7 @@ public class PlayerJumpingState : PlayerBaseState
 
     internal override void FixedUpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
+        //performing jump and applying custom gravity 
         if (Jumping)
         {
             TryJump(player);
@@ -89,6 +87,7 @@ public class PlayerJumpingState : PlayerBaseState
 
     internal override void ExitState(PlayerStateManager playerStateManager,  PlayerController player)
     {
+        // only resting jump velo if not attacking 
         if (!player.IsAttacking)
         {
             Debug.Log("Reseting velo");

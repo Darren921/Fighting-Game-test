@@ -11,8 +11,8 @@ public class InputReader : MonoBehaviour
         None,
         Up,
         Down,
-        Left,
-        Right,
+        Foward,
+        Backward,
         UpLeft,
         UpRight,
         DownLeft,
@@ -40,7 +40,7 @@ public class InputReader : MonoBehaviour
 
 
 
-   public float ReturnCurrentFrame(float currentFrame)
+    public float ReturnCurrentFrame(float currentFrame)
     {
         return Time.frameCount - currentFrame;
     }
@@ -68,14 +68,6 @@ public class InputReader : MonoBehaviour
         yield return new WaitUntil(() => Time.frameCount - frameCount > 3);
         AttackinputsVisual.Remove(result);    
     }
-    public MovementInputResult GetLastInput()
-    {
-      return currentMoveInput;
-    }
-    public  AttackInputResult GetLastAttackInput()
-    {
-        return currentAttackInput;
-    }
 
 
     private void Awake()
@@ -100,11 +92,13 @@ public class InputReader : MonoBehaviour
 
         private void CheckAttackInput()
         {
+            //Adding None when inputs are not active 
             if(!player.IsAttacking && currentAttackInput != AttackInputResult.None) StartCoroutine(AddAttackInput(AttackInputResult.None, Time.frameCount));
         }
 
         private void CheckMovementInput()
         {
+            //checking the movement inputted 
             var  playerInput = new Vector2(player.playerMove.x, player.playerMove.y);
 
             if (playerInput.magnitude < 0.1f)
@@ -114,15 +108,12 @@ public class InputReader : MonoBehaviour
             }
             
 
-            float x = playerInput.x;
-            float y = playerInput.y;
-           
-         
-            float threshold = 0.5f;
+            var x = playerInput.x;
+            var y = playerInput.y;
+            var threshold = 0.5f;
+            var newInput = MovementInputResult.None;
 
-            MovementInputResult newInput = MovementInputResult.None;
-
-//            print(new Vector2(x, y));
+            //Converting all inputs to absolute, and comparing to threshold to determine if input is a corner input (controller) 
             if (Mathf.Abs(x) > threshold && Mathf.Abs(y) > threshold)
             {
               
@@ -131,17 +122,27 @@ public class InputReader : MonoBehaviour
                 else if (x < 0 && y < 0) newInput = MovementInputResult.DownLeft;
                 else newInput = MovementInputResult.DownRight;
             }
+            //else find the correct standard input 
             else if (Mathf.Abs(x) > threshold)
             {
-              
-                newInput = (x > 0) ? MovementInputResult.Right : MovementInputResult.Left;
+                //switch if the player is facing the opposite  direction 
+                if (!player.Reversed)
+                {
+                    newInput = (x > 0)  ? MovementInputResult.Foward : MovementInputResult.Backward;
+
+                }
+                else
+                {
+                    newInput = (x > 0)  ? MovementInputResult.Backward : MovementInputResult.Foward;
+
+                }
+
             }
             else if(Mathf.Abs(y) > threshold)
             {
-                // Vertical
                 newInput = (y > 0) ? MovementInputResult.Up : MovementInputResult.Down;
             }
-
+            //Input the new input detected 
             StartCoroutine(AddMovementInput(newInput,Time.frameCount));
         }
 }

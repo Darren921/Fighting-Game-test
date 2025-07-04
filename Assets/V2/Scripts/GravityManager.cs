@@ -17,11 +17,6 @@ public class GravityManager : MonoBehaviour
   {
       var grounded = Physics.Raycast(player.transform.position, -player.transform.up, out raycastHit,
           player.raycastDistance, groundLayerMask);
-
-      if (raycastHit.collider is not  null)
-      {
-        // print(raycastHit.collider.gameObject.name);
-      }
       return grounded;
    }
 

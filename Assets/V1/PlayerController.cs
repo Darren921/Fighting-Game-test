@@ -76,8 +76,9 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     
     public void InitializePlayer(InputDevice device)
     {
-
+        //Setup all player controls (note if players > inputs, players aren't set up)
         controls = new Controls();
+        //creates a new set of controls for the chosen device 
         controls.devices = new[] { device };
         m_Player = controls.Player;
         m_Player.Move.performed += OnMove; 
@@ -87,7 +88,6 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         m_Player.Run.canceled += OnRun;
         m_Player.BackDash.performed += OnBackDash;
         m_Player.BackDash.canceled += OnBackDash;
-
         m_Player.Enable();
         SetUpCharacterVariables();
     }
@@ -160,6 +160,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     public void OnRun(InputAction.CallbackContext context)
     {
+        //Activates running, stops walking 
         if (!context.performed) return;
         IsRunning = true;
         IsWalking = false;
@@ -170,11 +171,12 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     public void OnBackDash(InputAction.CallbackContext context)
     {
         if (!context.performed ) return;
-        isBackDashing = true;
+        // isBackDashing = true;
     }
 
     private InputReader.AttackInputResult ReturnAttackType(float attackVal)
     {
+        //depending on the attacks scale number, (check controls and the attacks scale #) returns the corresponding attack 
         var attackValAsInt = (int) attackVal;
 //        print(attackValAsInt);
         var attackResult = attackValAsInt switch

@@ -10,18 +10,19 @@ public class PlayerCrouchingState : PlayerBaseState
     internal override void UpdateState(PlayerStateManager playerStateManager,PlayerController player)
     {
     
+        // swap states 
         if (player.playerMove is { y: 0, x: 0 })
         {
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Neutral);
         }
-
-        if (!player.isCrouching && player.playerMove.x != 0)
+        
+        if (!player.isCrouching && player.IsWalking)
         {
             Debug.Log("Switched to Move state (C.S)");
-            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Moving);
+            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Walking);
         }
 
-        if (player.isCrouching && player.playerMove.x != 0)
+        else if (player.isCrouching && player.playerMove.x != 0)
         {
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.CrouchMove);
         }

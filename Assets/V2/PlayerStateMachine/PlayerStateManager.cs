@@ -7,7 +7,8 @@ public class PlayerStateManager : MonoBehaviour
         Neutral,
         Crouching,
         Jumping,
-        Moving,
+        Walking,
+        Running,
         Attack,
         CrouchMove,
         Dash
@@ -17,18 +18,20 @@ public class PlayerStateManager : MonoBehaviour
     public string CurrentStateName => currentState?.GetType().Name; 
     [SerializeReference] internal PlayerBaseState currentState;
     [SerializeReference] internal PlayerBaseState previousState;
-    internal  PlayerController player;
+    PlayerController player;
    
 
 
    void Awake()
    {
+       //This dictionary makes it that each state is available and not duped 
     _states = new ()
     {
         { PlayerStateType.Neutral, new PlayerNeutralState() },
         { PlayerStateType.Crouching, new PlayerCrouchingState() },
         { PlayerStateType.Jumping, new PlayerJumpingState() },
-        { PlayerStateType.Moving, new PlayerMovingState() },
+        { PlayerStateType.Walking, new PlayerWalkingState() },
+        { PlayerStateType.Running, new PlayerRunningState()}, /////
         { PlayerStateType.Attack, new PlayerAttackState() },
         { PlayerStateType.CrouchMove , new PlayerCrouchMoveState()},
         { PlayerStateType.Dash , new PlayerDashState() }
