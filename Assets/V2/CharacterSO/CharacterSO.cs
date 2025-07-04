@@ -6,6 +6,6 @@ public class CharacterSO : ScriptableObject
     public int health;
     public int walkSpeed;
     public int runSpeed;
-    public int jumpHeight;
-    public int gravScale;
+    public float jumpHeight;
+    public float gravScale;
 }
