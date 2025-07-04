@@ -23,9 +23,13 @@ public class PlayerNeutralState : PlayerBaseState
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Attack);
         }
         
-        if (player.playerMove !=  Vector3.zero)
+        if (player.IsWalking)
         {
-            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Moving);
+            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Walking);
+        }
+        if (player.IsRunning)
+        {
+            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Running);
         }
 
         if (player.isBackDashing)
@@ -37,6 +41,7 @@ public class PlayerNeutralState : PlayerBaseState
      
     private IEnumerator CheckIfIdle(PlayerController player)
     {
+        //Idle state starts animations (TBA)
         yield return new WaitForSeconds(1f);
         Debug.Log("Idle");
         player.animator.SetBool(Neutral,true);

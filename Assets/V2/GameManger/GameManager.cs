@@ -13,9 +13,13 @@ public class GameManager : MonoBehaviour
     private List<InputDevice> availableDevices = new ();
 
     private int minDistance = 1;
+   
+    public static Dictionary<PlayerController, InputDevice > deviceIndex = new();
 
+ 
     private void Awake()
     {
+        // temp method to add devices to a pool in order to connect them to a player 
         foreach (var device in InputSystem.devices.Where(device => device is Gamepad or Keyboard))
         {
             availableDevices.Add(device);
@@ -43,6 +47,13 @@ public class GameManager : MonoBehaviour
 
     private void onConnect()
     {
+        
+        //var input1 = deviceIndex.GetValueOrDefault(players[0]);
+        //players[0].InitializePlayer(input1);
+        //var input2 = deviceIndex.GetValueOrDefault(players[1]);
+        //players[1].InitializePlayer(input2);
+        
+        //temp method to give a player controls depending on device connected first 
         for (var i = 0; i < players.Length; i++)
         {
             if (i < availableDevices.Count)
@@ -74,7 +85,8 @@ public class GameManager : MonoBehaviour
 
         private void checkIfReversed()
         {
-            float distance = Mathf.Abs(players[0].transform.position.x - players[1].transform.position.x);
+            //depending on the distance between players, and if they are grounded, reverse (flip) the player 
+            var distance = Mathf.Abs(players[0].transform.position.x - players[1].transform.position.x);
 
             if (distance < minDistance)
                 return;
@@ -96,13 +108,11 @@ public class GameManager : MonoBehaviour
 
         private void UpdatePlayerDirection(PlayerController player)
         {
-            if (player.isGrounded )
-            {
-                var targetYRotation = player.Reversed ? 180f : 0f;
-                var rotation = player.transform.eulerAngles;
-                rotation.y = targetYRotation;
-                player.transform.eulerAngles = rotation;
-            }
-          
+            if (!player.isGrounded) return;
+            var targetYRotation = player.Reversed ? 180f : 0f;
+            var rotation = player.transform.eulerAngles;
+            rotation.y = targetYRotation;
+            player.transform.eulerAngles = rotation;
+
         }
 }
