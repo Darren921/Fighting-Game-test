@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerNeutralState : PlayerBaseState
 {
-    private static readonly int Neutral = Animator.StringToHash("Neutral");
+   
     private Coroutine idleCoroutine;
 
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player )
@@ -27,7 +27,7 @@ public class PlayerNeutralState : PlayerBaseState
         {
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Walking);
         }
-        if (player.IsRunning)
+        if (player.IsRunning && player.playerMove != Vector3.zero)
         {
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Running);
         }
@@ -37,16 +37,22 @@ public class PlayerNeutralState : PlayerBaseState
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Dash);
         }
 
+        if (player.playerMove is { y: > 0, x: 0 })
+        {
+            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Jumping);
+        }
+        if (player.playerMove is { y: < 0, x: 0 })
+        {
+            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Jumping);
+        }
     }
      
     private IEnumerator CheckIfIdle(PlayerController player)
     {
         //Idle state starts animations (TBA)
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(3f);
         Debug.Log("Idle");
-        player.animator.SetBool(Neutral,true);
-        player.IsRunning = false;
-        player.IsWalking = false;
+        player.animator.SetBool(player.Idle,true);
     } 
 
     internal override void FixedUpdateState(PlayerStateManager playerStateManager,PlayerController player)
@@ -66,10 +72,10 @@ public class PlayerNeutralState : PlayerBaseState
         {
             player.StopCoroutine(idleCoroutine);
             idleCoroutine = null;
-            player.animator.SetBool(Neutral,false);
+            player.animator.SetBool(player.Idle,false);
 
         }
 
-        Debug.Log("Exit PlayerNeutralState");
+//        Debug.Log("Exit PlayerNeutralState");
     }
 }

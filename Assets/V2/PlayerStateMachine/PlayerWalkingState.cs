@@ -7,7 +7,7 @@ public class PlayerWalkingState : PlayerMovingState
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
         //switch states 
-        if (player.playerMove == Vector3.zero) playerStateManager.SwitchToLastState();
+        if (player.playerMove == Vector3.zero) playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Neutral);
 
         if (player.playerMove.x != 0 && player.isCrouching) playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.CrouchMove);
         

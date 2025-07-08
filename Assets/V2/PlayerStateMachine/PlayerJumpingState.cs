@@ -26,7 +26,7 @@ public class PlayerJumpingState : PlayerBaseState
 
         }
         // Toggling animation 
-        switch (player.isGrounded)
+        switch (player.isGrounded )
         {
             case true:
                 player.animator.SetBool(player.Jump, false);

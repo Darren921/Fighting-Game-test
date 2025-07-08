@@ -16,9 +16,4 @@ public class PlayerCrouchMoveState : PlayerMovingState
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Neutral);
         else if (player.isCrouching && (player.playerMove.x != 0 && player.IsAttacking)) playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Attack);
     }
-    
-    
-    
-
-   
 }

@@ -4,19 +4,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 {
     #region Animator Hashed variables
     public   int Attacking => Animator.StringToHash("Attacking");
     public int Light => Animator.StringToHash("Light");
-    public int Medium => Animator.StringToHash("Med");
-    public int Move = Animator.StringToHash("Move");
+    public int Medium => Animator.StringToHash("Medium");
+    public int Walking = Animator.StringToHash("Walking");
+    public int Running = Animator.StringToHash("Running");
     public int Left = Animator.StringToHash("Left");
     public  int Right = Animator.StringToHash("Right");
     public int Airborne = Animator.StringToHash("Airborne");
     public  int Crouch = Animator.StringToHash("Crouching");
     public  int Jump = Animator.StringToHash("Jumping");
+    public  int Idle = Animator.StringToHash("Idle");
     #endregion
    
     #region Class references
@@ -99,7 +102,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         WalkSpeed = characterData.walkSpeed;
         RunSpeed =  characterData.runSpeed;
     }
-    
+
+   
     void OnDisable() => m_Player.Disable();
     public void SetAttacking()
     {
@@ -123,27 +127,27 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         isGrounded = gravityManager.CheckifGrounded(this);
         animator.SetBool(Airborne, !isGrounded);
         animator.SetBool(Crouch, isCrouching);
-        animator.SetBool(Move, playerMove.x != 0);
+        animator.SetBool(Walking, IsWalking);
+        animator.SetBool(Running, IsRunning);
+        print(IsRunning);
         isCrouching = playerMove.y < 0;
 
     }
     
     public void OnMove(InputAction.CallbackContext context)
     {
-      
+        print("Move called");
         playerMove = context.ReadValue<Vector3>();
 
         //Turns off running and walking when player releases context or player stops 
-        if (context.canceled || playerMove.x == 0)
-        {
-            IsWalking = false;
-            IsRunning = false;
-            return;
-        }
         //default till running begins
-        if (!IsRunning)
+        if (!IsRunning && playerMove != Vector3.zero)
         {
             IsWalking = true;
+        }
+        else if (playerMove == Vector3.zero)
+        {
+            IsWalking = false;
         }
      
     }
@@ -160,11 +164,24 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     public void OnRun(InputAction.CallbackContext context)
     {
-        //Activates running, stops walking 
-        if (!context.performed) return;
-        IsRunning = true;
-        IsWalking = false;
-
+        if (context.performed)
+        {
+            IsRunning = true;
+            IsWalking = false;
+        }
+        if (context.canceled && rb.linearVelocity.x != 0 && playerMove.x != 0 )
+        {
+            IsWalking = true;
+            print(playerMove.x);
+        }
+        if (context.canceled || playerMove.x == 0)
+        {
+            IsRunning = false;
+        }
+       
+       
+        
+        
 
     }
 

@@ -45,25 +45,26 @@ public class PlayerAttackState : PlayerBaseState
                 break;
         }
     }
-  
+
 
     private void Medium(PlayerController player, InputReader.MovementInputResult move)
     {
         // Set the attack animation, and if players isn't in animation, select the correct attack based on movement
-        player.animator.SetBool(player.Medium,true);
+        player.animator.SetBool(player.Medium, true);
         if (player.animator.IsInTransition(0)) return;
         switch (move)
         {
-            case InputReader.MovementInputResult.Backward:
+            case InputReader.MovementInputResult.Backward or InputReader.MovementInputResult.UpRight
+                or InputReader.MovementInputResult.DownRight:
                 player.animator.SetBool(player.Right, true);
                 break;
-            case InputReader.MovementInputResult.Foward:
+            case InputReader.MovementInputResult.Foward or InputReader.MovementInputResult.UpLeft
+                or InputReader.MovementInputResult.DownLeft:
                 player.animator.SetBool(player.Left, true);
                 break;
             case InputReader.MovementInputResult.None:
                 break;
         }
-
     }
     
     private void Heavy(PlayerController player, InputReader.MovementInputResult move)
@@ -110,6 +111,11 @@ public class PlayerAttackState : PlayerBaseState
             Debug.Log("going to moving");
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Walking);
         }
+        else if(player.isCrouching && !player.IsAttacking)
+        {
+            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Crouching);
+
+        }
 
         
 
@@ -120,10 +126,7 @@ public class PlayerAttackState : PlayerBaseState
     
     internal override void FixedUpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
-        if (!player.isGrounded)
-        {
-            player.gravityManager.ApplyGravity(player);
-        }
+      
     }
 
     internal override void ExitState(PlayerStateManager playerStateManager, PlayerController player)

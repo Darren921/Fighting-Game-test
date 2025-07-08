@@ -41,7 +41,7 @@ public abstract class PlayerMovingState : PlayerBaseState
 
     internal override void ExitState(PlayerStateManager playerStateManager, PlayerController player)
     {
-        // player.rb.linearVelocity = Vector3.zero;
+      //   player.rb.linearVelocity = Vector3.zero;
         _smoothedMoveVelocity = Vector3.zero;
         _smoothedMoveDir = Vector3.zero;
 

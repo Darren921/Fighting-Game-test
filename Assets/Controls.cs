@@ -115,7 +115,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""id"": ""388614fa-6664-4fc4-99be-1e7e23edc97b"",
                     ""expectedControlType"": """",
                     ""processors"": """",
-                    ""interactions"": ""MultiTap(tapTime=0.3,tapDelay=0.2,tapCount=1)"",
+                    ""interactions"": ""MultiTapAndHold"",
                     ""initialStateCheck"": true
                 },
                 {
