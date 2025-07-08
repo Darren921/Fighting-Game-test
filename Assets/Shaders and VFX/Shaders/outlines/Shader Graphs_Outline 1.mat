@@ -39,10 +39,10 @@ Material:
     m_Ints: []
     m_Floats:
     - _Boolean: 0
-    - _Colour_Threshold: 0.14
-    - _Normal_Threshold: 0.74
+    - _Colour_Threshold: 0.32
+    - _Normal_Threshold: 0.18
     - _OVERLAY: 1
     m_Colors:
-    - _OutlineColour: {r: 0, g: 0, b: 0, a: 0}
+    - _OutlineColour: {r: 0.5, g: 0.5, b: 0.5, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
