@@ -815,7 +815,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f1743014679bc0499174aa45e187372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Move: 1326225478
+  Walking: 1744665739
+  Running: -526601997
+  Left: -631945130
+  Right: 1963678224
+  Airborne: -910879650
+  Crouch: -2032366093
+  Jump: 1137391654
+  Idle: 2081823275
   characterData: {fileID: 11400000, guid: 56c510574c45cff42bccd06bc0328275, type: 2}
 --- !u!114 &185236209
 MonoBehaviour:
@@ -844,6 +851,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentState:
+    rid: -2
+  previousState:
     rid: -2
   references:
     version: 2
@@ -3797,7 +3806,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9336e53aff41cd24baee4c3481f1e5d1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.26
+      value: 1.08
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9336e53aff41cd24baee4c3481f1e5d1, type: 3}
       propertyPath: m_LocalPosition.y

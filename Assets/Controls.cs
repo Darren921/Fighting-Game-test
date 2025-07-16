@@ -386,7 +386,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""3c3c138c-9c39-4c89-998b-b65583c9e93a"",
                     ""path"": ""<Keyboard>/d"",
-                    ""interactions"": ""MultiTap(tapTime=0.2,tapDelay=0.75,pressPoint=0.5)"",
+                    ""interactions"": ""MultiTap(tapTime=0.2,tapDelay=0.3,pressPoint=0.5)"",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""BackDash"",
