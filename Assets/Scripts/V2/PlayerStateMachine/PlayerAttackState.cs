@@ -11,11 +11,11 @@ public class PlayerAttackState : PlayerBaseState
     private Dictionary<( InputReader.MovementInputResult, InputReader.AttackInputResult), InputReader.AttackInputResult> attackMoveActions = new()
     {
             { (InputReader.MovementInputResult.None,InputReader.AttackInputResult.Light), InputReader.AttackInputResult.Light },
-            { (InputReader.MovementInputResult.Foward,InputReader.AttackInputResult.Light), InputReader.AttackInputResult.LightLeft },
+            { (InputReader.MovementInputResult.Forward,InputReader.AttackInputResult.Light), InputReader.AttackInputResult.LightLeft },
             { (InputReader.MovementInputResult.Backward,InputReader.AttackInputResult.Light), InputReader.AttackInputResult.LightLeft },
 
             { ( InputReader.MovementInputResult.None,InputReader.AttackInputResult.Medium), InputReader.AttackInputResult.Medium },
-            { (InputReader.MovementInputResult.Foward,InputReader.AttackInputResult.Medium), InputReader.AttackInputResult.MediumLeft },
+            { (InputReader.MovementInputResult.Forward,InputReader.AttackInputResult.Medium), InputReader.AttackInputResult.MediumLeft },
             { (InputReader.MovementInputResult.Backward,InputReader.AttackInputResult.Medium), InputReader.AttackInputResult.MediumRight },
 
             { ( InputReader.MovementInputResult.None,InputReader.AttackInputResult.Heavy), InputReader.AttackInputResult.Heavy },
@@ -43,7 +43,7 @@ public class PlayerAttackState : PlayerBaseState
             case InputReader.MovementInputResult.Backward or InputReader.MovementInputResult.UpRight or InputReader.MovementInputResult.DownRight:
                 player.animator.SetBool(player.Right, true);
                 break; 
-            case InputReader.MovementInputResult.Foward or InputReader.MovementInputResult.UpLeft or InputReader.MovementInputResult.DownLeft:
+            case InputReader.MovementInputResult.Forward or InputReader.MovementInputResult.UpLeft or InputReader.MovementInputResult.DownLeft:
                 player.animator.SetBool(player.Left, true);
                 break;
             case InputReader.MovementInputResult.None:
@@ -69,7 +69,7 @@ public class PlayerAttackState : PlayerBaseState
                 or InputReader.MovementInputResult.DownRight:
                 player.animator.SetBool(player.Right, true);
                 break;
-            case InputReader.MovementInputResult.Foward or InputReader.MovementInputResult.UpLeft
+            case InputReader.MovementInputResult.Forward or InputReader.MovementInputResult.UpLeft
                 or InputReader.MovementInputResult.DownLeft:
                 player.animator.SetBool(player.Left, true);
                 break;

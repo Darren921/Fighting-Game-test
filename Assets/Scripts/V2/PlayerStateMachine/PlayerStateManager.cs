@@ -16,7 +16,6 @@ public class PlayerStateManager : MonoBehaviour
 
     private  Dictionary<PlayerStateType, PlayerBaseState> _states;
     public string CurrentStateName => currentState?.GetType().Name; 
-    public string previousStateName =>  _states[PlayerStateType.Neutral].ToString(); 
 
     [SerializeReference] internal PlayerBaseState currentState;
     [SerializeReference] internal PlayerBaseState previousState;

@@ -31,14 +31,15 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     [SerializeField] private CharacterSO characterData;
     internal Animator animator;
     internal GravityManager gravityManager;
+    internal Collider playerCollider;
     #endregion
    
     private Coroutine AttackCheck; 
+
     public Vector3 playerMove {get; private set;}
     internal bool isGrounded;
     internal bool isCrouching;
-    internal Collider playerCollider;
-    internal bool isBackDashing;
+    internal bool Dashing;
   [SerializeField]  internal Transform raycastPos;
     #region Attack Check Variables  
     public bool IsAttacking{get; private set;}
@@ -67,6 +68,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     internal float gravScale; // (Hold for now )  character data affects gravity 5 
     internal  float velocity;
     internal Rigidbody rb;
+    internal InputReader.MovementInputResult DashDir;
 
     #endregion
 
@@ -93,8 +95,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         m_Player.Attack.performed += OnAttack;
         m_Player.Run.performed += OnRun;
         m_Player.Run.canceled += OnRun;
-        m_Player.BackDash.performed += OnBackDash;
-        m_Player.BackDash.canceled += OnBackDash;
+        m_Player.Dash.performed += OnDash;
+
         m_Player.Enable();
         SetUpCharacterVariables();
     }
@@ -135,6 +137,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         animator.SetBool(Running, IsRunning);
 //        print(IsRunning);
         isCrouching = playerMove.y < 0;
+      
     }
     
     public void OnMove(InputAction.CallbackContext context)
@@ -152,7 +155,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         {
             IsWalking = false;
         }
-     
+
     }
     
     public void OnAttack(InputAction.CallbackContext context)
@@ -171,37 +174,47 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     public void OnRun(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed  )
         {
             IsRunning = true;
-            IsWalking = false;
+            IsWalking = false;  
         }
-        if (context.canceled   && playerMove.x != 0)
+      
+        if (context.canceled  && playerMove.x != 0)
         {
+            IsRunning = false;
             IsWalking = true;
         }
-        if (context.canceled || playerMove.x == 0)
+        if (context.canceled || playerMove.x == 0 || Dashing )
         {
             IsRunning = false;
         }
-       
-       
+        
         
         
 
     }
 
-    public void OnBackDash(InputAction.CallbackContext context)
+    public void OnDash(InputAction.CallbackContext context)
     {
-        if (!context.performed ) return;
-        isBackDashing = true;
+        Dashing = true;
+        IsRunning = false;
+        IsWalking = false;
+        DashDir = ReturnDashDir();
     }
 
+    private InputReader.MovementInputResult ReturnDashDir()
+    {
+        //depending on the dash scale number, (check controls and the attacks scale #) returns the direction
+        var dashDir = InputReader.currentMoveInput;
+        print(dashDir);
+        return dashDir ;
+    }
     private InputReader.AttackInputResult ReturnAttackType(float attackVal)
     {
         //depending on the attacks scale number, (check controls and the attacks scale #) returns the corresponding attack 
         var attackValAsInt = (int) attackVal;
-//        print(attackValAsInt);
+        print(attackValAsInt);
         var attackResult = attackValAsInt switch
         {
             1 => InputReader.AttackInputResult.Light,

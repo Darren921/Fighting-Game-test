@@ -13,7 +13,7 @@ public class PlayerWalkingState : PlayerMovingState
         
         if (player.IsAttacking && !player.onCoolDown) playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Attack);
         
-        if (player.IsRunning) playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Running);
+        if (player.IsRunning &&  !player.Dashing ) playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Running);
 
         switch (player.playerMove.y)
         {

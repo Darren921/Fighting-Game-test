@@ -11,7 +11,7 @@ public class InputReader : MonoBehaviour
         None,
         Up,
         Down,
-        Foward,
+        Forward,
         Backward,
         UpLeft,
         UpRight,
@@ -50,6 +50,7 @@ public class InputReader : MonoBehaviour
         //updates current move input and removes past ones in 3 frames 
         if(currentMoveInput == result) yield break;
         currentMoveInput = result;
+//        print(result.ToString());
         MovementinputsVisual.Add(result);
         frameCount = ReturnCurrentFrame(frameCount);
         yield return new WaitUntil(() => Time.frameCount - frameCount > 3);
@@ -94,20 +95,13 @@ public class InputReader : MonoBehaviour
         {
             //Adding None when inputs are not active 
             if(!player.IsAttacking && currentAttackInput != AttackInputResult.None) StartCoroutine(AddAttackInput(AttackInputResult.None, Time.frameCount));
+            if(player.playerMove == Vector3.zero && currentMoveInput != MovementInputResult.None) StartCoroutine(AddMovementInput(MovementInputResult.None, Time.frameCount));
         }
 
-        private void CheckMovementInput()
+        public void CheckMovementInput()
         {
             //checking the movement inputted 
             var  playerInput = new Vector2(player.playerMove.x, player.playerMove.y);
-
-            if (playerInput.magnitude < 0.1f)
-            {
-                StartCoroutine(AddMovementInput(MovementInputResult.None, Time.frameCount));
-                return;
-            }
-            
-
             var x = playerInput.x;
             var y = playerInput.y;
             var threshold = 0.5f;
@@ -128,12 +122,12 @@ public class InputReader : MonoBehaviour
                 //switch if the player is facing the opposite  direction 
                 if (!player.Reversed)
                 {
-                    newInput = (x > 0)  ? MovementInputResult.Foward : MovementInputResult.Backward;
+                    newInput = (x > 0)  ? MovementInputResult.Forward : MovementInputResult.Backward;
 
                 }
                 else
                 {
-                    newInput = (x > 0)  ? MovementInputResult.Backward : MovementInputResult.Foward;
+                    newInput = (x > 0)  ? MovementInputResult.Backward : MovementInputResult.Forward;
 
                 }
 

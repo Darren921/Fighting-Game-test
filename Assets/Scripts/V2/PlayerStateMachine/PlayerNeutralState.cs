@@ -22,28 +22,29 @@ public class PlayerNeutralState : PlayerBaseState
         {
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Attack);
         }
-        
-        if (player.IsWalking)
+        else if (player.Dashing )
+        {
+            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Dash);
+        }
+        else if (player.IsWalking)
         {
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Walking);
         }
-        if (player.IsRunning && player.playerMove != Vector3.zero)
+       
+        else if (player.IsRunning  && !player.Dashing)
         {
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Running);
         }
 
-        if (player.isBackDashing && !player.IsRunning)
-        {
-            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Dash);
-        }
+        
 
-        if (player.playerMove is { y: > 0, x: 0 })
+        else if (player.playerMove is { y: > 0, x: 0 })
         {
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Jumping);
         }
-        if (player.playerMove is { y: < 0, x: 0 })
+        else if (player.playerMove is { y: < 0, x: 0 })
         {
-            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Jumping);
+            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Crouching);
         }
     }
      
