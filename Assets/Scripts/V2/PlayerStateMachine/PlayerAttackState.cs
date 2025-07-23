@@ -22,8 +22,11 @@ public class PlayerAttackState : PlayerBaseState
 
     };
     
-    private Coroutine cooldownCoroutine;
     
+    private Coroutine cooldownCoroutine;
+    private InputReader.AttackInputResult lastAttack;
+    private InputReader.MovementInputResult lastMove;
+
     
     internal override void EnterState(PlayerStateManager playerStateManager,PlayerController player)
     {
@@ -33,6 +36,10 @@ public class PlayerAttackState : PlayerBaseState
            }
 
            cooldownCoroutine = player.StartCoroutine(EnforceCooldown(player));
+           
+           lastMove = player.InputReader.currentMoveInput;
+           lastAttack = player.InputReader.currentAttackInput;
+           Debug.Log(lastAttack);
     }
     private void Light(PlayerController player, InputReader.MovementInputResult move)
     {           
@@ -54,7 +61,7 @@ public class PlayerAttackState : PlayerBaseState
     private IEnumerator EnforceCooldown(PlayerController player)
     {
         player.onCoolDown = true;
-        yield return new WaitUntil(() => player.animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
+        yield return new WaitUntil(() => player.animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f && player.IsAttacking == false);
         player.onCoolDown = false;
         
     }
@@ -94,24 +101,23 @@ public class PlayerAttackState : PlayerBaseState
         player.isGrounded = player.gravityManager.CheckifGrounded(player);
         
         player.animator.SetBool(player.Airborne, !player.isGrounded);
-        var inputReader = player.InputReader;
-        //grab the last inputs given 
-        var lastMove = inputReader.currentMoveInput;
-        var lastAttack = inputReader.currentAttackInput;
-       
+    
         // choose attack based on input and any movement detected 
-        switch (lastAttack)
+        if (player.IsAttacking)
         {
-            case InputReader.AttackInputResult.Light:
-                Light(player,lastMove);
-                break;
-            case InputReader.AttackInputResult.Medium:
-                Medium(player,lastMove);
-                break;
-            case InputReader.AttackInputResult.Heavy:
-                break;
+            switch (lastAttack)
+            {
+                case InputReader.AttackInputResult.Light:
+                    Light(player,lastMove);
+                    break;
+                case InputReader.AttackInputResult.Medium:
+                    Medium(player,lastMove);
+                    break;
+                case InputReader.AttackInputResult.Heavy:
+                    break;
+            }
+
         }
-        
         // State swapping 
         if (!player.isGrounded) return;
         if(player.playerMove == Vector3.zero && !player.IsAttacking)
@@ -144,8 +150,6 @@ public class PlayerAttackState : PlayerBaseState
 
     internal override void ExitState(PlayerStateManager playerStateManager, PlayerController player)
     {
-          player.StopCoroutine(EnforceCooldown(player));
-
-
+        
     }
 }
