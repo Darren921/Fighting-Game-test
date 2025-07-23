@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -34,47 +35,62 @@ public class InputReader : MonoBehaviour
     PlayerController player;
   public  MovementInputResult currentMoveInput { get; private set; }
   public  AttackInputResult currentAttackInput  { get; private set; }
-   [SerializeField] internal List<MovementInputResult> MovementinputsVisual = new List<MovementInputResult>();
-   [SerializeField] internal List<AttackInputResult> AttackinputsVisual = new List<AttackInputResult>();
-
-
-
-
-    public float ReturnCurrentFrame(float currentFrame)
-    {
-        return Time.frameCount - currentFrame;
-    }
   
-    public IEnumerator AddMovementInput(MovementInputResult result, float frameCount)
+  public Queue<bufferedInput<MovementInputResult>> movementBuffer = new ();
+  public Queue<bufferedInput<AttackInputResult>> attackBuffer = new();
+
+  private float bufferTime;
+  
+   [SerializeField] internal List<string> movementinputsVisual = new();
+   [SerializeField] internal List<string> AttackinputsVisual = new ();
+
+  
+
+   private int bufferCap;
+
+  public struct bufferedInput<T>
+   {
+       public T input;
+       public int curFrame;
+
+       public bufferedInput(T input, int curFrame)
+       {
+           this.input = input;
+           this.curFrame = curFrame;
+       }
+
+     
+   }
+
+   public void AddInput<T>(T input,Queue<bufferedInput<T>> inputBuffer) where T : struct 
+   {
+       var frame = Time.frameCount;
+       if (inputBuffer.Count < bufferCap)
+       {
+           inputBuffer.Enqueue(new bufferedInput<T>(input, frame));
+       }
+   }
+    /*public void AddMovementInput(MovementInputResult result)
     {
-        //updates current move input and removes past ones in 3 frames 
-        if(currentMoveInput == result) yield break;
-        currentMoveInput = result;
-//        print(result.ToString());
-        MovementinputsVisual.Add(result);
-        frameCount = ReturnCurrentFrame(frameCount);
-        yield return new WaitUntil(() => Time.frameCount - frameCount > 3);
-       MovementinputsVisual.Remove(result);
+      var frame = Time.frameCount;
+      
+      if(movementBuffer.Count < bufferCap)
+        movementBuffer.Enqueue(new bufferedInput<MovementInputResult>(result, frame));
       
     }
-    public IEnumerator AddAttackInput(AttackInputResult result, float frameCount)
+    public void AddAttackInput(AttackInputResult result)
     {
-        //updates current attack input and removes past ones in 3 frames 
-
-        if(currentAttackInput == result) yield break;
-        currentAttackInput = result;
-        AttackinputsVisual.Add(result);
-      print(result.ToString());
-        frameCount = ReturnCurrentFrame(frameCount);
-        yield return new WaitUntil(() => Time.frameCount - frameCount > 3);
-        AttackinputsVisual.Remove(result);    
-    }
+        var frame = Time.frameCount;
+        if(attackBuffer.Count < bufferCap)
+            attackBuffer.Enqueue(new bufferedInput<AttackInputResult>(result, frame));
+    }*/
 
 
     private void Awake()
     {
         player = GetComponent<PlayerController>();
-        
+        bufferTime = 3.5f;
+        bufferCap = 10;
     }
 
 
@@ -87,16 +103,39 @@ public class InputReader : MonoBehaviour
 
         private void Update()
         {
-            CheckAttackInput();
             CheckMovementInput();
+            UpdateInputBuffers();
         }
 
-        private void CheckAttackInput()
+        private void UpdateInputBuffers()
         {
-            //Adding None when inputs are not active 
-            if(!player.IsAttacking && currentAttackInput != AttackInputResult.None) StartCoroutine(AddAttackInput(AttackInputResult.None, Time.frameCount));
-            if(player.playerMove == Vector3.zero && currentMoveInput != MovementInputResult.None) StartCoroutine(AddMovementInput(MovementInputResult.None, Time.frameCount));
+            var  curFrame = Time.frameCount;
+            if (movementBuffer.Count > 0 && curFrame - movementBuffer.Peek().curFrame > bufferTime )
+            {
+                movementBuffer.Dequeue();
+            }
+
+            if (attackBuffer.Count > 0 &&  curFrame - attackBuffer.Peek().curFrame > bufferTime)
+            {
+                attackBuffer.Dequeue();
+            }
+            currentMoveInput = movementBuffer.Count > 0 ? movementBuffer.Peek().input : MovementInputResult.None;
+            currentAttackInput = attackBuffer.Count > 0 ? attackBuffer.Peek().input : AttackInputResult.None;
+
+            // movementinputsVisual.Clear();
+            // foreach (var input in movementBuffer)
+            // {
+            //     movementinputsVisual.Add($"{input.input} (F{input.curFrame})");
+            // }
+            //
+           //  AttackinputsVisual.Clear();
+           // foreach (var input in attackBuffer)
+           //  {
+           //       AttackinputsVisual.Add($"{input.input} (F{input.curFrame})");
+           //  }
         }
+
+
 
         public void CheckMovementInput()
         {
@@ -137,7 +176,7 @@ public class InputReader : MonoBehaviour
                 newInput = (y > 0) ? MovementInputResult.Up : MovementInputResult.Down;
             }
             //Input the new input detected 
-            StartCoroutine(AddMovementInput(newInput,Time.frameCount));
+            AddInput(newInput,movementBuffer);
         }
 }
 

@@ -90,12 +90,12 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         //creates a new set of controls for the chosen device 
         controls.devices = new[] { device };
         m_Player = controls.Player;
+        m_Player.Dash.performed += OnDash;
         m_Player.Move.performed += OnMove; 
         m_Player.Move.canceled += OnMove;
         m_Player.Attack.performed += OnAttack;
         m_Player.Run.performed += OnRun;
         m_Player.Run.canceled += OnRun;
-        m_Player.Dash.performed += OnDash;
 
         m_Player.Enable();
         SetUpCharacterVariables();
@@ -157,30 +157,31 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         }
 
     }
-    
+
     public void OnAttack(InputAction.CallbackContext context)
     {
+        print("Entered Attack");
 //        print("Attacking");
-        if (onCoolDown) return;
+
+        var attackVal = ReturnAttackType(context.ReadValue<float>());
+        InputReader.AddInput(attackVal,InputReader.attackBuffer);
+        if (onCoolDown || IsAttacking ) return;
         IsAttacking = true;
         animator.SetBool(Attacking, true);
         //convert and passes input to attack type for the input reader 
-        var attackVal = ReturnAttackType(context.ReadValue<float>());
-       
-        AttackCheck = StartCoroutine(InputReader.AddAttackInput(attackVal, Time.frameCount));
      //   print(AttackCheck);
         print(attackVal);
     }
 
     public void OnRun(InputAction.CallbackContext context)
     {
-        if (context.performed  )
+        if (context.performed && !Dashing  )
         {
             IsRunning = true;
             IsWalking = false;  
         }
       
-        if (context.canceled  && playerMove.x != 0)
+        if (context.canceled  && playerMove.x != 0 || InputReader.currentMoveInput != InputReader.MovementInputResult.Forward)
         {
             IsRunning = false;
             IsWalking = true;
@@ -197,19 +198,13 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     public void OnDash(InputAction.CallbackContext context)
     {
+        var dashdir = InputReader.currentMoveInput;
         Dashing = true;
         IsRunning = false;
         IsWalking = false;
-        DashDir = ReturnDashDir();
+        DashDir = dashdir;
     }
-
-    private InputReader.MovementInputResult ReturnDashDir()
-    {
-        //depending on the dash scale number, (check controls and the attacks scale #) returns the direction
-        var dashDir = InputReader.currentMoveInput;
-        print(dashDir);
-        return dashDir ;
-    }
+    
     private InputReader.AttackInputResult ReturnAttackType(float attackVal)
     {
         //depending on the attacks scale number, (check controls and the attacks scale #) returns the corresponding attack 
@@ -220,7 +215,6 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
             1 => InputReader.AttackInputResult.Light,
             2 => InputReader.AttackInputResult.Medium,
             3 => InputReader.AttackInputResult.Heavy,
-            _ => InputReader.AttackInputResult.None
         };
 
         return attackResult ;

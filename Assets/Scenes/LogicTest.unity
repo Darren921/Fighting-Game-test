@@ -211,7 +211,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 30312806}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.1945821, y: -0.00051441893, z: 0.00010204721, w: 0.9808861}
+  m_LocalRotation: {x: 0.19458203, y: -0.0009313998, z: 0.00018476529, w: 0.9808858}
   m_LocalPosition: {x: -11.257526, y: 11.775619, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -360,8 +360,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a36ba01377b4db49953ec8b144526b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MovementinputsVisual: 
-  AttackinputsVisual: 
+  movementinputsVisual: []
+  AttackinputsVisual: []
 --- !u!114 &129694265
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -494,8 +494,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a36ba01377b4db49953ec8b144526b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MovementinputsVisual: 
-  AttackinputsVisual: 
+  movementinputsVisual: []
+  AttackinputsVisual: []
 --- !u!114 &258787199
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -621,8 +621,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.19458209, y: -0.00051441893, z: 0.000102047234, w: 0.9808861}
-  m_LocalPosition: {x: -11.226505, y: 12.874304, z: -12.619887}
+  m_LocalRotation: {x: 0.19458203, y: -0.00093139976, z: 0.0001847653, w: 0.9808858}
+  m_LocalPosition: {x: -11.222287, y: 10.997937, z: -8.076406}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -835,7 +835,7 @@ GameObject:
   m_Component:
   - component: {fileID: 418530176}
   m_Layer: 0
-  m_Name: Player1
+  m_Name: Player1Parent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -922,7 +922,7 @@ GameObject:
   m_Component:
   - component: {fileID: 482439806}
   m_Layer: 0
-  m_Name: Player2
+  m_Name: Player2Parent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3809,7 +3809,7 @@ GameObject:
   - component: {fileID: 129694261}
   - component: {fileID: 129694260}
   m_Layer: 3
-  m_Name: GRN_body (1)
+  m_Name: Player2
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3832,7 +3832,7 @@ GameObject:
   - component: {fileID: 258787195}
   - component: {fileID: 258787194}
   m_Layer: 3
-  m_Name: GRN_body
+  m_Name: Player1
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
