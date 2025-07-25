@@ -9,7 +9,6 @@ public class PlayerStateManagerInspector : Editor
         DrawDefaultInspector();
     
         var manager = (PlayerStateManager)target;
-        var player = manager.GetComponent<PlayerController>();
     
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Current State", manager.CurrentStateName, EditorStyles.boldLabel);

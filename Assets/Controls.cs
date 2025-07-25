@@ -115,7 +115,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""id"": ""388614fa-6664-4fc4-99be-1e7e23edc97b"",
                     ""expectedControlType"": """",
                     ""processors"": """",
-                    ""interactions"": ""MultiTapAndHold"",
+                    ""interactions"": ""MultiTapAndHold(duration=0.2,pressPoint=0.3)"",
                     ""initialStateCheck"": true
                 },
                 {
@@ -124,7 +124,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""id"": ""562915e8-8d77-42e5-8653-2860691d6610"",
                     ""expectedControlType"": """",
                     ""processors"": """",
-                    ""interactions"": ""MultiTap(tapTime=0.3,tapDelay=0.4,pressPoint=0.5)"",
+                    ""interactions"": ""MultiTap(tapTime=0.4,tapDelay=0.4,pressPoint=0.3)"",
                     ""initialStateCheck"": true
                 }
             ],
@@ -373,6 +373,17 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""c083b34e-1218-4732-8486-93218cd8632b"",
+                    ""path"": ""<Gamepad>/leftStick/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Run"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""28daeca8-fb0c-4c0b-935b-d1e220dae397"",
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
@@ -406,17 +417,6 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""c083b34e-1218-4732-8486-93218cd8632b"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Run"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""f9211306-928c-46c7-9c71-63ffe8cb1e15"",
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
@@ -443,7 +443,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/leftStick/left"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Gamepad"",
                     ""action"": ""Dash"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -454,7 +454,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/leftStick/right"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Gamepad"",
                     ""action"": ""Dash"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -976,230 +976,6 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
-        },
-        {
-            ""name"": ""Storage"",
-            ""id"": ""6642ded6-d440-40c4-b393-6a5c0761fdd8"",
-            ""actions"": [
-                {
-                    ""name"": ""MoveX"",
-                    ""type"": ""Button"",
-                    ""id"": ""02d1852e-6d5f-4f33-b788-f555499b90d6"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""MoveY"",
-                    ""type"": ""Button"",
-                    ""id"": ""0d1c53b6-1310-4f5c-9a40-65638cbca1e1"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                }
-            ],
-            ""bindings"": [
-                {
-                    ""name"": ""1D Axis"",
-                    ""id"": ""746db409-2d11-44d7-a8a5-e887a3f1ee2b"",
-                    ""path"": ""1DAxis"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""MoveX"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""negative"",
-                    ""id"": ""125edaac-3361-47ef-890f-c10df123d90f"",
-                    ""path"": ""<Keyboard>/a"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""MoveX"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""positive"",
-                    ""id"": ""b397d1ab-a3fd-47b8-83c9-f5a9b4c65b61"",
-                    ""path"": ""<Keyboard>/d"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""MoveX"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""1D Axis"",
-                    ""id"": ""bb97597d-e510-4062-af8b-578d9d7d37a4"",
-                    ""path"": ""1DAxis"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""MoveX"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""negative"",
-                    ""id"": ""6145462d-a1f9-4cc3-be63-3f47cf8b5ccc"",
-                    ""path"": ""<Gamepad>/leftStick/left"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""MoveX"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""positive"",
-                    ""id"": ""77be31e0-e1c8-4dc1-9384-c2e3805bc5b8"",
-                    ""path"": ""<Gamepad>/leftStick/right"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""MoveX"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""1D Axis"",
-                    ""id"": ""4dc48214-4696-408b-bc05-0e15bb47a966"",
-                    ""path"": ""1DAxis"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""MoveX"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""negative"",
-                    ""id"": ""3212d950-a0e5-4b66-8e63-787e7b7a087b"",
-                    ""path"": ""<Gamepad>/dpad/left"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""MoveX"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""positive"",
-                    ""id"": ""449bf402-c111-4feb-9c98-fda9ce5785e0"",
-                    ""path"": ""<Gamepad>/dpad/right"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""MoveX"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""1D Axis"",
-                    ""id"": ""9c1c5ba1-dd24-466f-892a-8208ed3fd418"",
-                    ""path"": ""1DAxis"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""MoveY"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""negative"",
-                    ""id"": ""797562f0-ea34-4115-b157-90a93ba49775"",
-                    ""path"": ""<Keyboard>/s"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""MoveY"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""positive"",
-                    ""id"": ""b34027c7-5f9c-4caa-a955-3f4912284ba0"",
-                    ""path"": ""<Keyboard>/w"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""MoveY"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""1D Axis"",
-                    ""id"": ""76b09a25-ed9b-4cd9-af90-bdf8cf2e3bd0"",
-                    ""path"": ""1DAxis"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""MoveY"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""negative"",
-                    ""id"": ""efdae10b-d355-4ace-a418-71e03f8b9e35"",
-                    ""path"": ""<Gamepad>/leftStick/down"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""MoveY"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""positive"",
-                    ""id"": ""e1a4b85f-f185-4ceb-ad79-09a7ce1fdeb6"",
-                    ""path"": ""<Gamepad>/leftStick/up"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""MoveY"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""1D Axis"",
-                    ""id"": ""df835e35-44a0-4b62-9259-f56d6239b618"",
-                    ""path"": ""1DAxis"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""MoveY"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""negative"",
-                    ""id"": ""d93fb98c-adf7-43af-aa72-e459dc7f6900"",
-                    ""path"": ""<Gamepad>/dpad/down"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""MoveY"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""positive"",
-                    ""id"": ""6a8b61fc-eaad-4a35-a6a2-9deb8118cba0"",
-                    ""path"": ""<Gamepad>/dpad/up"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""MoveY"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                }
-            ]
         }
     ],
     ""controlSchemes"": [
@@ -1283,17 +1059,12 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         m_UI_ScrollWheel = m_UI.FindAction("ScrollWheel", throwIfNotFound: true);
         m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
-        // Storage
-        m_Storage = asset.FindActionMap("Storage", throwIfNotFound: true);
-        m_Storage_MoveX = m_Storage.FindAction("MoveX", throwIfNotFound: true);
-        m_Storage_MoveY = m_Storage.FindAction("MoveY", throwIfNotFound: true);
     }
 
     ~@Controls()
     {
         UnityEngine.Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, Controls.Player.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, Controls.UI.Disable() has not been called.");
-        UnityEngine.Debug.Assert(!m_Storage.enabled, "This will cause a leak and performance issues, Controls.Storage.Disable() has not been called.");
     }
 
     /// <summary>
@@ -1689,113 +1460,6 @@ public partial class @Controls: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="UIActions" /> instance referencing this action map.
     /// </summary>
     public UIActions @UI => new UIActions(this);
-
-    // Storage
-    private readonly InputActionMap m_Storage;
-    private List<IStorageActions> m_StorageActionsCallbackInterfaces = new List<IStorageActions>();
-    private readonly InputAction m_Storage_MoveX;
-    private readonly InputAction m_Storage_MoveY;
-    /// <summary>
-    /// Provides access to input actions defined in input action map "Storage".
-    /// </summary>
-    public struct StorageActions
-    {
-        private @Controls m_Wrapper;
-
-        /// <summary>
-        /// Construct a new instance of the input action map wrapper class.
-        /// </summary>
-        public StorageActions(@Controls wrapper) { m_Wrapper = wrapper; }
-        /// <summary>
-        /// Provides access to the underlying input action "Storage/MoveX".
-        /// </summary>
-        public InputAction @MoveX => m_Wrapper.m_Storage_MoveX;
-        /// <summary>
-        /// Provides access to the underlying input action "Storage/MoveY".
-        /// </summary>
-        public InputAction @MoveY => m_Wrapper.m_Storage_MoveY;
-        /// <summary>
-        /// Provides access to the underlying input action map instance.
-        /// </summary>
-        public InputActionMap Get() { return m_Wrapper.m_Storage; }
-        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
-        public void Enable() { Get().Enable(); }
-        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
-        public void Disable() { Get().Disable(); }
-        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
-        public bool enabled => Get().enabled;
-        /// <summary>
-        /// Implicitly converts an <see ref="StorageActions" /> to an <see ref="InputActionMap" /> instance.
-        /// </summary>
-        public static implicit operator InputActionMap(StorageActions set) { return set.Get(); }
-        /// <summary>
-        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
-        /// </summary>
-        /// <param name="instance">Callback instance.</param>
-        /// <remarks>
-        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
-        /// </remarks>
-        /// <seealso cref="StorageActions" />
-        public void AddCallbacks(IStorageActions instance)
-        {
-            if (instance == null || m_Wrapper.m_StorageActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_StorageActionsCallbackInterfaces.Add(instance);
-            @MoveX.started += instance.OnMoveX;
-            @MoveX.performed += instance.OnMoveX;
-            @MoveX.canceled += instance.OnMoveX;
-            @MoveY.started += instance.OnMoveY;
-            @MoveY.performed += instance.OnMoveY;
-            @MoveY.canceled += instance.OnMoveY;
-        }
-
-        /// <summary>
-        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
-        /// </summary>
-        /// <remarks>
-        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
-        /// </remarks>
-        /// <seealso cref="StorageActions" />
-        private void UnregisterCallbacks(IStorageActions instance)
-        {
-            @MoveX.started -= instance.OnMoveX;
-            @MoveX.performed -= instance.OnMoveX;
-            @MoveX.canceled -= instance.OnMoveX;
-            @MoveY.started -= instance.OnMoveY;
-            @MoveY.performed -= instance.OnMoveY;
-            @MoveY.canceled -= instance.OnMoveY;
-        }
-
-        /// <summary>
-        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="StorageActions.UnregisterCallbacks(IStorageActions)" />.
-        /// </summary>
-        /// <seealso cref="StorageActions.UnregisterCallbacks(IStorageActions)" />
-        public void RemoveCallbacks(IStorageActions instance)
-        {
-            if (m_Wrapper.m_StorageActionsCallbackInterfaces.Remove(instance))
-                UnregisterCallbacks(instance);
-        }
-
-        /// <summary>
-        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
-        /// </summary>
-        /// <remarks>
-        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
-        /// </remarks>
-        /// <seealso cref="StorageActions.AddCallbacks(IStorageActions)" />
-        /// <seealso cref="StorageActions.RemoveCallbacks(IStorageActions)" />
-        /// <seealso cref="StorageActions.UnregisterCallbacks(IStorageActions)" />
-        public void SetCallbacks(IStorageActions instance)
-        {
-            foreach (var item in m_Wrapper.m_StorageActionsCallbackInterfaces)
-                UnregisterCallbacks(item);
-            m_Wrapper.m_StorageActionsCallbackInterfaces.Clear();
-            AddCallbacks(instance);
-        }
-    }
-    /// <summary>
-    /// Provides a new <see cref="StorageActions" /> instance referencing this action map.
-    /// </summary>
-    public StorageActions @Storage => new StorageActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     /// <summary>
     /// Provides access to the input control scheme.
@@ -1974,27 +1638,5 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
-    }
-    /// <summary>
-    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Storage" which allows adding and removing callbacks.
-    /// </summary>
-    /// <seealso cref="StorageActions.AddCallbacks(IStorageActions)" />
-    /// <seealso cref="StorageActions.RemoveCallbacks(IStorageActions)" />
-    public interface IStorageActions
-    {
-        /// <summary>
-        /// Method invoked when associated input action "MoveX" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnMoveX(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "MoveY" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnMoveY(InputAction.CallbackContext context);
     }
 }

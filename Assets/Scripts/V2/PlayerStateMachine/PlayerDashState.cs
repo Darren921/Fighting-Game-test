@@ -3,9 +3,11 @@ using UnityEngine;
 
 public class PlayerDashState : PlayerBaseState
 {
+    private InputReader.MovementInputResult dir;
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player)
     {
       Debug.Log("PlayerDashState EnterState");
+         dir  = player.DashDir;
 
     }
 
@@ -13,7 +15,6 @@ public class PlayerDashState : PlayerBaseState
     {
    
         //grab the last inputs given 
-        var dir  = player.DashDir;
         var newDashVelo = Vector3.zero;
         if (dir == InputReader.MovementInputResult.Forward)
         {
@@ -24,7 +25,6 @@ public class PlayerDashState : PlayerBaseState
             newDashVelo =  !player.Reversed ? new Vector3(-10, 0, 0 ) : new Vector3(10, 0, 0);
         }
          
-        Debug.Log(newDashVelo);
         player.rb.linearVelocity = newDashVelo * 2;
         if (player.playerMove.x == 0) playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Neutral);
         if (player.playerMove.x > 0) playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Walking);
@@ -41,5 +41,6 @@ public class PlayerDashState : PlayerBaseState
     internal override void ExitState(PlayerStateManager playerStateManager, PlayerController player)
     {
         player.Dashing = false;
+
     }
 }

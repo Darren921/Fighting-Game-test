@@ -89,7 +89,7 @@ public class InputReader : MonoBehaviour
     private void Awake()
     {
         player = GetComponent<PlayerController>();
-        bufferTime = 3.5f;
+        bufferTime = 4f;
         bufferCap = 10;
     }
 
@@ -122,11 +122,11 @@ public class InputReader : MonoBehaviour
             currentMoveInput = movementBuffer.Count > 0 ? movementBuffer.Peek().input : MovementInputResult.None;
             currentAttackInput = attackBuffer.Count > 0 ? attackBuffer.Peek().input : AttackInputResult.None;
 
-            // movementinputsVisual.Clear();
-            // foreach (var input in movementBuffer)
-            // {
-            //     movementinputsVisual.Add($"{input.input} (F{input.curFrame})");
-            // }
+            movementinputsVisual.Clear();
+            foreach (var input in movementBuffer)
+            {
+                movementinputsVisual.Add($"{input.input} (F{input.curFrame})");
+           }
             //
            //  AttackinputsVisual.Clear();
            // foreach (var input in attackBuffer)

@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
  
     private void Start()
     {
+    //    Time.timeScale = 0.1f;
         // temp method to add devices to a pool in order to connect them to a player 
         foreach (var device in InputSystem.devices.Where(device => device is Gamepad or Keyboard))
         {

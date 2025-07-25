@@ -15,6 +15,7 @@ public class PlayerJumpingState : PlayerBaseState
     {
        collider = player.GetComponent<Collider>();
        player.animator.SetBool(player.Jump, true);
+       player.IsRunning = false;
     }
 
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
@@ -34,25 +35,45 @@ public class PlayerJumpingState : PlayerBaseState
             case false:
                 player.animator.SetBool(player.Jump, true);
                 break;
-        } 
+        }
+
+        if (!player.isGrounded)
+        {
+            if ( player.IsAttacking)
+            {
+                playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Attack);
+            }
+        }
+        else
+        {
+            if (player.playerMove.y == 0)
+            {
+                if (player.playerMove == Vector3.zero)
+                    playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Neutral);
+                else if (player.IsWalking && player.playerMove.y == 0)
+                    playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Walking);
+            }
+            else if ( player.playerMove.y < 0)
+            {
+                playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Crouching);
+            }
+
+            if ( player.InputReader.currentMoveInput == InputReader.MovementInputResult.Backward)
+            {
+                    playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Walking);
+            }
+            else if(player.InputReader.currentMoveInput == InputReader.MovementInputResult.Forward)
+            { playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Running);
+                
+            }
+        }
+           
+            
         
         //Transitioning states 
-        if (!player.isGrounded && player.IsAttacking)
-        {
-            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Attack);
-        }
         
-        if (player.isGrounded && player.playerMove.y == 0)
-        {
-            if (player.playerMove == Vector3.zero)
-                playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Neutral);
-            else if (player.IsWalking && player.playerMove.y == 0)
-                playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Walking);
-        }
-        else if (player.isGrounded && player.playerMove.y < 0)
-        {
-            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Crouching);
-        }
+
+     
     }
 
     private void TryJump(PlayerController player)

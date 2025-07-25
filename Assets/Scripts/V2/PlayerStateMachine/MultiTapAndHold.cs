@@ -8,17 +8,17 @@ using UnityEditor;
 #endif
 public class MultiTapAndHold : IInputInteraction
 {
-    //Above this value a tap is pressed
-    public float pressPoint = 0.4f;
-
-    //Below this value a tap is released
-    public float releasePoint = 0.2f;
-
-    //Number of taps to perform the multi tap
+    [Tooltip("Number of taps to perform the multi tap")]
     public float multiTapCount=2;
-
-    //"Time in sceonds to complete your multi tap before the action is canceled
+    
+    [Tooltip("Below this value a tap is released")]
+    public float releasePoint = 0.2f;
+    
+    [Tooltip("Time in seconds to complete your multi tap before the action is canceled")]
     public float duration = 0.5f;
+
+    [Tooltip("Above this value a tap is pressed")]
+    public float pressPoint = 0.4f;
 
     float tapCounter;
 
@@ -61,7 +61,7 @@ public class MultiTapAndHold : IInputInteraction
                 if (!context.ControlIsActuated())
                 {
                     context.Canceled();
-                    Debug.Log("Cancelled actuated ");
+//                    Debug.Log("Cancelled actuated ");
                 }
                 if(!context.ControlIsActuated(releasePoint))
                 {

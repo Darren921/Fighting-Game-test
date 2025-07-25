@@ -22,6 +22,21 @@ public class PlayerRunningState : PlayerMovingState
             
         }
 
+        if(player.Dashing) return;
+        if (player.InputReader.currentMoveInput == InputReader.MovementInputResult.Backward && player.isGrounded)
+        {
+            player.IsRunning = false;
+            player.IsWalking = true;
+            playerStateManager.SwitchToLastState();
+        }
+        else if (player.InputReader.currentMoveInput == InputReader.MovementInputResult.Backward && !player.isGrounded)
+        {
+            player.IsRunning = false;
+            player.IsWalking = true;
+            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Walking);
+        }
+
+
         if (player.playerMove.x != 0 && player.isCrouching) playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.CrouchMove);
         
         if (player.IsAttacking) playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Attack);
@@ -42,6 +57,6 @@ public class PlayerRunningState : PlayerMovingState
     internal override void ExitState(PlayerStateManager playerStateManager, PlayerController player)
     {
 
-        Debug.Log(player.rb.linearVelocity);
+//        Debug.Log(player.rb.linearVelocity);
     }
 }
