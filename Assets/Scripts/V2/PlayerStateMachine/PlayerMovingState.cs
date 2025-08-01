@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [System.Serializable]
@@ -16,7 +17,6 @@ public abstract class PlayerMovingState : PlayerBaseState
 
     internal override void FixedUpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
-        //set movement direction and apply velocity 
         setMoveDir(new Vector2(player.playerMove.x, 0));
         smoothMovement();
         applyVelocity(player);
@@ -24,9 +24,11 @@ public abstract class PlayerMovingState : PlayerBaseState
 
     protected void applyVelocity(PlayerController player)
     {
-        //change speed based on state 
         var velocity = new Vector3(_smoothedMoveDir.x * moveSpeed, player.rb.linearVelocity.y);
-        player.rb.linearVelocity = velocity;    
+        if (Mathf.Abs(velocity.x) > 0.01f)
+        {
+            player.rb.linearVelocity = velocity;    
+        }
     }
 
     protected void smoothMovement()

@@ -60,9 +60,9 @@ public class PlayerAttackState : PlayerBaseState
 
     private IEnumerator EnforceCooldown(PlayerController player)
     {
-        player.onCoolDown = true;
+        player.onAttackCoolDown = true;
         yield return new WaitUntil(() => player.animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f && player.IsAttacking == false);
-        player.onCoolDown = false;
+        player.onAttackCoolDown = false;
         
     }
 
@@ -96,7 +96,7 @@ public class PlayerAttackState : PlayerBaseState
 
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
-        if (player.animator.IsInTransition(0) && player.onCoolDown ) return;
+        if (player.animator.IsInTransition(0) && player.onAttackCoolDown ) return;
 
         player.isGrounded = player.gravityManager.CheckifGrounded(player);
         

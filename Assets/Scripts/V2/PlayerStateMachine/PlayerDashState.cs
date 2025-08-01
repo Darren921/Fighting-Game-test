@@ -1,46 +1,76 @@
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerDashState : PlayerBaseState
 {
     private InputReader.MovementInputResult dir;
+    private Vector3 dashDir;
+    private Vector3 newDashVelo;
+    private float dashTime = 0.1f;
+    private float dashDistance = 1.5f;
+    private bool isDashing;
+    private float jumpVelocity;
+    private Coroutine dashCoroutine;
+
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player)
     {
+        dir  = player.DashDir;
+        player.rb.linearVelocity = Vector3.zero;
       Debug.Log("PlayerDashState EnterState");
-         dir  = player.DashDir;
-
+      switch (dir)
+      {
+          case InputReader.MovementInputResult.Forward:
+              dashDir =  !player.Reversed ? new Vector3(1, 0, 0 ) : new Vector3(-1, 0, 0);
+              jumpVelocity = 0;
+              break;
+          case InputReader.MovementInputResult.Backward:
+              dashDir =  !player.Reversed ? new Vector3(-1, 0f, 0 ) : new Vector3(1, 0f, 0);
+              jumpVelocity = 4 ;
+              break;
+      }
+      
+      newDashVelo = dashDir * (dashDistance / dashTime);
+      Debug.Log(newDashVelo);
+      dashCoroutine =  player.StartCoroutine(Dash(player));
     }
+
+    private IEnumerator Dash(PlayerController player)
+    {
+        Debug.Log("PlayerDashState Dash");
+        isDashing = true;
+        player.rb.linearVelocity = new Vector3(newDashVelo.x, jumpVelocity, 0);
+        yield return new WaitForSeconds(dashTime);
+        isDashing = false;
+    }
+
 
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
    
         //grab the last inputs given 
-        var newDashVelo = Vector3.zero;
-        if (dir == InputReader.MovementInputResult.Forward)
-        {
-         newDashVelo =  !player.Reversed ? new Vector3(10, 0, 0 ) : new Vector3(-10, 0, 0);
-        }
-        else if (dir == InputReader.MovementInputResult.Backward)
-        {
-            newDashVelo =  !player.Reversed ? new Vector3(-10, 0, 0 ) : new Vector3(10, 0, 0);
-        }
-         
-        player.rb.linearVelocity = newDashVelo * 2;
+
+  
+        if(isDashing) return;
         if (player.playerMove.x == 0) playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Neutral);
-        if (player.playerMove.x > 0) playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Walking);
-        if (player.isCrouching) playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Crouching);
-        if (player.isGrounded && player.playerMove.y > 0) playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Jumping);
+        
         
     }
 
     internal override void FixedUpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
-        
+       
     }
 
     internal override void ExitState(PlayerStateManager playerStateManager, PlayerController player)
     {
+        if (dashCoroutine != null)
+        {
+            player.StopCoroutine(dashCoroutine);
+            dashCoroutine = null;
+        }
         player.Dashing = false;
-
+        
+        Debug.Log("PlayerDashState ExitState");
     }
 }

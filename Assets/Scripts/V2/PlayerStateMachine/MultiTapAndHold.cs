@@ -21,6 +21,7 @@ public class MultiTapAndHold : IInputInteraction
     public float pressPoint = 0.4f;
 
     float tapCounter;
+    private float holdTime;
 
 
     static MultiTapAndHold()
@@ -49,8 +50,10 @@ public class MultiTapAndHold : IInputInteraction
             case InputActionPhase.Started:
                 if (context.ControlIsActuated(pressPoint))
                 {
+                    holdTime += Time.deltaTime;
+                    Debug.Log(holdTime);
                     tapCounter++;
-                    if (tapCounter >= multiTapCount)
+                    if (tapCounter >= multiTapCount && holdTime <= 0.0257)
                     {
                         context.PerformedAndStayPerformed();
                     }
@@ -80,5 +83,6 @@ public class MultiTapAndHold : IInputInteraction
     public void Reset()
     {
         tapCounter = 0;
+        holdTime = 0;
     }
 }

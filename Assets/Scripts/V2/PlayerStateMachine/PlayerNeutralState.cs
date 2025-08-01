@@ -12,13 +12,13 @@ public class PlayerNeutralState : PlayerBaseState
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player )
     {
         idleCoroutine = player.StartCoroutine(CheckIfIdle(player));
-      
+        player.rb.linearVelocity = Vector3.zero;
     }
 
     internal override void UpdateState(PlayerStateManager playerStateManager,PlayerController player)
     {
 
-        if (player.IsAttacking && !player.onCoolDown)
+        if (player.IsAttacking && !player.onAttackCoolDown)
         {
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Attack);
         }
@@ -35,11 +35,10 @@ public class PlayerNeutralState : PlayerBaseState
         {
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Running);
         }
-
         
-
         else if (player.playerMove is { y: > 0, x: 0 })
         {
+            Debug.Log("player Jumping");
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Jumping);
         }
         else if (player.playerMove is { y: < 0, x: 0 })
@@ -62,7 +61,7 @@ public class PlayerNeutralState : PlayerBaseState
         {
             player.gravityManager.ApplyGravity(player);
             
-            player.rb.linearVelocity  = new Vector3(player.rb.linearVelocity.x,player.gravityManager.GetVelocity(),0);
+            player.rb.linearVelocity  = new Vector3(player.rb.linearVelocity.x,player.gravityManager.GetVelocity() * 0.25f,0);
         }
       
     }

@@ -11,11 +11,11 @@ public class PlayerWalkingState : PlayerMovingState
 
         if (player.playerMove.x != 0 && player.isCrouching) playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.CrouchMove);
         
-        if (player.IsAttacking && !player.onCoolDown) playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Attack);
+        if (player.IsAttacking && !player.onAttackCoolDown) playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Attack);
 
         if (player.Dashing)
         {
-            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Dash);
+       //     playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Dash);
         }
         if (player.IsRunning &&  !player.Dashing ) playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Running);
 

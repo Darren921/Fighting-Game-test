@@ -36,6 +36,8 @@ public class InputReader : MonoBehaviour
   public  MovementInputResult currentMoveInput { get; private set; }
   public  AttackInputResult currentAttackInput  { get; private set; }
   
+  public  MovementInputResult LastValidMovementInput { get; private set; }
+
   public Queue<bufferedInput<MovementInputResult>> movementBuffer = new ();
   public Queue<bufferedInput<AttackInputResult>> attackBuffer = new();
 
@@ -43,7 +45,7 @@ public class InputReader : MonoBehaviour
   
    [SerializeField] internal List<string> movementinputsVisual = new();
    [SerializeField] internal List<string> AttackinputsVisual = new ();
-
+  
   
 
    private int bufferCap;
@@ -62,20 +64,29 @@ public class InputReader : MonoBehaviour
      
    }
 
-   public void AddInput<T>(T input,Queue<bufferedInput<T>> inputBuffer) where T : struct 
+   /*public void AddInput<T>(T input,Queue<bufferedInput<T>> inputBuffer) where T : struct 
    {
        var frame = Time.frameCount;
        if (inputBuffer.Count < bufferCap)
        {
+           if(input.GetType() == typeof(MovementInputResult))
+           {
+              
+           }
            inputBuffer.Enqueue(new bufferedInput<T>(input, frame));
        }
-   }
-    /*public void AddMovementInput(MovementInputResult result)
+   }*/
+    public void AddMovementInput(MovementInputResult result)
     {
       var frame = Time.frameCount;
       
+      if (result != MovementInputResult.None)
+      {
+          LastValidMovementInput = result;
+      }
       if(movementBuffer.Count < bufferCap)
         movementBuffer.Enqueue(new bufferedInput<MovementInputResult>(result, frame));
+     
       
     }
     public void AddAttackInput(AttackInputResult result)
@@ -83,7 +94,7 @@ public class InputReader : MonoBehaviour
         var frame = Time.frameCount;
         if(attackBuffer.Count < bufferCap)
             attackBuffer.Enqueue(new bufferedInput<AttackInputResult>(result, frame));
-    }*/
+    }
 
 
     private void Awake()
@@ -176,7 +187,8 @@ public class InputReader : MonoBehaviour
                 newInput = (y > 0) ? MovementInputResult.Up : MovementInputResult.Down;
             }
             //Input the new input detected 
-            AddInput(newInput,movementBuffer);
+          //  AddInput(newInput,movementBuffer);
+           AddMovementInput(newInput);
         }
 }
 

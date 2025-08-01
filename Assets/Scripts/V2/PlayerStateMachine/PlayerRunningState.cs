@@ -8,9 +8,9 @@ public class PlayerRunningState : PlayerMovingState
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player)
     {
         base.EnterState(playerStateManager, player);
-        player.rb.linearVelocity = Vector3.zero;
-        _smoothedMoveDir = Vector3.zero;
-        _smoothedMoveVelocity = Vector3.zero;
+        // player.rb.linearVelocity = Vector3.zero;
+        // _smoothedMoveDir = Vector3.zero;
+        // _smoothedMoveVelocity = Vector3.zero;
     }
 
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
@@ -22,7 +22,6 @@ public class PlayerRunningState : PlayerMovingState
             
         }
 
-        if(player.Dashing) return;
         if (player.InputReader.currentMoveInput == InputReader.MovementInputResult.Backward && player.isGrounded)
         {
             player.IsRunning = false;
