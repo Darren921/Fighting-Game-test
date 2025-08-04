@@ -7,8 +7,8 @@ public class PlayerDashState : PlayerBaseState
     private InputReader.MovementInputResult dir;
     private Vector3 dashDir;
     private Vector3 newDashVelo;
-    private float dashTime = 0.1f;
-    private float dashDistance = 1.5f;
+    private float dashTime = 0.3f;
+    private float dashDistance = 3f;
     private bool isDashing;
     private float jumpVelocity;
     private Coroutine dashCoroutine;
@@ -20,19 +20,19 @@ public class PlayerDashState : PlayerBaseState
       Debug.Log("PlayerDashState EnterState");
       switch (dir)
       {
-          case InputReader.MovementInputResult.Forward:
-              dashDir =  !player.Reversed ? new Vector3(1, 0, 0 ) : new Vector3(-1, 0, 0);
+          case InputReader.MovementInputResult.None or  InputReader.MovementInputResult.Forward:
+              dashDir =  !player.Reversed ? new Vector3(2, 0, 0 ) : new Vector3(-1, 0, 0);
               jumpVelocity = 0;
               break;
           case InputReader.MovementInputResult.Backward:
-              dashDir =  !player.Reversed ? new Vector3(-1, 0f, 0 ) : new Vector3(1, 0f, 0);
-              jumpVelocity = 4 ;
+              dashDir =  !player.Reversed ? new Vector3(-1, 0f, 0 ) : new Vector3(2, 0f, 0);
+              jumpVelocity = 3 ;
               break;
       }
       
       newDashVelo = dashDir * (dashDistance / dashTime);
-      Debug.Log(newDashVelo);
-      dashCoroutine =  player.StartCoroutine(Dash(player));
+//      Debug.Log(newDashVelo);
+      player.StartCoroutine(Dash(player));
     }
 
     private IEnumerator Dash(PlayerController player)
@@ -42,6 +42,8 @@ public class PlayerDashState : PlayerBaseState
         player.rb.linearVelocity = new Vector3(newDashVelo.x, jumpVelocity, 0);
         yield return new WaitForSeconds(dashTime);
         isDashing = false;
+        player.Dashing = false;
+
     }
 
 
@@ -49,12 +51,8 @@ public class PlayerDashState : PlayerBaseState
     {
    
         //grab the last inputs given 
-
-  
-        if(isDashing) return;
+        if(isDashing || player.Dashing) return;
         if (player.playerMove.x == 0) playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Neutral);
-        
-        
     }
 
     internal override void FixedUpdateState(PlayerStateManager playerStateManager, PlayerController player)

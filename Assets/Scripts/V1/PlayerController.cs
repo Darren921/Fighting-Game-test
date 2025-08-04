@@ -80,7 +80,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     internal Rigidbody rb;
     internal InputReader.MovementInputResult DashDir;
     private bool onDashCoolDown;
-
+    
     #endregion
 
     void Awake()
@@ -102,12 +102,12 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         //creates a new set of controls for the chosen device 
         controls.devices = new[] { device };
         m_Player = controls.Player;
-        m_Player.Dash.performed += OnDash;
+        m_Player.RunOrDash.performed += OnRunOrDash;
+        m_Player.RunOrDash.canceled += OnRunOrDash;
         m_Player.Move.performed += OnMove;
         m_Player.Move.canceled += OnMove;
         m_Player.Attack.performed += OnAttack;
-        m_Player.Run.performed += OnRun;
-        m_Player.Run.canceled += OnRun;
+       
 
         m_Player.Enable();
         SetUpCharacterVariables();
@@ -192,10 +192,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         }
     }
 
-    public void OnDashMarco (InputAction.CallbackContext context)
-    {
-        OnDash(context);
-    }
+
     public void OnMove(InputAction.CallbackContext context)
     {
         //     print("Move called");
@@ -229,40 +226,62 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         //   print(AttackCheck);
         print(attackVal);
     }
-    
-    public void OnDash(InputAction.CallbackContext context)
+
+    public void OnDashMacro(InputAction.CallbackContext context)
     {
-        if(IsRunning || Dashing || !isGrounded) return;
-        Dashing = true;
-        print("Entered Dash");
-       // StartCoroutine(EnforceDashCoolDown());
-        DashDir = InputReader.LastValidMovementInput;
-        IsRunning = false;
-        IsWalking = false;
+        throw new NotImplementedException();
     }
 
-    public void OnRun(InputAction.CallbackContext context)
+    public void OnRunOrDash(InputAction.CallbackContext context)
     {
-        if(onDashCoolDown && InputReader.currentMoveInput == InputReader.MovementInputResult.Backward && isGrounded) return;
-        if (context.performed && !Dashing)
+        var contextHold = context.interaction as MultiTapOrHold;
+        
+        if (IsRunning && context.canceled )
         {
-            print("entered run");
-            IsRunning = true;
+            
+            if (playerMove.x != 0)
+            {
+                print("canceled run");
+                IsRunning = false;
+                IsWalking = true;
+            }
+            if ( playerMove.x == 0)
+            {
+                IsRunning = false;
+            }
+            return;
+        }
+        
+        
+        if (contextHold is { holding: true } && context.performed && isGrounded)
+        {
+            if(InputReader.LastValidMovementInput == InputReader.MovementInputResult.Backward)
+            {
+                IsWalking = true;
+                return;
+            }
+          
+            if (!Dashing)
+            {
+                print("entered run");
+                IsRunning = true;
+                IsWalking = false;
+            }
+        }
+        if (!contextHold.holding && context.performed)
+        {
+            if(IsRunning || Dashing || !isGrounded || context.canceled) return;
+            print("entered dash");
+            Dashing = true;
+            // StartCoroutine(EnforceDashCoolDown());
+            DashDir = InputReader.LastValidMovementInput;
+            IsRunning = false;
             IsWalking = false;
         }
-
-        if (context.canceled && playerMove.x != 0)
-        {
-            IsRunning = false;
-            IsWalking = true;
-        }
-
-        if (context.canceled || playerMove.x == 0)
-        {
-            IsRunning = false;
-        }
+        
+      
     }
-
+    
 
     //
     // private IEnumerator EnforceDashCoolDown()

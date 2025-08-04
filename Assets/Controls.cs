@@ -110,21 +110,21 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Run"",
-                    ""type"": ""Button"",
-                    ""id"": ""388614fa-6664-4fc4-99be-1e7e23edc97b"",
+                    ""name"": ""DashMacro"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""23375423-81af-449e-823d-5e5e16ffc24a"",
                     ""expectedControlType"": """",
                     ""processors"": """",
-                    ""interactions"": ""MultiTapAndHold(releasePoint=0.6,duration=0.3,pressPoint=0.7)"",
+                    ""interactions"": """",
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Dash"",
+                    ""name"": ""RunOrDash"",
                     ""type"": ""Button"",
-                    ""id"": ""562915e8-8d77-42e5-8653-2860691d6610"",
+                    ""id"": ""a01182da-0edd-40e3-a1d7-9d54e6f24fd1"",
                     ""expectedControlType"": """",
                     ""processors"": """",
-                    ""interactions"": ""MultiTap(tapTime=0.5,tapDelay=0.3,pressPoint=0.4)"",
+                    ""interactions"": ""MultiTapOrHold(pressPoint=0.5)"",
                     ""initialStateCheck"": true
                 }
             ],
@@ -373,89 +373,34 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""28daeca8-fb0c-4c0b-935b-d1e220dae397"",
+                    ""id"": ""fd405696-1be0-4b60-b780-c7ae8173fa21"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""DashMacro"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e877625c-102b-4802-88b8-a14395b07648"",
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Run"",
+                    ""action"": ""RunOrDash"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""a91ab526-8a4b-464e-b0c8-4e494d90a1b7"",
+                    ""id"": ""06fff161-ef31-4e9f-9904-518f6f5bf0a4"",
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Run"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""c083b34e-1218-4732-8486-93218cd8632b"",
-                    ""path"": ""<Gamepad>/leftStick/left"",
-                    ""interactions"": ""MultiTapAndHold(pressPoint=0.9)"",
-                    ""processors"": ""AxisDeadzone(min=0.2)"",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""Run"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""b9685082-ccac-48aa-a004-4b92be154efe"",
-                    ""path"": ""<Gamepad>/leftStick/right"",
-                    ""interactions"": """",
-                    ""processors"": ""AxisDeadzone(min=0.2,max=0.8)"",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""Run"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""f9211306-928c-46c7-9c71-63ffe8cb1e15"",
-                    ""path"": ""<Keyboard>/a"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Dash"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""3c3c138c-9c39-4c89-998b-b65583c9e93a"",
-                    ""path"": ""<Keyboard>/d"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Dash"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""312ca909-f18a-4a19-bf85-4724ffc6fa6b"",
-                    ""path"": ""<Gamepad>/leftStick/left"",
-                    ""interactions"": ""MultiTap"",
-                    ""processors"": ""AxisDeadzone"",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""Dash"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""e8a906d7-997d-4c12-8866-a1b57f07ffa9"",
-                    ""path"": ""<Gamepad>/leftStick/right"",
-                    ""interactions"": ""MultiTap"",
-                    ""processors"": ""AxisDeadzone"",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""Dash"",
+                    ""action"": ""RunOrDash"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1045,8 +990,8 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
-        m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
-        m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
+        m_Player_DashMacro = m_Player.FindAction("DashMacro", throwIfNotFound: true);
+        m_Player_RunOrDash = m_Player.FindAction("RunOrDash", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1142,8 +1087,8 @@ public partial class @Controls: IInputActionCollection2, IDisposable
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Attack;
-    private readonly InputAction m_Player_Run;
-    private readonly InputAction m_Player_Dash;
+    private readonly InputAction m_Player_DashMacro;
+    private readonly InputAction m_Player_RunOrDash;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -1164,13 +1109,13 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Attack => m_Wrapper.m_Player_Attack;
         /// <summary>
-        /// Provides access to the underlying input action "Player/Run".
+        /// Provides access to the underlying input action "Player/DashMacro".
         /// </summary>
-        public InputAction @Run => m_Wrapper.m_Player_Run;
+        public InputAction @DashMacro => m_Wrapper.m_Player_DashMacro;
         /// <summary>
-        /// Provides access to the underlying input action "Player/Dash".
+        /// Provides access to the underlying input action "Player/RunOrDash".
         /// </summary>
-        public InputAction @Dash => m_Wrapper.m_Player_Dash;
+        public InputAction @RunOrDash => m_Wrapper.m_Player_RunOrDash;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1203,12 +1148,12 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @Attack.started += instance.OnAttack;
             @Attack.performed += instance.OnAttack;
             @Attack.canceled += instance.OnAttack;
-            @Run.started += instance.OnRun;
-            @Run.performed += instance.OnRun;
-            @Run.canceled += instance.OnRun;
-            @Dash.started += instance.OnDash;
-            @Dash.performed += instance.OnDash;
-            @Dash.canceled += instance.OnDash;
+            @DashMacro.started += instance.OnDashMacro;
+            @DashMacro.performed += instance.OnDashMacro;
+            @DashMacro.canceled += instance.OnDashMacro;
+            @RunOrDash.started += instance.OnRunOrDash;
+            @RunOrDash.performed += instance.OnRunOrDash;
+            @RunOrDash.canceled += instance.OnRunOrDash;
         }
 
         /// <summary>
@@ -1226,12 +1171,12 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @Attack.started -= instance.OnAttack;
             @Attack.performed -= instance.OnAttack;
             @Attack.canceled -= instance.OnAttack;
-            @Run.started -= instance.OnRun;
-            @Run.performed -= instance.OnRun;
-            @Run.canceled -= instance.OnRun;
-            @Dash.started -= instance.OnDash;
-            @Dash.performed -= instance.OnDash;
-            @Dash.canceled -= instance.OnDash;
+            @DashMacro.started -= instance.OnDashMacro;
+            @DashMacro.performed -= instance.OnDashMacro;
+            @DashMacro.canceled -= instance.OnDashMacro;
+            @RunOrDash.started -= instance.OnRunOrDash;
+            @RunOrDash.performed -= instance.OnRunOrDash;
+            @RunOrDash.canceled -= instance.OnRunOrDash;
         }
 
         /// <summary>
@@ -1547,19 +1492,19 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnAttack(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Run" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "DashMacro" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnRun(InputAction.CallbackContext context);
+        void OnDashMacro(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Dash" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "RunOrDash" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnDash(InputAction.CallbackContext context);
+        void OnRunOrDash(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

@@ -6,7 +6,7 @@ using UnityEditor;
 #if UNITY_EDITOR
 [InitializeOnLoad]
 #endif
-public class MultiTapAndHold : IInputInteraction
+public class MultiTapOrHold : IInputInteraction
 {
     [Tooltip("Number of taps to perform the multi tap")]
     public float multiTapCount=2;
@@ -22,11 +22,13 @@ public class MultiTapAndHold : IInputInteraction
 
     float tapCounter;
     private float holdTime;
+    internal bool holding;
+    private float currentTime;
 
 
-    static MultiTapAndHold()
+    static MultiTapOrHold()
     {
-        InputSystem.RegisterInteraction<MultiTapAndHold>();
+        InputSystem.RegisterInteraction<MultiTapOrHold>();
     }
     
     public void Process(ref InputInteractionContext context)
@@ -43,37 +45,60 @@ public class MultiTapAndHold : IInputInteraction
                 {
                     tapCounter++;
                     context.Started();
-                    context.SetTimeout(duration + 0.00001f);
+                    context.SetTimeout(duration + 0.00001f); 
+                    currentTime = Time.time;
+                    Debug.Log("waited");
                 }
                 break;
 
             case InputActionPhase.Started:
                 if (context.ControlIsActuated(pressPoint))
                 {
-                    holdTime += Time.deltaTime;
-                    Debug.Log(holdTime);
+                    holdTime = Time.time - currentTime;
+//                    Debug.Log(holdTime);
                     tapCounter++;
-                    if (tapCounter >= multiTapCount && holdTime <= 0.0257)
+                    Debug.Log("started");
+                    if (tapCounter >= multiTapCount && holdTime < 0.189)
                     {
+                        if (holdTime > 0.185 && !holding)
+                        {
+                            context.Canceled();
+                        }
+                        holding = false;
+                        context.Performed();
+                    }
+                    else if (tapCounter >= multiTapCount && holdTime >= 0.189)
+                    {
+                        holding = true;
                         context.PerformedAndStayPerformed();
                     }
                 }
                 break;
 
             case InputActionPhase.Performed:
+                Debug.Log("performed" + holdTime + " seconds");
+
                 if (!context.ControlIsActuated())
                 {
                     context.Canceled();
-//                    Debug.Log("Cancelled actuated ");
+               Debug.Log("Cancelled actuated 1 ");
                 }
                 if(!context.ControlIsActuated(releasePoint))
                 {
                     context.Canceled();
+                    Debug.Log("Cancelled actuated 2");
 
+                }
+
+                if (holdTime > 0.1f && !holding)
+                {
+                    context.Canceled();
+                    Debug.Log("Cancelled actuated 3 ");
                 }
                 break;
 
             case InputActionPhase.Canceled:
+                Debug.Log("canceled");
                 Reset();
                 break;
 
