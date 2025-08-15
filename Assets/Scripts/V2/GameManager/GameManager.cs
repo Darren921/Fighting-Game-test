@@ -17,10 +17,13 @@ public class GameManager : MonoBehaviour
    
     public static Dictionary<PlayerController, InputDevice > deviceIndex = new();
 
- 
+    
     private void Start()
     {
+       
+        hitDetection.OnDeath += OnPlayerDeath;
         Application.targetFrameRate = 60;
+        print(Application.targetFrameRate);
     //    Time.timeScale = 0.1f;
         // temp method to add devices to a pool in order to connect them to a player 
         foreach (var device in InputSystem.devices.Where(device => device is Gamepad or Keyboard))
@@ -42,6 +45,21 @@ public class GameManager : MonoBehaviour
             }
         };
     }
+
+    private void OnPlayerDeath()
+    {
+        foreach (var player in players)
+        {
+            player.animator.enabled = false;
+            player.Hitbox.SetActive(false);
+            if (player.Health <= 0)
+            {
+                player.gameObject.SetActive(false);
+            }
+          
+        }
+    }
+
 
     private void onAdd(InputDevice device)
     {
@@ -79,17 +97,22 @@ public class GameManager : MonoBehaviour
         // Update is called once per frame
         void Update()
         {
-          checkIfReversed();
+          CheckIfReversed();
+          
         }
 
-        private void checkIfReversed()
+       
+
+      
+
+        private void CheckIfReversed()
         {
             //depending on the distance between players, and if they are grounded, reverse (flip) the player 
             var distance = Mathf.Abs(players[0].transform.position.x - players[1].transform.position.x);
 
             if (distance < minDistance)
                 return;
-
+            
             if (players[1].transform.position.x < players[0].transform.position.x)
             {
                 players[0].Reversed = true;

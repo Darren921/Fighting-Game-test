@@ -30,16 +30,16 @@ public class PlayerAttackState : PlayerBaseState
     
     internal override void EnterState(PlayerStateManager playerStateManager,PlayerController player)
     {
+        lastMove = player.InputReader.currentMoveInput;
+        lastAttack = player.InputReader.currentAttackInput;
            if (player.animator.GetBool(player.Idle))
            {
                player.animator.SetBool(player.Idle, false);
            }
-
-           cooldownCoroutine = player.StartCoroutine(EnforceCooldown(player));
-           
-           lastMove = player.InputReader.currentMoveInput;
-           lastAttack = player.InputReader.currentAttackInput;
-           Debug.Log(lastAttack);
+          
+     
+//         Debug.Log(lastMove);
+//        Debug.Log(lastAttack);
     }
     private void Light(PlayerController player, InputReader.MovementInputResult move)
     {           
@@ -96,60 +96,85 @@ public class PlayerAttackState : PlayerBaseState
 
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
-        if (player.animator.IsInTransition(0) && player.onAttackCoolDown ) return;
+        // if (player.animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f && !player.animator.IsInTransition(0) && player.IsAttacking)
+        // {
+        //     player.SetAttacking(); 
+        // }
 
         player.isGrounded = player.gravityManager.CheckifGrounded(player);
-        
+      
         player.animator.SetBool(player.Airborne, !player.isGrounded);
     
         // choose attack based on input and any movement detected 
-        if (player.IsAttacking)
-        {
-            switch (lastAttack)
-            {
-                case InputReader.AttackInputResult.Light:
-                    Light(player,lastMove);
-                    break;
-                case InputReader.AttackInputResult.Medium:
-                    Medium(player,lastMove);
-                    break;
-                case InputReader.AttackInputResult.Heavy:
-                    break;
-            }
 
-        }
-        // State swapping 
-        if (!player.isGrounded) return;
-        if(player.playerMove == Vector3.zero && !player.IsAttacking)
+        if (player.IsAttacking && !player.onAttackCoolDown)
         {
-            Debug.Log("going to neut");
-            playerStateManager.SwitchState( PlayerStateManager.PlayerStateType.Neutral);
+            PerformAttack(player);
         }
-        else if (player.IsWalking && !player.IsAttacking )
+
+        // State swapping 
+        if (!player.isGrounded || player.IsAttacking ) return;
+        playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Neutral);
+        if (player.IsWalking  )
         {
             Debug.Log("going to moving");
-            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Walking);
+            playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Walking);
         }
-        else if(player.isCrouching && !player.IsAttacking)
+        else if(player.isCrouching)
         {
-            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Crouching);
+            playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Crouching);
 
         }
 
+//        Debug.Log(player.gravityManager.GetVelocity());
 
 
 
 
     }
 
-    
+    private void PerformAttack(PlayerController player)
+    {
+        if (player.IsAttacking && !player.onAttackCoolDown)
+        {
+            enforcedCooldown = true;
+            switch (lastAttack )
+            {
+                case InputReader.AttackInputResult.Light:
+                    Light(player,lastMove);
+//                    Debug.Log(lastMove.ToString());
+                    break;
+                case InputReader.AttackInputResult.Medium:
+                    Medium(player,lastMove);
+                    //        Debug.Log(lastMove.ToString());
+                    break;
+                case InputReader.AttackInputResult.Heavy:
+                    break;
+                case InputReader.AttackInputResult.None:
+                    Debug.LogError("Attack dectection Failed ");
+                    break;
+            }
+            cooldownCoroutine = player.StartCoroutine(EnforceCooldown(player));
+        }
+    }
+
+    private bool enforcedCooldown;
+
+
     internal override void FixedUpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
-      
+
+        if (!player.isGrounded && player.transform.localPosition.y > 0.1f)
+        {
+            player.gravityManager.ApplyGravity(player);
+        }
+        player.rb.linearVelocity = new Vector3(player.rb.linearVelocity.x, player.gravityManager.GetVelocity(), 0);
+//        Debug.Log(player.gravityManager.GetVelocity());
+        
     }
 
     internal override void ExitState(PlayerStateManager playerStateManager, PlayerController player)
     {
-        
+        enforcedCooldown = false;
     }
 }

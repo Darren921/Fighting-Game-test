@@ -19,7 +19,7 @@ public class GravityManager : MonoBehaviour
     {
         var grounded = Physics.Raycast(player.raycastPos.position, -player.transform.up, out raycastHit,
             player.raycastDistance, _groundLayerMask);
-//     print(Vector3.Distance(player.raycastPos.position, raycastHit.point)); 
+//       print(Vector3.Distance(player.raycastPos.position, raycastHit.point)); 
         //   print(raycastHit);
         Debug.DrawRay(player.raycastPos.position, -player.transform.up * player.raycastDistance, Color.red);
         return grounded;
@@ -39,7 +39,8 @@ public class GravityManager : MonoBehaviour
 
     public void ApplyGravity(PlayerController player)
     {
-        velocity += Physics.gravity.y * player.gravScale * Time.deltaTime;
+        velocity += Physics.gravity.y   * player.gravScale * Time.fixedDeltaTime;
+//        print("Applying gravity");
     }
 
     public float GetVelocity()
@@ -55,7 +56,7 @@ public class GravityManager : MonoBehaviour
     public float SetJumpVelocity(PlayerController player)
     {
         var targetVelocity = Mathf.Sqrt(player.jumpHeight * -2 * (Physics.gravity.y * player.gravScale));
-        print(player.jumpHeight * -2 * (Physics.gravity.y * player.gravScale));
+//        print(player.jumpHeight * -2 * (Physics.gravity.y * player.gravScale));
         return velocity = targetVelocity;
     }
 }

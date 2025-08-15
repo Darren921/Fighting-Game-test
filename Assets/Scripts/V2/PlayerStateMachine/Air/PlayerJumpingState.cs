@@ -13,7 +13,7 @@ public class PlayerJumpingState : PlayerBaseState
     private float xJumpVal; // check Try jump method for changes 
     private Collider collider;
     private bool jumpTriggered;
-
+    private InputReader.MovementInputResult enterInput;
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player)
     {
         collider = player.GetComponent<Collider>();
@@ -27,6 +27,7 @@ public class PlayerJumpingState : PlayerBaseState
         // check to see if player is jumping 
 
 
+        
         switch (player.isGrounded)
         {
             case true:
@@ -39,40 +40,22 @@ public class PlayerJumpingState : PlayerBaseState
 
         if (!player.isGrounded)
         {
-            if (player.IsAttacking)
-            {
-                playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Attack);
-            }
+            playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Attack | PlayerStateManager.PlayerStateTypes.AirDash);
+            
         }
         else
         {
-            switch (player.playerMove.y)
-            {
-                case 0:
-                {
-                    if (player.playerMove == Vector3.zero)
-                        playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Neutral);
-                    else if (player.IsWalking && player.playerMove.y == 0)
-                        playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Walking);
-                    break;
-                }
-                case < 0:
-                    playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Crouching);
-                    break;
-                case > 0:
-                    playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Jumping);
-                    break;
-            }
-
+            if(!player.AtDashHeight) return;
+            playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Neutral | PlayerStateManager.PlayerStateTypes.Walking | PlayerStateManager.PlayerStateTypes.Crouching | PlayerStateManager.PlayerStateTypes.Jumping | PlayerStateManager.PlayerStateTypes.Walking );
             if (!player.isGrounded)
             {
                 switch (player.InputReader.currentMoveInput)
                 {
                     case InputReader.MovementInputResult.Backward:
-                        playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Walking);
+                        playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Walking);
                         break;
                     case InputReader.MovementInputResult.Forward:
-                        playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Running);
+                        playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Running);
                         break;
                 }
             }
@@ -99,7 +82,8 @@ public class PlayerJumpingState : PlayerBaseState
                 break;
         }
 
-        player.rb.linearVelocity = new Vector3(xJumpVal, velocity, 0);
+        enterInput = player.InputReader.LastValidMovementInput;
+
     }
 
 
@@ -107,7 +91,10 @@ public class PlayerJumpingState : PlayerBaseState
     {
         //performing jump and applying custom gravity 
 
-        if (!player.isGrounded)
+        player.rb.linearVelocity = new Vector3(xJumpVal, player.gravityManager.GetVelocity(), 0);
+//        Debug.Log(player.gravityManager.GetVelocity());
+
+        if (!player.isGrounded && player.gameObject.transform.localPosition.y > 0.1f )
         {
             player.gravityManager.ApplyGravity(player);
         }
@@ -116,11 +103,11 @@ public class PlayerJumpingState : PlayerBaseState
     internal override void ExitState(PlayerStateManager playerStateManager, PlayerController player)
     {
         // only resting jump velo if not attacking 
-        if (!player.IsAttacking)
-        {
-            //   Debug.Log("Reseting velo");
-            player.gravityManager.ResetVelocity();
-        }
+        // if (!player.IsAttacking)
+        // {
+        //     //   Debug.Log("Reseting velo");
+        //     player.gravityManager.ResetVelocity();
+        // }
 
         player.animator.SetBool(player.Jump, false);
         xJumpVal = 0f;

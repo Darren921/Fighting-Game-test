@@ -11,27 +11,12 @@ public class PlayerCrouchingState : PlayerBaseState
     {
     
         // swap states 
-        if (player.playerMove is { y: 0, x: 0 })
-        {
-            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Neutral);
-        }
-        
+        playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Neutral | PlayerStateManager.PlayerStateTypes.Attack | PlayerStateManager.PlayerStateTypes.Jumping | PlayerStateManager.PlayerStateTypes.CrouchMove);
         if (!player.isCrouching && player.IsWalking)
         {
     //        Debug.Log("Switched to Move state (C.S)");
-            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Walking);
+            playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Walking);
         }
-
-        else if (player.isCrouching && player.playerMove.x != 0)
-        {
-            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.CrouchMove);
-        }
-
-        if (player.isCrouching && player.IsAttacking)
-        {
-            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Attack);
-        }
-          
     }
 
     internal override void FixedUpdateState(PlayerStateManager playerStateManager,PlayerController playerController)

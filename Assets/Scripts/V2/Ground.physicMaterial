@@ -8,7 +8,7 @@ PhysicsMaterial:
   m_PrefabAsset: {fileID: 0}
   m_Name: Ground
   serializedVersion: 2
-  m_DynamicFriction: 5
+  m_DynamicFriction: 3
   m_StaticFriction: 1
   m_Bounciness: 0
   m_FrictionCombine: 1

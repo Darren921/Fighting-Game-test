@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
@@ -29,41 +30,41 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     private Controls controls;
     private Controls.PlayerActions m_Player;
     internal InputReader InputReader;
-    internal PlayerStateManager stateManager;
-    [SerializeField] private CharacterSO characterData;
+    [SerializeField] internal CharacterSO characterData;
     internal Animator animator;
     internal GravityManager gravityManager;
-    internal Collider playerCollider;
+    internal hitDetection playerHitDetection;
 
     #endregion
 
-    private Coroutine AttackCheck;
+    #region Crouching and Dashing variables
 
-    public Vector3 playerMove { get; private set; }
-    internal bool isGrounded;
     internal bool isCrouching;
+    
+    
     internal bool Dashing;
-    [SerializeField] internal Transform raycastPos;
+    internal bool AtDashHeight;
 
+    #endregion
+    
     #region Attack Check Variables
 
     public bool IsAttacking { get; private set; }
-    public bool IsPunching { get; private set; }
-    public bool IsKicking { get; private set; }
-    public bool IsSlashing { get; internal set; }
-
-    public bool IsHeavySlashing { get; private set; }
     public bool onAttackCoolDown { get; set; }
-    private int dashCooldownAmount { get; set; }
 
     #endregion
 
-    internal Renderer playerRenderer;
-    internal bool playerBelow;
+    #region Misc variables
+  
     internal bool Reversed;
+    internal bool hitStun;
+    internal int Health;
 
-    #region Changeable Move Variables
+    #endregion
 
+    #region Move Variables
+
+    public Vector3 playerMove { get; private set; }
     internal float WalkSpeed;
     internal float RunSpeed;
     internal bool IsWalking;
@@ -71,28 +72,31 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     #endregion
 
-    #region Changeable Jump Variables
+    #region Jump Variables
 
+    [SerializeField] internal Transform raycastPos;
     internal float jumpHeight; //Switch to player character data S.O when created 5 
-    internal float raycastDistance = 2.023f; // 1
+    internal float raycastDistance; //2.023f
     internal float gravScale; // (Hold for now )  character data affects gravity 5 
     internal float velocity;
     internal Rigidbody rb;
     internal InputReader.MovementInputResult DashDir;
-    private bool onDashCoolDown;
-    
+    internal bool isGrounded;
+    [SerializeField] internal GameObject Hitbox;
+
     #endregion
 
+
+  
     void Awake()
     {
+        playerHitDetection = GetComponentInChildren<hitDetection>();
         gravityManager = GetComponent<GravityManager>();
         isGrounded = true;
-        playerRenderer = gameObject.GetComponent<Renderer>();
         InputReader = GetComponent<InputReader>();
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
-        stateManager = GetComponent<PlayerStateManager>();
-        playerCollider = GetComponent<Collider>();
+        raycastDistance = 2.0231f;
     }
 
     public void InitializePlayer(InputDevice device)
@@ -104,14 +108,29 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         m_Player = controls.Player;
         m_Player.RunOrDash.performed += OnRunOrDash;
         m_Player.RunOrDash.canceled += OnRunOrDash;
+        m_Player.DashMacro.performed += OnDashMacro;
+        m_Player.AirDash.performed += OnAirDash;
         m_Player.Move.performed += OnMove;
         m_Player.Move.canceled += OnMove;
         m_Player.Attack.performed += OnAttack;
-       
 
-        m_Player.Enable();
+        print(gameObject.gameObject.name);
+
+        OnEnablePlayer();
         SetUpCharacterVariables();
     }
+
+    public void OnEnablePlayer()
+    {
+        m_Player.Enable();
+        hitDetection.OnDeath += OnPlayerDeath;
+    }
+
+    private void OnPlayerDeath()
+    {
+        OnDisablePlayer();
+    }
+
 
     private void SetUpCharacterVariables()
     {
@@ -120,10 +139,16 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         gravScale = characterData.gravScale;
         WalkSpeed = characterData.walkSpeed;
         RunSpeed = characterData.runSpeed;
+        Health = characterData.health;
     }
 
 
-//    void OnDisable() => m_Player.Disable();
+    public void OnDisablePlayer()
+    {
+        m_Player.Disable();
+    }
+
+    void OnDisable() => OnDisablePlayer();
     public void SetAttacking()
     {
         //This may need to change to separate ones for each attack
@@ -138,13 +163,14 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     void OnCollisionStay(Collision collision)
     {
+        isGrounded = gravityManager.CheckifGrounded(this);
         if (collision.gameObject.CompareTag("Player") && collision.gameObject != gameObject && !isGrounded)
         {
-            print(gameObject.GetComponent<Collider>().bounds.min.y >
-                  collision.gameObject.GetComponent<Collider>().bounds.max.y);
-            print(gameObject.transform.position.x < collision.gameObject.GetComponent<Collider>().bounds.center.x);
-            print(gameObject.GetComponent<Collider>().bounds.min.y);
-            print(collision.gameObject.GetComponent<Collider>().bounds.max.y);
+            // print(gameObject.GetComponent<Collider>().bounds.min.y >
+            //       collision.gameObject.GetComponent<Collider>().bounds.max.y);
+            // print(gameObject.transform.position.x < collision.gameObject.GetComponent<Collider>().bounds.center.x);
+            // print(gameObject.GetComponent<Collider>().bounds.min.y);
+            // print(collision.gameObject.GetComponent<Collider>().bounds.max.y);
             if (gameObject.GetComponent<Collider>().bounds.min.y >
                 collision.gameObject.GetComponent<Collider>().bounds.max.y - 0.001)
             {
@@ -171,9 +197,13 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         }
     }
 
+    private void OnCollisionExit(Collision other)
+    {
+       isGrounded = false;
+    }
+
     private void Update()
     {
-        isGrounded = gravityManager.CheckifGrounded(this);
         animator.SetBool(Airborne, !isGrounded);
         if (isGrounded)
         {
@@ -190,14 +220,18 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
             animator.SetBool(Walking, false);
             animator.SetBool(Running, false);
         }
-    }
 
+        if (transform.localPosition.y < jumpHeight / 2)
+        {
+            AtDashHeight = true;
+        }
+    }
+     
 
     public void OnMove(InputAction.CallbackContext context)
     {
         //     print("Move called");
         playerMove = context.ReadValue<Vector3>();
-
         //Turns off running and walking when player releases context or player stops 
         //default till running begins
         if (!IsRunning && playerMove.x != 0)
@@ -208,59 +242,68 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         {
             IsWalking = false;
         }
-        
     }
 
     public void OnAttack(InputAction.CallbackContext context)
     {
-        print("Entered Attack");
+//        print("Entered Attack");
 //        print("Attacking");
-
-        var attackVal = ReturnAttackType(context.ReadValue<float>());
         //    InputReader.AddInput(attackVal,InputReader.attackBuffer);
-        InputReader.AddAttackInput(attackVal);
+        InputReader.AddAttackInput(ReturnAttackType(context.ReadValue<float>()));
         if (onAttackCoolDown || IsAttacking) return;
         IsAttacking = true;
         animator.SetBool(Attacking, true);
         //convert and passes input to attack type for the input reader 
-        //   print(AttackCheck);
-        print(attackVal);
+//        print(attackVal);
     }
 
     public void OnDashMacro(InputAction.CallbackContext context)
     {
-        throw new NotImplementedException();
+        if (IsRunning || Dashing || !isGrounded ) return;
+        print("entered dash");
+        Dashing = true;
+        DashDir = InputReader.currentMoveInput;
+        IsRunning = false;
+        IsWalking = false;
     }
-
+    public void OnAirDash(InputAction.CallbackContext context)
+    {
+        if (IsRunning || Dashing || isGrounded ) return;
+        print("entered dash");
+        Dashing = true;
+        DashDir = InputReader.LastValidMovementInput;
+        IsRunning = false;
+        IsWalking = false;
+    }
     public void OnRunOrDash(InputAction.CallbackContext context)
     {
         var contextHold = context.interaction as MultiTapOrHold;
-        
-        if (IsRunning && context.canceled )
+
+        if (IsRunning && context.canceled)
         {
-            
             if (playerMove.x != 0)
             {
                 print("canceled run");
                 IsRunning = false;
                 IsWalking = true;
             }
-            if ( playerMove.x == 0)
+            else
             {
                 IsRunning = false;
             }
+
             return;
         }
-        
-        
+
+
         if (contextHold is { holding: true } && context.performed && isGrounded)
         {
-            if(InputReader.LastValidMovementInput == InputReader.MovementInputResult.Backward)
+            if (InputReader.LastValidMovementInput == InputReader.MovementInputResult.Backward)
             {
                 IsWalking = true;
                 return;
             }
-          
+
             if (!Dashing)
             {
                 print("entered run");
@@ -268,40 +311,31 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
                 IsWalking = false;
             }
         }
-        if (!contextHold.holding && context.performed)
-        {
-            if(IsRunning || Dashing || !isGrounded || context.canceled) return;
-            print("entered dash");
-            Dashing = true;
-            // StartCoroutine(EnforceDashCoolDown());
-            DashDir = InputReader.LastValidMovementInput;
-            IsRunning = false;
-            IsWalking = false;
-        }
-        
-      
+
+        if (contextHold is not { holding: false } || !context.performed) return;
+        if (IsRunning || Dashing || !isGrounded || context.canceled) return;
+        print("entered dash");
+        Dashing = true;
+        DashDir = InputReader.LastValidMovementInput;
+        IsRunning = false;
+        IsWalking = false;
     }
-    
 
-    //
-    // private IEnumerator EnforceDashCoolDown()
-    // {
-    //     onDashCoolDown = true;
-    //     yield return new WaitForSeconds(1f);
-    //     onDashCoolDown = false;
-    //
-    // }
+   
 
+
+   
     private InputReader.AttackInputResult ReturnAttackType(float attackVal)
     {
         //depending on the attacks scale number, (check controls and the attacks scale #) returns the corresponding attack 
         var attackValAsInt = (int)attackVal;
-        print(attackValAsInt);
+//        print(attackValAsInt);
         var attackResult = attackValAsInt switch
         {
             1 => InputReader.AttackInputResult.Light,
             2 => InputReader.AttackInputResult.Medium,
             3 => InputReader.AttackInputResult.Heavy,
+            _ => InputReader.AttackInputResult.None,
         };
 
         return attackResult;

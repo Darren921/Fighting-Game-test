@@ -9,11 +9,11 @@ public class PlayerCrouchMoveState : PlayerMovingState
     {
         // state swap
         if (player.isCrouching && player.playerMove.x == 0)
-            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Crouching);
+            playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Crouching);
         else if (!player.isCrouching && player.IsWalking)
-            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Walking);
+            playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Walking);
         else if (!player.isCrouching && player.playerMove.x == 0)
-            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Neutral);
-        else if (player.isCrouching && (player.playerMove.x != 0 && player.IsAttacking)) playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Attack);
+            playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Neutral);
+        else if (player.isCrouching && (player.playerMove.x != 0 && player.IsAttacking)) playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Attack);
     }
 }

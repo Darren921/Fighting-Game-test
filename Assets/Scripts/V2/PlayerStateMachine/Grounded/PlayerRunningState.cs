@@ -1,9 +1,10 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerRunningState : PlayerMovingState
 {
     protected override float moveSpeed => _player.RunSpeed;
-
 
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player)
     {
@@ -16,12 +17,17 @@ public class PlayerRunningState : PlayerMovingState
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
         //switch states 
-        if (player.playerMove == Vector3.zero)
+        if (player.playerMove == Vector3.zero && !decelerating)
         {
-            if (player.playerMove == Vector3.zero && _smoothedMoveDir.magnitude < 0.9f) playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Neutral);
-            
+            player.StartCoroutine(DecelerationCurve(player));
+        }
+        if (player.playerMove == Vector3.zero && decelerating == false)
+        {
+                Debug.Log("HEH");
+                playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Neutral);
         }
 
+        if(decelerating) return;
         if (player.InputReader.currentMoveInput == InputReader.MovementInputResult.Backward && player.isGrounded)
         {
             player.IsRunning = false;
@@ -32,26 +38,28 @@ public class PlayerRunningState : PlayerMovingState
         {
             player.IsRunning = false;
             player.IsWalking = true;
-            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Walking);
+            playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Walking);
         }
 
-
-        if (player.playerMove.x != 0 && player.isCrouching) playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.CrouchMove);
+        playerStateManager.CheckForTransition( PlayerStateManager.PlayerStateTypes.Attack);
+        if (player.playerMove.x != 0 && player.isCrouching) playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.CrouchMove);
         
-        if (player.IsAttacking) playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Attack);
-        
-        if (player.IsWalking) playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Walking);
+        if (player.IsWalking) playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Walking);
 
         switch (player.playerMove.y)
         {
             case > 0:
-                playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Jumping);
+                playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Jumping);
                 break;
             case < 0  :
-                playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Crouching);
+                playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Crouching);
                 break;
         }
     }
+
+   
+
+ 
 
     internal override void ExitState(PlayerStateManager playerStateManager, PlayerController player)
     {

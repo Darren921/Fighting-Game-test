@@ -47,7 +47,7 @@ public class MultiTapOrHold : IInputInteraction
                     context.Started();
                     context.SetTimeout(duration + 0.00001f); 
                     currentTime = Time.time;
-                    Debug.Log("waited");
+//                    Debug.Log("waited");
                 }
                 break;
 
@@ -57,7 +57,7 @@ public class MultiTapOrHold : IInputInteraction
                     holdTime = Time.time - currentTime;
 //                    Debug.Log(holdTime);
                     tapCounter++;
-                    Debug.Log("started");
+             //       Debug.Log("started");
                     if (tapCounter >= multiTapCount && holdTime < 0.189)
                     {
                         if (holdTime > 0.185 && !holding)
@@ -81,19 +81,13 @@ public class MultiTapOrHold : IInputInteraction
                 if (!context.ControlIsActuated())
                 {
                     context.Canceled();
-               Debug.Log("Cancelled actuated 1 ");
+//               Debug.Log("Cancelled actuated 1 ");
                 }
                 if(!context.ControlIsActuated(releasePoint))
                 {
                     context.Canceled();
-                    Debug.Log("Cancelled actuated 2");
+//                    Debug.Log("Cancelled actuated 2");
 
-                }
-
-                if (holdTime > 0.1f && !holding)
-                {
-                    context.Canceled();
-                    Debug.Log("Cancelled actuated 3 ");
                 }
                 break;
 

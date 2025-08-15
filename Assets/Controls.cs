@@ -96,7 +96,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""type"": ""Value"",
                     ""id"": ""9fb589fb-7fa7-435d-805c-d3ea44e296e5"",
                     ""expectedControlType"": ""Vector3"",
-                    ""processors"": """",
+                    ""processors"": ""NormalizeVector3,Range"",
                     ""interactions"": """",
                     ""initialStateCheck"": true
                 },
@@ -124,7 +124,16 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""id"": ""a01182da-0edd-40e3-a1d7-9d54e6f24fd1"",
                     ""expectedControlType"": """",
                     ""processors"": """",
-                    ""interactions"": ""MultiTapOrHold(pressPoint=0.5)"",
+                    ""interactions"": ""MultiTapOrHold(duration=0.3,pressPoint=0.5)"",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""AirDash"",
+                    ""type"": ""Button"",
+                    ""id"": ""a449c966-36ba-4b8b-94dd-de538fa4d3d5"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": ""MultiTap(tapTime=0.2,tapDelay=0.75,pressPoint=0.5)"",
                     ""initialStateCheck"": true
                 }
             ],
@@ -132,9 +141,9 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""3D Vector"",
                     ""id"": ""5b12c8ff-544c-4ad7-91eb-26021a424362"",
-                    ""path"": ""3DVector"",
+                    ""path"": ""3DVector(mode=1)"",
                     ""interactions"": """",
-                    ""processors"": ""NormalizeVector3"",
+                    ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Move"",
                     ""isComposite"": true,
@@ -185,33 +194,11 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""Forward"",
-                    ""id"": ""f6e0022e-25fd-45fd-a559-4d2b259cf4b4"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""Backward"",
-                    ""id"": ""b87a6fdd-99cb-4cb5-889b-469266952e80"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
                     ""name"": ""3D Vector"",
                     ""id"": ""deb5a49a-2c7a-46b8-8f26-5002babff629"",
                     ""path"": ""3DVector(mode=1)"",
                     ""interactions"": """",
-                    ""processors"": ""NormalizeVector3"",
+                    ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Move"",
                     ""isComposite"": true,
@@ -401,6 +388,116 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""RunOrDash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bc3aef70-704a-49e0-8cc0-f7d1c38b40bf"",
+                    ""path"": ""<Gamepad>/leftStick/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""RunOrDash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f3218ae7-d931-4b99-9b6e-19fe09dfdd72"",
+                    ""path"": ""<Gamepad>/leftStick/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""RunOrDash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c0209e57-569e-49d7-b186-800631a627cc"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""RunOrDash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""22ce149e-4e72-4651-8914-67c05dee4a09"",
+                    ""path"": ""<Gamepad>/dpad/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""RunOrDash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""69478adf-fb99-47ee-9b45-9f5f13ea6438"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""AirDash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""92536284-de76-4e1b-9dbe-d255d34e5e82"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""AirDash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""aeb934f6-902c-4617-a0eb-d1919b396d81"",
+                    ""path"": ""<Gamepad>/leftStick/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""AirDash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""98d01adc-0bb8-4b4b-ae55-ff147180d0ab"",
+                    ""path"": ""<Gamepad>/leftStick/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""AirDash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7f251909-b9c4-4908-8b38-b6ce6ab83855"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""AirDash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6b716f3f-4906-4a1e-9e77-f80b302215c8"",
+                    ""path"": ""<Gamepad>/dpad/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""AirDash"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -992,6 +1089,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_DashMacro = m_Player.FindAction("DashMacro", throwIfNotFound: true);
         m_Player_RunOrDash = m_Player.FindAction("RunOrDash", throwIfNotFound: true);
+        m_Player_AirDash = m_Player.FindAction("AirDash", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1089,6 +1187,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_DashMacro;
     private readonly InputAction m_Player_RunOrDash;
+    private readonly InputAction m_Player_AirDash;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -1116,6 +1215,10 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/RunOrDash".
         /// </summary>
         public InputAction @RunOrDash => m_Wrapper.m_Player_RunOrDash;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/AirDash".
+        /// </summary>
+        public InputAction @AirDash => m_Wrapper.m_Player_AirDash;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1154,6 +1257,9 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @RunOrDash.started += instance.OnRunOrDash;
             @RunOrDash.performed += instance.OnRunOrDash;
             @RunOrDash.canceled += instance.OnRunOrDash;
+            @AirDash.started += instance.OnAirDash;
+            @AirDash.performed += instance.OnAirDash;
+            @AirDash.canceled += instance.OnAirDash;
         }
 
         /// <summary>
@@ -1177,6 +1283,9 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @RunOrDash.started -= instance.OnRunOrDash;
             @RunOrDash.performed -= instance.OnRunOrDash;
             @RunOrDash.canceled -= instance.OnRunOrDash;
+            @AirDash.started -= instance.OnAirDash;
+            @AirDash.performed -= instance.OnAirDash;
+            @AirDash.canceled -= instance.OnAirDash;
         }
 
         /// <summary>
@@ -1505,6 +1614,13 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnRunOrDash(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "AirDash" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnAirDash(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

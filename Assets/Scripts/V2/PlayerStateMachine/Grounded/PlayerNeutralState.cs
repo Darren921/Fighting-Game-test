@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static PlayerStateManager;
 
 public class PlayerNeutralState : PlayerBaseState
 {
@@ -13,38 +14,12 @@ public class PlayerNeutralState : PlayerBaseState
     {
         idleCoroutine = player.StartCoroutine(CheckIfIdle(player));
         player.rb.linearVelocity = Vector3.zero;
+//        Debug.Log("Entered PlayerNeutralState");
     }
 
     internal override void UpdateState(PlayerStateManager playerStateManager,PlayerController player)
     {
-
-        if (player.IsAttacking && !player.onAttackCoolDown)
-        {
-            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Attack);
-        }
-        else if (player.Dashing )
-        {
-            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Dash);
-        }
-        else if (player.IsWalking)
-        {
-            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Walking);
-        }
-       
-        else if (player.IsRunning  && !player.Dashing)
-        {
-            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Running);
-        }
-        
-        else if (player.playerMove is { y: > 0, x: 0 })
-        {
-            Debug.Log("player Jumping");
-            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Jumping);
-        }
-        else if (player.playerMove is { y: < 0, x: 0 })
-        {
-            playerStateManager.SwitchState(PlayerStateManager.PlayerStateType.Crouching);
-        }
+        playerStateManager.CheckForTransition(PlayerStateTypes.Attack | PlayerStateTypes.Jumping | PlayerStateTypes.Crouching | PlayerStateTypes.Walking | PlayerStateTypes.Running | PlayerStateTypes.Dash);
     }
      
     private IEnumerator CheckIfIdle(PlayerController player)

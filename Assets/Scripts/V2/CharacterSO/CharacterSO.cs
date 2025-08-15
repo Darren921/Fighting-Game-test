@@ -9,4 +9,6 @@ public class CharacterSO : ScriptableObject
     public int runSpeed;
     public float jumpHeight;
     public float gravScale;
+    public int AirDashCharges;
+
 }
