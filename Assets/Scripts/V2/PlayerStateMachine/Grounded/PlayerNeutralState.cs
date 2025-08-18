@@ -13,7 +13,7 @@ public class PlayerNeutralState : PlayerBaseState
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player )
     {
         idleCoroutine = player.StartCoroutine(CheckIfIdle(player));
-        player.rb.linearVelocity = Vector3.zero;
+        player.Rb.linearVelocity = Vector3.zero;
 //        Debug.Log("Entered PlayerNeutralState");
     }
 
@@ -27,16 +27,16 @@ public class PlayerNeutralState : PlayerBaseState
         //Idle state starts animations (TBA)
         yield return new WaitForSeconds(3f);
     //    Debug.Log("Idle");
-        player.animator.SetBool(player.Idle,true);
+        player.Animator.SetBool(player.Idle,true);
     } 
 
     internal override void FixedUpdateState(PlayerStateManager playerStateManager,PlayerController player)
     {
-        if (!player.isGrounded)
+        if (!player.IsGrounded)
         {
-            player.gravityManager.ApplyGravity(player);
+            player.GravityManager.ApplyGravity(player);
             
-            player.rb.linearVelocity  = new Vector3(player.rb.linearVelocity.x,player.gravityManager.GetVelocity() * 0.25f,0);
+            player.Rb.linearVelocity  = new Vector3(player.Rb.linearVelocity.x,player.GravityManager.GetVelocity() * 0.25f,0);
         }
       
     }
@@ -47,7 +47,7 @@ public class PlayerNeutralState : PlayerBaseState
         {
             player.StopCoroutine(idleCoroutine);
             idleCoroutine = null;
-            player.animator.SetBool(player.Idle,false);
+            player.Animator.SetBool(player.Idle,false);
 
         }        
 

@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class GravityManager : MonoBehaviour
 {
-    public float velocity { get; private set; }
-    internal RaycastHit raycastHit;
+    private float Velocity { get; set; }
+    internal RaycastHit RaycastHit;
     private LayerMask _groundLayerMask;
     private LayerMask _playerLayerMask;
 
@@ -15,48 +15,49 @@ public class GravityManager : MonoBehaviour
         _playerLayerMask = LayerMask.GetMask("Player");
     }
 
-    public bool CheckifGrounded(PlayerController player)
+    public bool CheckGrounded(PlayerController player)
     {
-        var grounded = Physics.Raycast(player.raycastPos.position, -player.transform.up, out raycastHit,
-            player.raycastDistance, _groundLayerMask);
-//       print(Vector3.Distance(player.raycastPos.position, raycastHit.point)); 
-        //   print(raycastHit);
-        Debug.DrawRay(player.raycastPos.position, -player.transform.up * player.raycastDistance, Color.red);
+        //checks if the player is grounded and updates the related bool 
+        var grounded = Physics.Raycast(player.raycastPos.position, -player.transform.up, out RaycastHit,
+            player.RaycastDistance, _groundLayerMask);
+        Debug.DrawRay(player.raycastPos.position, -player.transform.up * player.RaycastDistance, Color.red);
         return grounded;
     }
 
-    public bool CheckIfPlayer(PlayerController player)
-    {
-        var playerBelow = Physics.Raycast(player.raycastPos.position, -player.transform.up, out raycastHit,
-            player.raycastDistance, _playerLayerMask);
-        if (playerBelow)
-        {
-            print(player.rb.linearVelocity);
-        }
-
-        return playerBelow;
-    }
+    // public bool CheckIfPlayer(PlayerController player)
+    // {
+    //     var playerBelow = Physics.Raycast(player.raycastPos.position, -player.transform.up, out RaycastHit,
+    //         player.RaycastDistance, _playerLayerMask);
+    //     if (playerBelow)
+    //     {
+    //         print(player.Rb.linearVelocity);
+    //     }
+    //
+    //     return playerBelow;
+    // }
 
     public void ApplyGravity(PlayerController player)
     {
-        velocity += Physics.gravity.y   * player.gravScale * Time.fixedDeltaTime;
-//        print("Applying gravity");
+        //Applies the custom gravity based on grav scale
+        Velocity += Physics.gravity.y   * player.GravScale * Time.fixedDeltaTime;
     }
 
     public float GetVelocity()
     {
-        return velocity;
+        //gets the current velocity value 
+        return Velocity;
     }
 
     public void ResetVelocity()
     {
-        velocity = 0;
+        //resets the gravity's velocity 
+        Velocity = 0;
     }
 
     public float SetJumpVelocity(PlayerController player)
     {
-        var targetVelocity = Mathf.Sqrt(player.jumpHeight * -2 * (Physics.gravity.y * player.gravScale));
-//        print(player.jumpHeight * -2 * (Physics.gravity.y * player.gravScale));
-        return velocity = targetVelocity;
+        //uses formula in order to get a constant jump height 
+        var targetVelocity = Mathf.Sqrt(player.JumpHeight * -2 * (Physics.gravity.y * player.GravScale));
+        return Velocity = targetVelocity;
     }
 }

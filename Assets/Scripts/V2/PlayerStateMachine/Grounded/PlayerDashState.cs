@@ -17,7 +17,7 @@ public class PlayerDashState : PlayerMovingState
     {
         dir  = player.DashDir;
         Debug.Log(dir);
-        player.rb.linearVelocity = Vector3.zero;
+        player.Rb.linearVelocity = Vector3.zero;
       Debug.Log("PlayerDashState EnterState");
       switch (dir)
       {
@@ -39,10 +39,10 @@ public class PlayerDashState : PlayerMovingState
     {
         Debug.Log("PlayerDashState Dash");
         isDashing = true;
-        player.rb.linearVelocity = new Vector3(newDashVelo.x, jumpVelocity, 0);
+        player.Rb.linearVelocity = new Vector3(newDashVelo.x, jumpVelocity, 0);
         yield return new WaitForSeconds(dashTime);
         isDashing = false;
-        player.Dashing = false;
+        player.IsDashing = false;
 
     }
 
@@ -50,9 +50,9 @@ public class PlayerDashState : PlayerMovingState
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
         //grab the last inputs given 
-        if (isDashing || player.Dashing) return;
+        if (isDashing || player.IsDashing) return;
         player.StartCoroutine(DecelerationCurve(player));
-        if (player.playerMove == Vector3.zero && decelerating == false)
+        if (player.PlayerMove == Vector3.zero && decelerating == false)
         { 
             Debug.Log("HEH");
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Neutral);
@@ -75,7 +75,7 @@ public class PlayerDashState : PlayerMovingState
             player.StopCoroutine(dashCoroutine);
             dashCoroutine = null;
         }
-        player.Dashing = false;
+        player.IsDashing = false;
         
         Debug.Log("PlayerDashState ExitState");
     }

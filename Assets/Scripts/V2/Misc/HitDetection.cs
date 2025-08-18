@@ -1,44 +1,50 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-public class hitDetection : MonoBehaviour, IDamageable
+public class HitDetection : MonoBehaviour, IDamageable
 {
-    private PlayerController player;
-    internal PlayerController otherPlayer;
-
+    private PlayerController _player; 
+    [SerializeField] internal PlayerController otherPlayer;
     public static event Action OnDeath;
     private void Awake()
     {
-        player = gameObject.GetComponentInParent<PlayerController>();
+        _player = gameObject.GetComponentInParent<PlayerController>();
     }
 
     void Start()
     {
-        
+
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+       
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        //Search for other hit box and then apply affects 
         if (other.gameObject.CompareTag("HitBox"))
         {
-            otherPlayer = other.gameObject.GetComponentInParent<PlayerController>();
-            var target = OnHit(player, other.gameObject.GetComponentInParent<PlayerController>());
+            var target = OnHit(_player, otherPlayer);
             target.GetComponent<PlayerStateManager>().SwitchState(PlayerStateManager.PlayerStateTypes.HitStun);
-            target.playerHitDetection.TakeDamage(10);
+            target.PlayerHitDetection.TakeDamage(10);
         }
+        else if (other.gameObject.CompareTag("Wall"))
+        {
+            _player.AtBorder = true;
+        }
+     
     }
 
     private PlayerController OnHit(PlayerController sender, PlayerController receiver)
     {
+        
+        //Check the players buffers for last attack frame  and decide the player hit
         var attackBufferSender = sender.GetComponentInParent<InputReader>();
         var attackBufferReceiver = receiver.GetComponentInParent<InputReader>();
-
-     //   print(attackBufferSender!= InputReader.AttackInputResult.None);
-//        print(attackBufferReceiver != InputReader.AttackInputResult.None);
-
-    //    print(attackBufferSender);
-    //    print(attackBufferReceiver);
-     
+        
         if (attackBufferSender.LastValidAttackInput != InputReader.AttackInputResult.None &&
             attackBufferReceiver.LastValidAttackInput != InputReader.AttackInputResult.None)
         {
@@ -56,18 +62,27 @@ public class hitDetection : MonoBehaviour, IDamageable
         }
         return null;
     }
-    void Update()
-    {
-        
-    }
 
     public void TakeDamage(int damage)
     {
-        player.Health -= damage;
+        // deal damage and active death event to trigger end of game 
+        
+        _player.Health -= damage;
+        print(otherPlayer.name);
+        print(_player.name);
 
-        if (player.Health <= 0)
+        if (!_player.AtBorder)
         {
-       //     OnDeath?.Invoke();
+             otherPlayer.StartCoroutine(otherPlayer.PlayerKnockBack.KnockBackOtherPlayer(_player));
+        }
+        else
+        {
+            otherPlayer.StartCoroutine(otherPlayer.PlayerKnockBack.KnockBackThisPlayer(otherPlayer)); 
+        }
+        
+        if (_player.Health <= 0)
+        {
+            OnDeath?.Invoke();
         }
     }
 }

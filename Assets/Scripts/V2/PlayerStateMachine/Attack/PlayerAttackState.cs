@@ -32,9 +32,9 @@ public class PlayerAttackState : PlayerBaseState
     {
         lastMove = player.InputReader.currentMoveInput;
         lastAttack = player.InputReader.currentAttackInput;
-           if (player.animator.GetBool(player.Idle))
+           if (player.Animator.GetBool(player.Idle))
            {
-               player.animator.SetBool(player.Idle, false);
+               player.Animator.SetBool(player.Idle, false);
            }
           
      
@@ -44,14 +44,14 @@ public class PlayerAttackState : PlayerBaseState
     private void Light(PlayerController player, InputReader.MovementInputResult move)
     {           
         // Set the attack animation, and if players isn't in animation, select the correct attack based on movement
-        player.animator.SetBool(player.Light,true);
+        player.Animator.SetBool(player.Light,true);
         switch (move)
         {
             case InputReader.MovementInputResult.Backward or InputReader.MovementInputResult.UpRight or InputReader.MovementInputResult.DownRight:
-                player.animator.SetBool(player.Right, true);
+                player.Animator.SetBool(player.right, true);
                 break; 
             case InputReader.MovementInputResult.Forward or InputReader.MovementInputResult.UpLeft or InputReader.MovementInputResult.DownLeft:
-                player.animator.SetBool(player.Left, true);
+                player.Animator.SetBool(player.left, true);
                 break;
             case InputReader.MovementInputResult.None:
                 break;
@@ -60,25 +60,25 @@ public class PlayerAttackState : PlayerBaseState
 
     private IEnumerator EnforceCooldown(PlayerController player)
     {
-        player.onAttackCoolDown = true;
-        yield return new WaitUntil(() => player.animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f && player.IsAttacking == false);
-        player.onAttackCoolDown = false;
+        player.OnAttackCoolDown = true;
+        yield return new WaitUntil(() => player.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f && player.IsAttacking == false);
+        player.OnAttackCoolDown = false;
         
     }
 
     private void Medium(PlayerController player, InputReader.MovementInputResult move)
     {
         // Set the attack animation, and if players isn't in animation, select the correct attack based on movement
-        player.animator.SetBool(player.Medium, true);
+        player.Animator.SetBool(player.Medium, true);
         switch (move)
         {
             case InputReader.MovementInputResult.Backward or InputReader.MovementInputResult.UpRight
                 or InputReader.MovementInputResult.DownRight:
-                player.animator.SetBool(player.Right, true);
+                player.Animator.SetBool(player.right, true);
                 break;
             case InputReader.MovementInputResult.Forward or InputReader.MovementInputResult.UpLeft
                 or InputReader.MovementInputResult.DownLeft:
-                player.animator.SetBool(player.Left, true);
+                player.Animator.SetBool(player.left, true);
                 break;
             case InputReader.MovementInputResult.None:
                 break;
@@ -101,26 +101,26 @@ public class PlayerAttackState : PlayerBaseState
         //     player.SetAttacking(); 
         // }
 
-        player.isGrounded = player.gravityManager.CheckifGrounded(player);
+        player.IsGrounded = player.GravityManager.CheckGrounded(player);
       
-        player.animator.SetBool(player.Airborne, !player.isGrounded);
+        player.Animator.SetBool(player.airborne, !player.IsGrounded);
     
         // choose attack based on input and any movement detected 
 
-        if (player.IsAttacking && !player.onAttackCoolDown)
+        if (player.IsAttacking && !player.OnAttackCoolDown)
         {
             PerformAttack(player);
         }
 
         // State swapping 
-        if (!player.isGrounded || player.IsAttacking ) return;
+        if (!player.IsGrounded || player.IsAttacking ) return;
         playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Neutral);
         if (player.IsWalking  )
         {
             Debug.Log("going to moving");
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Walking);
         }
-        else if(player.isCrouching)
+        else if(player.IsCrouching)
         {
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Crouching);
 
@@ -135,7 +135,7 @@ public class PlayerAttackState : PlayerBaseState
 
     private void PerformAttack(PlayerController player)
     {
-        if (player.IsAttacking && !player.onAttackCoolDown)
+        if (player.IsAttacking && !player.OnAttackCoolDown)
         {
             enforcedCooldown = true;
             switch (lastAttack )
@@ -164,11 +164,11 @@ public class PlayerAttackState : PlayerBaseState
     internal override void FixedUpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
 
-        if (!player.isGrounded && player.transform.localPosition.y > 0.1f)
+        if (!player.IsGrounded && player.transform.localPosition.y > 0.1f)
         {
-            player.gravityManager.ApplyGravity(player);
+            player.GravityManager.ApplyGravity(player);
         }
-        player.rb.linearVelocity = new Vector3(player.rb.linearVelocity.x, player.gravityManager.GetVelocity(), 0);
+        player.Rb.linearVelocity = new Vector3(player.Rb.linearVelocity.x, player.GravityManager.GetVelocity(), 0);
 //        Debug.Log(player.gravityManager.GetVelocity());
         
     }

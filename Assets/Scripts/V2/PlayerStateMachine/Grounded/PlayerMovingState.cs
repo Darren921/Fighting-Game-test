@@ -22,17 +22,17 @@ public abstract class PlayerMovingState : PlayerBaseState
 
     internal override void FixedUpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
-        setMoveDir(new Vector2(player.playerMove.x, 0));
+        setMoveDir(new Vector2(player.PlayerMove.x, 0));
         smoothMovement();
         applyVelocity(player);
     }
 
     protected void applyVelocity(PlayerController player)
     {
-        var velocity = new Vector3(_smoothedMoveDir.x * moveSpeed, player.rb.linearVelocity.y);
+        var velocity = new Vector3(_smoothedMoveDir.x * moveSpeed, player.Rb.linearVelocity.y);
         if (Mathf.Abs(velocity.x) > 0.01f)
         {
-            player.rb.linearVelocity = velocity;    
+            player.Rb.linearVelocity = velocity;    
         }
     }
 
@@ -50,22 +50,17 @@ public abstract class PlayerMovingState : PlayerBaseState
         if (decelerating) yield break;
         decelerating = true;
 
-        while (player.rb.linearVelocity.magnitude > 0.1f)
+        while (player.Rb.linearVelocity.magnitude > 0.1f)
         {
-            var decelerationCurve = player.rb.linearVelocity.normalized * (2 * Time.deltaTime);
+            var decelerationCurve = player.Rb.linearVelocity.normalized * (2 * Time.deltaTime);
             Debug.Log(decelerationCurve);
-            player.rb.linearVelocity -= decelerationCurve;
+            player.Rb.linearVelocity -= decelerationCurve;
             yield return null;
         }
         decelerating = false;
     }
 
-    private IEnumerator Delay(PlayerController player)
-    {
-        
-        yield return new  WaitUntil(() => player.rb.linearVelocity.magnitude < 0.1f);
-        decelerating = false;
-    }
+   
     internal override void ExitState(PlayerStateManager playerStateManager, PlayerController player)
     {
       //   player.rb.linearVelocity = Vector3.zero;

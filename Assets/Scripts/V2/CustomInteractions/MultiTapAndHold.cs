@@ -20,10 +20,10 @@ public class MultiTapOrHold : IInputInteraction
     [Tooltip("Above this value a tap is pressed")]
     public float pressPoint = 0.4f;
 
-    float tapCounter;
-    private float holdTime;
-    internal bool holding;
-    private float currentTime;
+    private float _tapCounter;
+    private float _holdTime;
+    internal bool Holding;
+    private float _currentTime;
 
 
     static MultiTapOrHold()
@@ -43,10 +43,10 @@ public class MultiTapOrHold : IInputInteraction
             case InputActionPhase.Waiting:
                 if (context.ControlIsActuated(pressPoint))
                 {
-                    tapCounter++;
+                    _tapCounter++;
                     context.Started();
                     context.SetTimeout(duration + 0.00001f); 
-                    currentTime = Time.time;
+                    _currentTime = Time.time;
 //                    Debug.Log("waited");
                 }
                 break;
@@ -54,29 +54,29 @@ public class MultiTapOrHold : IInputInteraction
             case InputActionPhase.Started:
                 if (context.ControlIsActuated(pressPoint))
                 {
-                    holdTime = Time.time - currentTime;
+                    _holdTime = Time.time - _currentTime;
 //                    Debug.Log(holdTime);
-                    tapCounter++;
+                    _tapCounter++;
              //       Debug.Log("started");
-                    if (tapCounter >= multiTapCount && holdTime < 0.189)
+                    if (_tapCounter >= multiTapCount && _holdTime < 0.189)
                     {
-                        if (holdTime > 0.185 && !holding)
+                        if (_holdTime > 0.185 && !Holding)
                         {
                             context.Canceled();
                         }
-                        holding = false;
+                        Holding = false;
                         context.Performed();
                     }
-                    else if (tapCounter >= multiTapCount && holdTime >= 0.189)
+                    else if (_tapCounter >= multiTapCount && _holdTime >= 0.189)
                     {
-                        holding = true;
+                        Holding = true;
                         context.PerformedAndStayPerformed();
                     }
                 }
                 break;
 
             case InputActionPhase.Performed:
-                Debug.Log("performed" + holdTime + " seconds");
+                Debug.Log("performed" + _holdTime + " seconds");
 
                 if (!context.ControlIsActuated())
                 {
@@ -101,7 +101,7 @@ public class MultiTapOrHold : IInputInteraction
 
     public void Reset()
     {
-        tapCounter = 0;
-        holdTime = 0;
+        _tapCounter = 0;
+        _holdTime = 0;
     }
 }

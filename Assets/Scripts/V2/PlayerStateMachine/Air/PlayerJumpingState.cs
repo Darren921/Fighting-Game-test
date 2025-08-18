@@ -17,7 +17,7 @@ public class PlayerJumpingState : PlayerBaseState
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player)
     {
         collider = player.GetComponent<Collider>();
-        player.animator.SetBool(player.Jump, true);
+        player.Animator.SetBool(player.Jump, true);
         player.IsRunning = false;
         TryJump(player);
     }
@@ -28,17 +28,17 @@ public class PlayerJumpingState : PlayerBaseState
 
 
         
-        switch (player.isGrounded)
+        switch (player.IsGrounded)
         {
             case true:
-                player.animator.SetBool(player.Jump, false);
+                player.Animator.SetBool(player.Jump, false);
                 break;
             case false:
-                player.animator.SetBool(player.Jump, true);
+                player.Animator.SetBool(player.Jump, true);
                 break;
         }
 
-        if (!player.isGrounded)
+        if (!player.IsGrounded)
         {
             playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Attack | PlayerStateManager.PlayerStateTypes.AirDash);
             
@@ -47,7 +47,7 @@ public class PlayerJumpingState : PlayerBaseState
         {
             if(!player.AtDashHeight) return;
             playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Neutral | PlayerStateManager.PlayerStateTypes.Walking | PlayerStateManager.PlayerStateTypes.Crouching | PlayerStateManager.PlayerStateTypes.Jumping | PlayerStateManager.PlayerStateTypes.Walking );
-            if (!player.isGrounded)
+            if (!player.IsGrounded)
             {
                 switch (player.InputReader.currentMoveInput)
                 {
@@ -68,7 +68,7 @@ public class PlayerJumpingState : PlayerBaseState
     private void TryJump(PlayerController player)
     {
         // jumping based off on custom  gravity to ensure the player jumps to same height each time 
-        velocity = player.gravityManager.SetJumpVelocity(player);
+        velocity = player.GravityManager.SetJumpVelocity(player);
         switch (player.InputReader.LastValidMovementInput)
         {
             case InputReader.MovementInputResult.Up:
@@ -91,12 +91,12 @@ public class PlayerJumpingState : PlayerBaseState
     {
         //performing jump and applying custom gravity 
 
-        player.rb.linearVelocity = new Vector3(xJumpVal, player.gravityManager.GetVelocity(), 0);
+        player.Rb.linearVelocity = new Vector3(xJumpVal, player.GravityManager.GetVelocity(), 0);
 //        Debug.Log(player.gravityManager.GetVelocity());
 
-        if (!player.isGrounded && player.gameObject.transform.localPosition.y > 0.1f )
+        if (!player.IsGrounded && player.gameObject.transform.localPosition.y > 0.1f )
         {
-            player.gravityManager.ApplyGravity(player);
+            player.GravityManager.ApplyGravity(player);
         }
     }
 
@@ -109,7 +109,7 @@ public class PlayerJumpingState : PlayerBaseState
         //     player.gravityManager.ResetVelocity();
         // }
 
-        player.animator.SetBool(player.Jump, false);
+        player.Animator.SetBool(player.Jump, false);
         xJumpVal = 0f;
         //   Debug.Log("Exiting playerJumpingState");
     }

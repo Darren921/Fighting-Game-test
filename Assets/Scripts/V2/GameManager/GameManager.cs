@@ -11,36 +11,36 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private PlayerController[] players;
 
-    private List<InputDevice> availableDevices = new ();
+    private readonly List<InputDevice> _availableDevices = new ();
 
-    private int minDistance = 1;
-   
-    public static Dictionary<PlayerController, InputDevice > deviceIndex = new();
+    private const int MinDistance = 1;
 
-    
+
     private void Start()
     {
        
-        hitDetection.OnDeath += OnPlayerDeath;
+        HitDetection.OnDeath += OnPlayerDeath;
         Application.targetFrameRate = 60;
         print(Application.targetFrameRate);
     //    Time.timeScale = 0.1f;
+    
         // temp method to add devices to a pool in order to connect them to a player 
         foreach (var device in InputSystem.devices.Where(device => device is Gamepad or Keyboard))
         {
-            availableDevices.Add(device);
+            _availableDevices.Add(device);
         }
-        onConnect();
+        OnConnect();
         InputSystem.onDeviceChange += (device, change) =>
         {
+            //May need to add removed, disconnected 
             switch (change)
             {
                 case InputDeviceChange.Added:
-                    onAdd(device);
-                    onConnect();
+                    OnAdd(device);
+                    OnConnect();
                     break;
                 case InputDeviceChange.Reconnected:
-                    onConnect();
+                    OnConnect();
                     break;
             }
         };
@@ -50,8 +50,8 @@ public class GameManager : MonoBehaviour
     {
         foreach (var player in players)
         {
-            player.animator.enabled = false;
-            player.Hitbox.SetActive(false);
+            player.Animator.enabled = false;
+            player.hitBox.SetActive(false);
             if (player.Health <= 0)
             {
                 player.gameObject.SetActive(false);
@@ -61,12 +61,12 @@ public class GameManager : MonoBehaviour
     }
 
 
-    private void onAdd(InputDevice device)
+    private void OnAdd(InputDevice device)
     {
-        if (!availableDevices.Contains(device)) availableDevices.Add(device);
+        if (!_availableDevices.Contains(device)) _availableDevices.Add(device);
     }
 
-    private void onConnect()
+    private void OnConnect()
     {
         
         //var input1 = deviceIndex.GetValueOrDefault(players[0]);
@@ -77,10 +77,10 @@ public class GameManager : MonoBehaviour
         //temp method to give a player controls depending on device connected first 
         for (var i = 0; i < players.Length; i++)
         {
-            if (i < availableDevices.Count)
+            if (i < _availableDevices.Count)
             {
-                players[i].InitializePlayer(availableDevices[i]);
-                Debug.Log($"Assigned {availableDevices[i].name} to Player {i + 1}");
+                players[i].InitializePlayer(_availableDevices[i]);
+                Debug.Log($"Assigned {_availableDevices[i].name} to Player {i + 1}");
             }
             else
             {
@@ -95,7 +95,7 @@ public class GameManager : MonoBehaviour
 
 
         // Update is called once per frame
-        void Update()
+        private void Update()
         {
           CheckIfReversed();
           
@@ -110,7 +110,7 @@ public class GameManager : MonoBehaviour
             //depending on the distance between players, and if they are grounded, reverse (flip) the player 
             var distance = Mathf.Abs(players[0].transform.position.x - players[1].transform.position.x);
 
-            if (distance < minDistance)
+            if (distance < MinDistance)
                 return;
             
             if (players[1].transform.position.x < players[0].transform.position.x)
@@ -128,9 +128,9 @@ public class GameManager : MonoBehaviour
             UpdatePlayerDirection(players[1]);
         }
 
-        private void UpdatePlayerDirection(PlayerController player)
+        private static void UpdatePlayerDirection(PlayerController player)
         {
-            if (!player.isGrounded) return;
+            if (!player.IsGrounded) return;
             var targetYRotation = player.Reversed ? 270 : 90f;
             var rotation = player.transform.eulerAngles;
             rotation.y = targetYRotation;

@@ -17,24 +17,24 @@ public class PlayerRunningState : PlayerMovingState
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
         //switch states 
-        if (player.playerMove == Vector3.zero && !decelerating)
+        if (player.PlayerMove == Vector3.zero && !decelerating)
         {
             player.StartCoroutine(DecelerationCurve(player));
         }
-        if (player.playerMove == Vector3.zero && decelerating == false)
+        if (player.PlayerMove == Vector3.zero && decelerating == false)
         {
                 Debug.Log("HEH");
                 playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Neutral);
         }
 
         if(decelerating) return;
-        if (player.InputReader.currentMoveInput == InputReader.MovementInputResult.Backward && player.isGrounded)
+        if (player.InputReader.currentMoveInput == InputReader.MovementInputResult.Backward && player.IsGrounded)
         {
             player.IsRunning = false;
             player.IsWalking = true;
             playerStateManager.SwitchToLastState();
         }
-        else if (player.InputReader.currentMoveInput == InputReader.MovementInputResult.Backward && !player.isGrounded)
+        else if (player.InputReader.currentMoveInput == InputReader.MovementInputResult.Backward && !player.IsGrounded)
         {
             player.IsRunning = false;
             player.IsWalking = true;
@@ -42,11 +42,11 @@ public class PlayerRunningState : PlayerMovingState
         }
 
         playerStateManager.CheckForTransition( PlayerStateManager.PlayerStateTypes.Attack);
-        if (player.playerMove.x != 0 && player.isCrouching) playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.CrouchMove);
+        if (player.PlayerMove.x != 0 && player.IsCrouching) playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.CrouchMove);
         
         if (player.IsWalking) playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Walking);
 
-        switch (player.playerMove.y)
+        switch (player.PlayerMove.y)
         {
             case > 0:
                 playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Jumping);

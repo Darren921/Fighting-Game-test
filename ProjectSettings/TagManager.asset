@@ -8,6 +8,7 @@ TagManager:
   - PushBox
   - HitBox
   - Ground
+  - Wall
   layers:
   - Default
   - TransparentFX

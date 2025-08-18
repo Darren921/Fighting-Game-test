@@ -190,6 +190,6 @@ public class InputReader : MonoBehaviour
             [(-1, -1)] = MovementInputResult.DownLeft
         };
 //            print(playerInput);
-        AddMovementInput(lookup[(player.playerMove.x, player.playerMove.y)]);
+        AddMovementInput(lookup[(player.PlayerMove.x, player.PlayerMove.y)]);
     }
 }

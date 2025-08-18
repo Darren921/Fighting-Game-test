@@ -10,7 +10,7 @@ public class RangeProcessor : InputProcessor<Vector3>
     public override Vector3 Process(Vector3 value, InputControl control)
     {
         
-        for (int xyz = 0; xyz < 3; xyz++){
+        for (var xyz = 0; xyz < 3; xyz++){
           value[xyz] = Mathf.RoundToInt(value[xyz]);
         }
         return value;
@@ -23,7 +23,7 @@ public class RangeProcessor : InputProcessor<Vector3>
 #endif
 
     [RuntimeInitializeOnLoadMethod]
-    static void Initialize()
+    private static void Initialize()
     {
         InputSystem.RegisterProcessor<RangeProcessor>();
     }

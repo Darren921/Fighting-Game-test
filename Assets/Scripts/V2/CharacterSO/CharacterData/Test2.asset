@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eed73eb88df98634596fd1f5bc2439b7, type: 3}
-  m_Name: Default
+  m_Name: Test2
   m_EditorClassIdentifier: 
   gravScale: 1.5
   health: 100
@@ -19,5 +19,5 @@ MonoBehaviour:
   jumpHeight: 5
   airDashCharges: 1
   damage: 0
-  lightKnockback: 7
-  medKnockback: 14
+  lightKnockback: 1
+  medKnockback: 10
