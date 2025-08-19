@@ -129,6 +129,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     public void OnDisablePlayer()
     {
         _playerActions.Disable();
+        InputReader.enabled = false;
         HitDetection.OnDeath -= OnPlayerDeath;
     }
 
@@ -141,6 +142,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     private void SetUpCharacterVariables()
     {
         //All character data is added here (future ones must be added here as well)
+        
         JumpHeight = characterData.jumpHeight;
         GravScale = characterData.gravScale;
         WalkSpeed = characterData.walkSpeed;
@@ -291,7 +293,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
             return;
         }
 
-
+        //This is run section activated when the button is press and held after the second press 
         if (contextHold is { Holding: true } && context.performed && IsGrounded)
         {
             if (InputReader.LastValidMovementInput == InputReader.MovementInputResult.Backward)
@@ -307,7 +309,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
                 IsWalking = false;
             }
         }
-
+        //This is dash section activated when the button is pressed twice quickly 
         if (contextHold is not { Holding: false } || !context.performed) return;
         if (IsRunning || IsDashing || !IsGrounded || context.canceled) return;
         print("entered dash");

@@ -68,8 +68,8 @@ public class HitDetection : MonoBehaviour, IDamageable
         // deal damage and active death event to trigger end of game 
         
         _player.Health -= damage;
-        print(otherPlayer.name);
-        print(_player.name);
+//        print(otherPlayer.name);
+  //      print(_player.name);
 
         if (!_player.AtBorder)
         {

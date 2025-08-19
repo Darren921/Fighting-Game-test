@@ -3,52 +3,56 @@ using UnityEngine;
 
 public class PlayerKnockBack : MonoBehaviour
 {
-    private bool isBeingKnockedBack;
-    private float _knockBackTime = 0.1f;
+    private bool _isBeingKnockedBack;
+    private const float KnockBackTime = 0.1f;
     private float _hitDirectionForce;
 
     public IEnumerator KnockBackOtherPlayer( PlayerController player)
     {
-        isBeingKnockedBack = true;
+        //Use this to knock back the other player 
+        _isBeingKnockedBack = true;
 
         var  hitDir = ReturnHitDir(player.PlayerHitDetection.otherPlayer) ;
         _hitDirectionForce = ReturnHitForce(player.PlayerHitDetection.otherPlayer);
         var hitForce = hitDir * _hitDirectionForce ;
         var elapsedTime = 0f;
-        while (elapsedTime < _knockBackTime)
+        while (elapsedTime < KnockBackTime)
         {
             elapsedTime += Time.fixedDeltaTime;
             player.Rb.linearVelocity = hitForce;
             yield return new WaitForFixedUpdate();
         }
-        isBeingKnockedBack = false;
+        _isBeingKnockedBack = false;
     }
     
     private Vector3 ReturnHitDir(PlayerController player)
     {
-        return player.Reversed ?  Vector3.left:  Vector3.right;
+        // depending on the players direction return the direction 
+        return !player.Reversed ? Vector3.right : Vector3.left;
     }
     
     public IEnumerator KnockBackThisPlayer( PlayerController player)
     {
-        isBeingKnockedBack = true;
+        _isBeingKnockedBack = true;
+        //Use this to knock back the attacking player 
 
         var  hitDir = ReturnHitDir(player.PlayerHitDetection.otherPlayer) ;
         _hitDirectionForce = ReturnHitForce(player);
         var hitForce = hitDir * _hitDirectionForce ;
         var elapsedTime = 0f;
-        while (elapsedTime < _knockBackTime)
+        while (elapsedTime < KnockBackTime)
         {
             elapsedTime += Time.fixedDeltaTime;
             player.Rb.linearVelocity = hitForce;
             yield return new WaitForFixedUpdate();
         }
-        isBeingKnockedBack = false;
+        _isBeingKnockedBack = false;
     }
     
     
     private float ReturnHitForce(PlayerController player)
     {
+        //Depending on the attack type return a knockback force value  (note mod this to add directional values later)
         var hitForceTemp = 0f;
 
         switch (player.InputReader.LastValidAttackInput)
@@ -78,8 +82,8 @@ public class PlayerKnockBack : MonoBehaviour
             case InputReader.AttackInputResult.HeavyRight:
                 break; 
         }
-        print(player.characterData.lightKnockback);
-        print(player.characterData.medKnockback);
+//        print(player.characterData.lightKnockback);
+ //       print(player.characterData.medKnockback);
         return hitForceTemp;
     }
 

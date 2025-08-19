@@ -15,6 +15,7 @@ public class CharacterSO : ScriptableObject
     public int runSpeed;
     public float jumpHeight;
     public int airDashCharges;
+    public int jumpCharges;
     [Header("Combat")]
     public int damage;
     public float lightKnockback;

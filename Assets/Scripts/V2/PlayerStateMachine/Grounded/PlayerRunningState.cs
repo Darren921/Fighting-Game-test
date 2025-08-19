@@ -5,18 +5,10 @@ using UnityEngine;
 public class PlayerRunningState : PlayerMovingState
 {
     protected override float moveSpeed => _player.RunSpeed;
-
-    internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player)
-    {
-        base.EnterState(playerStateManager, player);
-        // player.rb.linearVelocity = Vector3.zero;
-        // _smoothedMoveDir = Vector3.zero;
-        // _smoothedMoveVelocity = Vector3.zero;
-    }
-
+    
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
-        //switch states 
+        //controls the decel curve to make slow down movement more accurate 
         if (player.PlayerMove == Vector3.zero && !decelerating)
         {
             player.StartCoroutine(DecelerationCurve(player));
@@ -27,6 +19,7 @@ public class PlayerRunningState : PlayerMovingState
                 playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Neutral);
         }
 
+        //switch states 
         if(decelerating) return;
         if (player.InputReader.currentMoveInput == InputReader.MovementInputResult.Backward && player.IsGrounded)
         {
@@ -41,7 +34,7 @@ public class PlayerRunningState : PlayerMovingState
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Walking);
         }
 
-        playerStateManager.CheckForTransition( PlayerStateManager.PlayerStateTypes.Attack);
+        playerStateManager.CheckForTransition( PlayerStateManager.PlayerStateTypes.Attack | PlayerStateManager.PlayerStateTypes.CrouchMove);
         if (player.PlayerMove.x != 0 && player.IsCrouching) playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.CrouchMove);
         
         if (player.IsWalking) playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Walking);

@@ -10,41 +10,42 @@ public class PlayerAirDashState : PlayerDashState
         _airDashCharges = player.characterData.airDashCharges;
         _airDashCharges--;
         player.StartCoroutine(AirDash(player));
+        
 //      Debug.Log(newDashVelo);
      
     }
 
     private void SetUpDash(PlayerController player)
     {
-        dir  = player.DashDir;
+        Dir  = player.DashDir;
      //   Debug.Log(dir);
     //    Debug.Log("PlayerDashState EnterState");
-        switch (dir)
+        switch (Dir)
         {
             case InputReader.MovementInputResult.None or  InputReader.MovementInputResult.Forward:
-                dashDir =  !player.Reversed ? new Vector3(1.5f, 0, 0 ) : new Vector3(-1.5f, 0, 0);
+                DashDir =  !player.Reversed ? new Vector3(1.5f, 0, 0 ) : new Vector3(-1.5f, 0, 0);
       //          Debug.Log(dashDir);
                 break;
             case InputReader.MovementInputResult.Backward:
-                dashDir =  !player.Reversed ? new Vector3(-1.5f, 0f, 0 ) : new Vector3(1.5f, 0f, 0);
+                DashDir =  !player.Reversed ? new Vector3(-1.5f, 0f, 0 ) : new Vector3(1.5f, 0f, 0);
       //          Debug.Log(dashDir);
                 break;
         }
-        newDashVelo = dashDir * (dashDistance / dashTime);
+        NewDashVelo = DashDir * (dashDistance / dashTime);
     }
 
 
     private IEnumerator AirDash(PlayerController player)
     {
     //    Debug.Log("PlayerDashState Dash");
-        isDashing = true;
+        IsDashing = true;
         SetUpDash(player);
         player.Rb.useGravity = false;
-        player.Rb.linearVelocity = new Vector3(newDashVelo.x, 0, 0);
+        player.Rb.linearVelocity = new Vector3(NewDashVelo.x, 0, 0);
         yield return new WaitForSeconds(dashTime);
         player.GravityManager.ResetVelocity();
         player.Rb.useGravity = true;
-        isDashing = false;
+        IsDashing = false;
         player.IsDashing = false;
 
     }
@@ -53,7 +54,7 @@ public class PlayerAirDashState : PlayerDashState
   //      if(!player.isGrounded ||   isDashing || player.Dashing) return;
 
         playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Attack);
-        if (_airDashCharges > 0 && player.IsDashing && !isDashing) 
+        if (_airDashCharges > 0 && player.IsDashing && !IsDashing && player.AtDashHeight) 
         {
           //  Debug.Log("PlayerDashState Dash again");
             _airDashCharges--;
@@ -72,7 +73,7 @@ public class PlayerAirDashState : PlayerDashState
     {
 //        Debug.Log(player.gravityManager.GetVelocity());
 
-        if (!player.IsGrounded && player.gameObject.transform.localPosition.y > 0.1f && !isDashing )
+        if (!player.IsGrounded && player.gameObject.transform.localPosition.y > 0.1f && !IsDashing )
         {
             player.GravityManager.ApplyGravity(player);
             player.Rb.linearVelocity = new Vector3(player.Rb.linearVelocity.x, player.GravityManager.GetVelocity(), 0);

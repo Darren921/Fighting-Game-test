@@ -14,8 +14,7 @@ public class PlayerCrouchingState : PlayerBaseState
         playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Neutral | PlayerStateManager.PlayerStateTypes.Attack | PlayerStateManager.PlayerStateTypes.Jumping | PlayerStateManager.PlayerStateTypes.CrouchMove);
         if (!player.IsCrouching && player.IsWalking)
         {
-    //        Debug.Log("Switched to Move state (C.S)");
-            playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Walking);
+         playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Walking);
         }
     }
 

@@ -6,7 +6,7 @@ public class PlayerJumpingState : PlayerBaseState
 {
     #region Standard Jump Variables
 
-    [Header("Jumping")] float velocity;
+   float velocity;
 
     #endregion
 
@@ -14,20 +14,24 @@ public class PlayerJumpingState : PlayerBaseState
     private Collider collider;
     private bool jumpTriggered;
     private InputReader.MovementInputResult enterInput;
+    private int jumpCharges;
+    private bool atJumpHeight;
+
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player)
     {
+        jumpCharges = player.characterData.jumpCharges;
+        //apply jump immediately when entering state to prevent update glitches   
         collider = player.GetComponent<Collider>();
         player.Animator.SetBool(player.Jump, true);
         player.IsRunning = false;
         TryJump(player);
+        jumpCharges--;
     }
 
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
+        if (player.transform.localPosition.y > player.JumpHeight) atJumpHeight = true;
         // check to see if player is jumping 
-
-
-        
         switch (player.IsGrounded)
         {
             case true:
@@ -37,11 +41,17 @@ public class PlayerJumpingState : PlayerBaseState
                 player.Animator.SetBool(player.Jump, true);
                 break;
         }
-
+        
+        //Transitioning states 
         if (!player.IsGrounded)
         {
             playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Attack | PlayerStateManager.PlayerStateTypes.AirDash);
-            
+            if (jumpCharges > 0 && atJumpHeight && player.PlayerMove.y > 0 )
+            {
+                player.Animator.SetBool(player.Jump, true);
+                jumpCharges--;
+                TryJump(player);
+            }
         }
         else
         {
@@ -62,25 +72,19 @@ public class PlayerJumpingState : PlayerBaseState
         }
 
 
-        //Transitioning states 
     }
 
     private void TryJump(PlayerController player)
     {
         // jumping based off on custom  gravity to ensure the player jumps to same height each time 
         velocity = player.GravityManager.SetJumpVelocity(player);
-        switch (player.InputReader.LastValidMovementInput)
+        xJumpVal = player.InputReader.LastValidMovementInput switch
         {
-            case InputReader.MovementInputResult.Up:
-                xJumpVal = 0;
-                break;
-            case InputReader.MovementInputResult.UpRight:
-                xJumpVal = 3;
-                break;
-            case InputReader.MovementInputResult.UpLeft:
-                xJumpVal = -3;
-                break;
-        }
+            InputReader.MovementInputResult.Up => 0,
+            InputReader.MovementInputResult.UpRight => 3,
+            InputReader.MovementInputResult.UpLeft => -3,
+            _ => xJumpVal
+        };
 
         enterInput = player.InputReader.LastValidMovementInput;
 
@@ -90,19 +94,17 @@ public class PlayerJumpingState : PlayerBaseState
     internal override void FixedUpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
         //performing jump and applying custom gravity 
-
         player.Rb.linearVelocity = new Vector3(xJumpVal, player.GravityManager.GetVelocity(), 0);
-//        Debug.Log(player.gravityManager.GetVelocity());
-
         if (!player.IsGrounded && player.gameObject.transform.localPosition.y > 0.1f )
         {
             player.GravityManager.ApplyGravity(player);
         }
+        //        Debug.Log(player.gravityManager.GetVelocity());
+
     }
 
     internal override void ExitState(PlayerStateManager playerStateManager, PlayerController player)
     {
-        // only resting jump velo if not attacking 
         // if (!player.IsAttacking)
         // {
         //     //   Debug.Log("Reseting velo");
@@ -111,6 +113,7 @@ public class PlayerJumpingState : PlayerBaseState
 
         player.Animator.SetBool(player.Jump, false);
         xJumpVal = 0f;
+        atJumpHeight = false;
         //   Debug.Log("Exiting playerJumpingState");
     }
 }

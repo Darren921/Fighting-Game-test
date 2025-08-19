@@ -31,7 +31,7 @@ AnimationClip:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.1
+        time: 0.06666667
         value: 1
         inSlope: Infinity
         outSlope: Infinity
@@ -40,7 +40,7 @@ AnimationClip:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.43333334
+        time: 0.26666668
         value: 0
         inSlope: Infinity
         outSlope: Infinity
@@ -70,7 +70,7 @@ AnimationClip:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.1
+        time: 0.06666667
         value: 1
         inSlope: Infinity
         outSlope: Infinity
@@ -91,11 +91,11 @@ AnimationClip:
     curve:
     - time: 0
       value: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
-    - time: 0.16666667
+    - time: 0.1
       value: {fileID: 2100000, guid: bef54b5f3ca3e094db679252daa615b8, type: 2}
-    - time: 0.43333334
+    - time: 0.26666668
       value: {fileID: 2100000, guid: 68f6a82dce335c44186144005672cd1e, type: 2}
-    - time: 0.51666665
+    - time: 0.31666666
       value: {fileID: 2100000, guid: 68f6a82dce335c44186144005672cd1e, type: 2}
     attribute: 'm_Materials.Array.data[0]'
     path: HItbox
@@ -146,7 +146,7 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.53333336
+    m_StopTime: 0.33333334
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -176,7 +176,7 @@ AnimationClip:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.1
+        time: 0.06666667
         value: 1
         inSlope: Infinity
         outSlope: Infinity
@@ -185,7 +185,7 @@ AnimationClip:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.43333334
+        time: 0.26666668
         value: 0
         inSlope: Infinity
         outSlope: Infinity
@@ -215,7 +215,7 @@ AnimationClip:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.1
+        time: 0.06666667
         value: 1
         inSlope: Infinity
         outSlope: Infinity
@@ -235,7 +235,7 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events:
-  - time: 0.53333336
+  - time: 0.31666666
     functionName: SetAttacking
     data: 
     objectReferenceParameter: {fileID: 0}
