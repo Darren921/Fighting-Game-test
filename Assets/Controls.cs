@@ -135,6 +135,24 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": ""MultiTap(tapTime=0.2,tapDelay=0.75,pressPoint=0.5)"",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Jumping"",
+                    ""type"": ""Button"",
+                    ""id"": ""92415a1a-6aad-407a-9f5d-a93915d104b5"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": ""Press"",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""SuperJump"",
+                    ""type"": ""Button"",
+                    ""id"": ""07bc2e65-108d-415b-a8c1-89eb72268fb6"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -511,6 +529,50 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""action"": ""AirDash"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""163b7165-ee8f-4646-aa68-1167aea88ce8"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Jumping"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""One Modifier"",
+                    ""id"": ""ce6c2240-179e-4861-a10f-9acc1a01b68d"",
+                    ""path"": ""OneModifier(modifiersOrder=2)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SuperJump"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Binding"",
+                    ""id"": ""384dccb8-baa2-4504-a316-5e16264fd466"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SuperJump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Modifier"",
+                    ""id"": ""dc0278c9-bfba-450d-821d-b82e18ccf935"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SuperJump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         },
@@ -1101,6 +1163,8 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         m_Player_DashMacro = m_Player.FindAction("DashMacro", throwIfNotFound: true);
         m_Player_RunOrDash = m_Player.FindAction("RunOrDash", throwIfNotFound: true);
         m_Player_AirDash = m_Player.FindAction("AirDash", throwIfNotFound: true);
+        m_Player_Jumping = m_Player.FindAction("Jumping", throwIfNotFound: true);
+        m_Player_SuperJump = m_Player.FindAction("SuperJump", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1199,6 +1263,8 @@ public partial class @Controls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_DashMacro;
     private readonly InputAction m_Player_RunOrDash;
     private readonly InputAction m_Player_AirDash;
+    private readonly InputAction m_Player_Jumping;
+    private readonly InputAction m_Player_SuperJump;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -1230,6 +1296,14 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/AirDash".
         /// </summary>
         public InputAction @AirDash => m_Wrapper.m_Player_AirDash;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Jumping".
+        /// </summary>
+        public InputAction @Jumping => m_Wrapper.m_Player_Jumping;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/SuperJump".
+        /// </summary>
+        public InputAction @SuperJump => m_Wrapper.m_Player_SuperJump;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1271,6 +1345,12 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @AirDash.started += instance.OnAirDash;
             @AirDash.performed += instance.OnAirDash;
             @AirDash.canceled += instance.OnAirDash;
+            @Jumping.started += instance.OnJumping;
+            @Jumping.performed += instance.OnJumping;
+            @Jumping.canceled += instance.OnJumping;
+            @SuperJump.started += instance.OnSuperJump;
+            @SuperJump.performed += instance.OnSuperJump;
+            @SuperJump.canceled += instance.OnSuperJump;
         }
 
         /// <summary>
@@ -1297,6 +1377,12 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @AirDash.started -= instance.OnAirDash;
             @AirDash.performed -= instance.OnAirDash;
             @AirDash.canceled -= instance.OnAirDash;
+            @Jumping.started -= instance.OnJumping;
+            @Jumping.performed -= instance.OnJumping;
+            @Jumping.canceled -= instance.OnJumping;
+            @SuperJump.started -= instance.OnSuperJump;
+            @SuperJump.performed -= instance.OnSuperJump;
+            @SuperJump.canceled -= instance.OnSuperJump;
         }
 
         /// <summary>
@@ -1632,6 +1718,20 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnAirDash(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Jumping" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnJumping(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "SuperJump" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSuperJump(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

@@ -20,6 +20,7 @@ public class PlayerNeutralState : PlayerBaseState
     internal override void UpdateState(PlayerStateManager playerStateManager,PlayerController player)
     {
         playerStateManager.CheckForTransition(PlayerStateTypes.Attack | PlayerStateTypes.Jumping | PlayerStateTypes.Crouching | PlayerStateTypes.Walking | PlayerStateTypes.Running | PlayerStateTypes.Dash);
+        if(player.SuperJumpActive) playerStateManager.SwitchState (PlayerStateTypes.Jumping);
     }
      
     private IEnumerator CheckIfIdle(PlayerController player)

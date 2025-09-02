@@ -49,6 +49,24 @@
                     "processors": "",
                     "interactions": "MultiTap(tapTime=0.2,tapDelay=0.75,pressPoint=0.5)",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Jumping",
+                    "type": "Button",
+                    "id": "92415a1a-6aad-407a-9f5d-a93915d104b5",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Press",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "SuperJump",
+                    "type": "Button",
+                    "id": "07bc2e65-108d-415b-a8c1-89eb72268fb6",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -425,6 +443,50 @@
                     "action": "AirDash",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "163b7165-ee8f-4646-aa68-1167aea88ce8",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Jumping",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "One Modifier",
+                    "id": "ce6c2240-179e-4861-a10f-9acc1a01b68d",
+                    "path": "OneModifier(modifiersOrder=2)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SuperJump",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "Binding",
+                    "id": "384dccb8-baa2-4504-a316-5e16264fd466",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SuperJump",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Modifier",
+                    "id": "dc0278c9-bfba-450d-821d-b82e18ccf935",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SuperJump",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         },

@@ -44,6 +44,9 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     internal bool AtDashHeight;
 
     #endregion
+
+    public Action OnJump;
+    
     
     #region Attack Check Variables
 
@@ -81,7 +84,9 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     internal Rigidbody Rb;
     internal InputReader.MovementInputResult DashDir;
     internal bool IsGrounded;
+    internal bool SuperJumpActive;
     [SerializeField] internal GameObject hitBox;
+    internal bool jumpPressed;
 
     #endregion
 
@@ -112,6 +117,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         _playerActions.Move.performed += OnMove;
         _playerActions.Move.canceled += OnMove;
         _playerActions.Attack.performed += OnAttack;
+        _playerActions.Jumping.performed += OnJumping;
+        _playerActions.SuperJump.performed += OnSuperJump;
 
         print(gameObject.gameObject.name);
 
@@ -272,6 +279,22 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         IsRunning = false;
         IsWalking = false;
     }
+
+    public void OnJumping(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            OnJump?.Invoke();
+        }
+
+    }
+
+    public void OnSuperJump(InputAction.CallbackContext context)
+    {
+
+        SuperJumpActive = true;
+    }
+
     public void OnRunOrDash(InputAction.CallbackContext context)
     {
         var contextHold = context.interaction as MultiTapOrHold;
