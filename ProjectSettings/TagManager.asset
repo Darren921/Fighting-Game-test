@@ -7,6 +7,8 @@ TagManager:
   - HurtBox
   - PushBox
   - HitBox
+  - Ground
+  - Wall
   layers:
   - Default
   - TransparentFX
@@ -16,7 +18,7 @@ TagManager:
   - UI
   - Ground
   - PushBox
-  - 
+  - PlayerBody
   - 
   - 
   - 
