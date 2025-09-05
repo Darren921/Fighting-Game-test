@@ -6,40 +6,7 @@ using UnityEngine;
 public class PlayerAttackState : PlayerBaseState
 {
     // for future combo uses (look up table )
-    private Dictionary<( InputReader.MovementInputResult, InputReader.AttackInputResult), InputReader.AttackInputResult>
-        attackMoveActions = new()
-        {
-            {
-                (InputReader.MovementInputResult.None, InputReader.AttackInputResult.Light),
-                InputReader.AttackInputResult.Light
-            },
-            {
-                (InputReader.MovementInputResult.Forward, InputReader.AttackInputResult.Light),
-                InputReader.AttackInputResult.LightLeft
-            },
-            {
-                (InputReader.MovementInputResult.Backward, InputReader.AttackInputResult.Light),
-                InputReader.AttackInputResult.LightLeft
-            },
-
-            {
-                (InputReader.MovementInputResult.None, InputReader.AttackInputResult.Medium),
-                InputReader.AttackInputResult.Medium
-            },
-            {
-                (InputReader.MovementInputResult.Forward, InputReader.AttackInputResult.Medium),
-                InputReader.AttackInputResult.MediumLeft
-            },
-            {
-                (InputReader.MovementInputResult.Backward, InputReader.AttackInputResult.Medium),
-                InputReader.AttackInputResult.MediumRight
-            },
-
-            {
-                (InputReader.MovementInputResult.None, InputReader.AttackInputResult.Heavy),
-                InputReader.AttackInputResult.Heavy
-            },
-        };
+  
 
 
     private Coroutine cooldownCoroutine;
@@ -95,14 +62,15 @@ public class PlayerAttackState : PlayerBaseState
 
     private void PerformAttack(PlayerController player)
     {
+        lastAttack = player.InputReader.UseAttackInput();
         lastMove = player.InputReader.currentMoveInput;
-        lastAttack = player.InputReader.currentAttackInput;
+        Debug.Log(player.InputReader.currentAttackInput);
         if (player.IsAttacking && !player.OnAttackCoolDown)
         {
             // choose attack based on input 
             switch (lastAttack)
             {
-                case InputReader.AttackInputResult.Light:
+                case InputReader.AttackInputResult.Light or InputReader.AttackInputResult.LightLeft or InputReader.AttackInputResult.LightRight:
                     Light(player, lastMove);
 //                    Debug.Log(lastMove.ToString());
                     break;

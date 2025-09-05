@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -53,7 +54,7 @@ public class PlayerJumpingState : PlayerBaseState
 
         doubleJumpReady = player.PlayerMove == Vector3.zero && atJumpHeight && jumpCharges > 0 &&
                           !player.SuperJumpActive;
-
+    
         //Transitioning states 
         if (!player.IsGrounded)
         {
@@ -92,15 +93,18 @@ public class PlayerJumpingState : PlayerBaseState
     {
         // jumping based off on custom  gravity to ensure the player jumps to same height each time 
         velocity = player.GravityManager.SetJumpVelocity(player);
-        xJumpVal = player.InputReader.LastValidMovementInput switch
+        Debug.Log(player.InputReader.currentMoveInput);
+        xJumpVal = player.InputReader.currentMoveInput switch
         {
             InputReader.MovementInputResult.Up => 0,
+            InputReader.MovementInputResult.Forward => !player.Reversed ? 3 : -3,
+            InputReader.MovementInputResult.Backward => !player.Reversed ? -3 : 3,
             InputReader.MovementInputResult.UpRight => 3,
             InputReader.MovementInputResult.UpLeft => -3,
             _ => xJumpVal
         };
 
-        enterInput = player.InputReader.LastValidMovementInput;
+        enterInput = player.InputReader.currentMoveInput;
 
     }
 

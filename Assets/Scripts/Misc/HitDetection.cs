@@ -41,12 +41,12 @@ public class HitDetection : MonoBehaviour, IDamageable
     private PlayerController OnHit(PlayerController sender, PlayerController receiver)
     {
         
-        //Check the players buffers for last attack frame  and decide the player hit
+        /*//Check the players buffers for last attack frame  and decide the player hit
         var attackBufferSender = sender.GetComponentInParent<InputReader>();
         var attackBufferReceiver = receiver.GetComponentInParent<InputReader>();
         
-        if (attackBufferSender.LastValidAttackInput != InputReader.AttackInputResult.None &&
-            attackBufferReceiver.LastValidAttackInput != InputReader.AttackInputResult.None)
+        if (attackBufferSender.currentAttackInput != InputReader.AttackInputResult.None &&
+            attackBufferReceiver.currentAttackInput != InputReader.AttackInputResult.None)
         {
             var result = attackBufferSender.LastValidAttackInputFrame < attackBufferReceiver.LastValidAttackInputFrame ?  sender : receiver ;
             print(result);
@@ -59,7 +59,7 @@ public class HitDetection : MonoBehaviour, IDamageable
         if (attackBufferSender.LastValidAttackInput == InputReader.AttackInputResult.None && attackBufferReceiver.LastValidAttackInput != InputReader.AttackInputResult.None)
         {
             return sender;
-        }
+        } */
         return null;
     }
 

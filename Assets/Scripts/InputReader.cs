@@ -56,18 +56,44 @@ public class InputReader : MonoBehaviour
         HeavyLeft,
         HeavyRight,
     }
+    
+    private Dictionary<( MovementInputResult, AttackInputResult), AttackInputResult>
+        attackMoveActions = new()
+        {
+            {
+                (MovementInputResult.None, AttackInputResult.Light), AttackInputResult.Light
+            },
+            {
+                (MovementInputResult.Forward, AttackInputResult.Light), AttackInputResult.LightRight
+            },
+            {
+                (MovementInputResult.Backward, AttackInputResult.Light), AttackInputResult.LightLeft
+            },
+
+            {
+                (MovementInputResult.None, AttackInputResult.Medium),
+                AttackInputResult.Medium
+            },
+            {
+                (MovementInputResult.Forward, AttackInputResult.Medium),
+                AttackInputResult.MediumRight
+            },
+            {
+                (MovementInputResult.Backward, AttackInputResult.Medium),
+                AttackInputResult.MediumLeft
+            },
+
+            {
+                (MovementInputResult.None, AttackInputResult.Heavy),
+                AttackInputResult.Heavy
+            },
+        };
 
     PlayerController player;
     public MovementInputResult currentMoveInput { get; private set; }
-    public int currentMoveInputFrame { get; private set; }
     public AttackInputResult currentAttackInput { get; private set; }
     public int currentAttackInputFrame { get; private set; }
-
-    public MovementInputResult LastValidMovementInput { get; private set; }
-    public AttackInputResult LastValidAttackInput { get; private set; }
-    public int  LastValidAttackInputFrame { get; private set; }
-
-
+    
     public Queue<bufferedInput<MovementInputResult>> movementBuffer = new();
     public Queue<bufferedInput<AttackInputResult>> attackBuffer = new();
 
@@ -83,7 +109,8 @@ public class InputReader : MonoBehaviour
     {
         public T input;
         public int curFrame;
-
+        
+        
         public bufferedInput(T input, int curFrame)
         {
             this.input = input;
@@ -105,27 +132,18 @@ public class InputReader : MonoBehaviour
     }*/
     public void AddMovementInput(MovementInputResult result)
     {
-        var frame = Time.frameCount;
-
-        if (result != MovementInputResult.None)
-        {
-            LastValidMovementInput = result;
-        }
-
-        if (movementBuffer.Count < bufferCap)
-            movementBuffer.Enqueue(new bufferedInput<MovementInputResult>(result, frame));
+        if (movementBuffer.Count >= bufferCap)
+            movementBuffer.Dequeue();
+        
+        movementBuffer.Enqueue(new bufferedInput<MovementInputResult>(result,Time.frameCount));
     }
 
     public void AddAttackInput(AttackInputResult result)
     {
-        var frame = Time.frameCount;
-        if (result != AttackInputResult.None)
-        {
-            LastValidAttackInput = result;
-            LastValidAttackInputFrame = frame;
-        }
-        if (attackBuffer.Count < bufferCap)
-            attackBuffer.Enqueue(new bufferedInput<AttackInputResult>(result, frame));
+        result = checkForNormals(result, currentMoveInput);
+        if (attackBuffer.Count >= bufferCap)
+            movementBuffer.Dequeue();
+        attackBuffer.Enqueue(new bufferedInput<AttackInputResult>(result, Time.frameCount));
     }
 
 
@@ -134,6 +152,7 @@ public class InputReader : MonoBehaviour
         player = GetComponent<PlayerController>();
         bufferTime = 3f;
         bufferCap = 10;
+        player.PlayerAttackAction += AddAttackInput;
     }
 
     private void Update()
@@ -145,18 +164,17 @@ public class InputReader : MonoBehaviour
     private void UpdateInputBuffers()
     {
         var curFrame = Time.frameCount;
-        if (movementBuffer.Count > 0 && curFrame - movementBuffer.Peek().curFrame > bufferTime)
+        while (movementBuffer.Count > 0 && curFrame - movementBuffer.Peek().curFrame > bufferTime)
         {
             movementBuffer.Dequeue();
         }
 
-        if (attackBuffer.Count > 0 && curFrame - attackBuffer.Peek().curFrame > bufferTime)
+        while (attackBuffer.Count > 0 && curFrame - attackBuffer.Peek().curFrame > bufferTime)
         {
             attackBuffer.Dequeue();
         }
 
         currentMoveInput = movementBuffer.Count > 0 ? movementBuffer.Peek().input : MovementInputResult.None;
-        currentMoveInputFrame = movementBuffer.Count > 0 ? movementBuffer.Peek().curFrame : 0;
         currentAttackInput = attackBuffer.Count > 0 ? attackBuffer.Peek().input : AttackInputResult.None;
         currentAttackInputFrame = attackBuffer.Count > 0 ? attackBuffer.Peek().curFrame : 0;
 
@@ -191,5 +209,17 @@ public class InputReader : MonoBehaviour
         };
 //            print(playerInput);
         AddMovementInput(lookup[(player.PlayerMove.x, player.PlayerMove.y)]);
+    }
+    
+    private AttackInputResult checkForNormals(AttackInputResult attackInputResult, MovementInputResult movementInput)
+    {
+        return attackMoveActions.GetValueOrDefault((movementInput, attackInputResult), attackInputResult);
+    }
+    
+    public AttackInputResult UseAttackInput()
+    {
+        if (attackBuffer.Count == 0) return AttackInputResult.None;
+        var input = attackBuffer.Dequeue().input;
+        return input;
     }
 }

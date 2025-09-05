@@ -46,7 +46,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     #endregion
 
     public Action OnJump;
-    
+    public Action<InputReader.AttackInputResult> PlayerAttackAction;
     
     #region Attack Check Variables
 
@@ -253,7 +253,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     public void OnAttack(InputAction.CallbackContext context)
     {
         //convert and passes input to attack type for the input reader 
-        InputReader.AddAttackInput(ReturnAttackType(context.ReadValue<float>()));
+        PlayerAttackAction?.Invoke(ReturnAttackType(context.ReadValue<float>()));
         if (OnAttackCoolDown || IsAttacking) return;
         IsAttacking = true;
         Animator.SetBool(Attacking, true);
@@ -275,7 +275,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         if (IsRunning || IsDashing || IsGrounded ) return;
         print("entered dash");
         IsDashing = true;
-        DashDir = InputReader.LastValidMovementInput;
+        DashDir = InputReader.currentMoveInput;
         IsRunning = false;
         IsWalking = false;
     }
@@ -319,7 +319,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         //This is run section activated when the button is press and held after the second press 
         if (contextHold is { Holding: true } && context.performed && IsGrounded)
         {
-            if (InputReader.LastValidMovementInput == InputReader.MovementInputResult.Backward)
+            if (InputReader.currentMoveInput == InputReader.MovementInputResult.Backward)
             {
                 IsWalking = true;
                 return;
@@ -337,7 +337,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         if (IsRunning || IsDashing || !IsGrounded || context.canceled) return;
         print("entered dash");
         IsDashing = true;
-        DashDir = InputReader.LastValidMovementInput;
+        DashDir = InputReader.currentMoveInput;
         IsRunning = false;
         IsWalking = false;
     }
