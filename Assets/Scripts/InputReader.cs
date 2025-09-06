@@ -220,6 +220,15 @@ public class InputReader : MonoBehaviour
     {
         if (attackBuffer.Count == 0) return AttackInputResult.None;
         var input = attackBuffer.Dequeue().input;
+        Debug.Log(input);
+        return input;
+    }
+
+    public MovementInputResult UseMovementInput()
+    {
+        if (movementBuffer.Count == 0) return MovementInputResult.None;
+        var input = movementBuffer.Dequeue().input;
+        Debug.Log(input);
         return input;
     }
 }

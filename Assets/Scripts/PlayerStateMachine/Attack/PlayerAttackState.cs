@@ -63,8 +63,8 @@ public class PlayerAttackState : PlayerBaseState
     private void PerformAttack(PlayerController player)
     {
         lastAttack = player.InputReader.UseAttackInput();
-        lastMove = player.InputReader.currentMoveInput;
-        Debug.Log(player.InputReader.currentAttackInput);
+        lastMove = player.InputReader.UseMovementInput();
+        Debug.Log(lastMove);
         if (player.IsAttacking && !player.OnAttackCoolDown)
         {
             // choose attack based on input 
@@ -74,7 +74,7 @@ public class PlayerAttackState : PlayerBaseState
                     Light(player, lastMove);
 //                    Debug.Log(lastMove.ToString());
                     break;
-                case InputReader.AttackInputResult.Medium:
+                case InputReader.AttackInputResult.Medium or InputReader.AttackInputResult.MediumLeft or InputReader.AttackInputResult.MediumRight:
                     Medium(player, lastMove);
                     //        Debug.Log(lastMove.ToString());
                     break;
