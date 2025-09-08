@@ -150,7 +150,7 @@ public class InputReader : MonoBehaviour
     private void Awake()
     {
         player = GetComponent<PlayerController>();
-        bufferTime = 3f;
+        bufferTime = 5f;
         bufferCap = 10;
         player.PlayerAttackAction += AddAttackInput;
     }

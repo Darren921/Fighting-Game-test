@@ -97,6 +97,13 @@ public class MultiTapOrHold : IInputInteraction
                     context.Canceled();
                     Reset();
                 }
+                else
+                {
+                    Debug.Log("MultiTapOrHold: Still Performed");
+                }
+                break;
+            case  Phase.Canceled:
+                context.Canceled();
                 break;
         }
     }
@@ -106,6 +113,7 @@ public class MultiTapOrHold : IInputInteraction
         Tap,
         WaitForRelease,
         Performed,
+        Canceled
     }
 
     private Phase currentPhase;
