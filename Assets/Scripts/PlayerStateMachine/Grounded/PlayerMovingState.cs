@@ -17,7 +17,9 @@ public abstract class PlayerMovingState : PlayerBaseState
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player)
     {
 //        Debug.Log("Entered " + playerStateManager.currentState);
+        
         _player = player;
+        player.Rb.linearVelocity = Vector3.zero;
     }
 
     internal override void FixedUpdateState(PlayerStateManager playerStateManager, PlayerController player)
@@ -53,7 +55,7 @@ public abstract class PlayerMovingState : PlayerBaseState
         while (player.Rb.linearVelocity.magnitude > 0.1f)
         {
             var decelerationCurve = player.Rb.linearVelocity.normalized * (2 * Time.deltaTime);
-            Debug.Log(decelerationCurve);
+//            Debug.Log(decelerationCurve);
             player.Rb.linearVelocity -= decelerationCurve;
             yield return null;
         }

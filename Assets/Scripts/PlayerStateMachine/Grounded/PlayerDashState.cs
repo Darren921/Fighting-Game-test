@@ -15,7 +15,7 @@ public class PlayerDashState : PlayerMovingState
 
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player)
     {
-        Dir  = player.DashDir;
+        Dir  = player.InputReader.currentMoveInput;
         Debug.Log(Dir);
         player.Rb.linearVelocity = Vector3.zero;
       Debug.Log("PlayerDashState EnterState");

@@ -15,15 +15,17 @@ public class MultiTapOrHold : IInputInteraction
     public float releasePoint = 0.2f;
     
     [Tooltip("Time in seconds to complete your multi tap before the action is canceled")]
-    public float duration = 0.5f;
-
+    public float totalDuration = 0.5f;
+    [Tooltip("Time in seconds to increase tap count before the action is canceled")]
+    public float tapDuration  = 0.5f;
     [Tooltip("Above this value a tap is pressed")]
     public float pressPoint = 0.4f;
 
     private float _tapCounter;
-    private float _holdTime;
+    private float _holdTime = 0.1f;
     internal bool Holding;
-    private float _currentTime;
+    private double _currentTapTime;
+    private double _currentReleaseTime;
 
 
     static MultiTapOrHold()
@@ -36,72 +38,74 @@ public class MultiTapOrHold : IInputInteraction
         if (context.timerHasExpired)
         {
             context.Canceled();
+            Reset();
             return;
         }
-        switch (context.phase)
+
+        switch (currentPhase)
         {
-            case InputActionPhase.Waiting:
+            case Phase.None:
+            {
                 if (context.ControlIsActuated(pressPoint))
                 {
                     _tapCounter++;
+                    currentPhase = Phase.WaitForRelease;
+                    _currentTapTime = context.time;
                     context.Started();
-                    context.SetTimeout(duration + 0.00001f); 
-                    _currentTime = Time.time;
-//                    Debug.Log("waited");
                 }
-                break;
 
-            case InputActionPhase.Started:
-                if (context.ControlIsActuated(pressPoint))
+                break;
+            }
+            case Phase.Tap:
+                
+                _tapCounter++;
+                if (_tapCounter >= multiTapCount)
                 {
-                    _holdTime = Time.time - _currentTime;
-//                    Debug.Log(holdTime);
-                    _tapCounter++;
-             //       Debug.Log("started");
-                    if (_tapCounter >= multiTapCount && _holdTime < 0.189)
-                    {
-                        if (_holdTime > 0.185 && !Holding)
-                        {
-                            context.Canceled();
-                        }
-                        Holding = false;
-                        context.Performed();
-                    }
-                    else if (_tapCounter >= multiTapCount && _holdTime >= 0.189)
-                    {
-                        Holding = true;
-                        context.PerformedAndStayPerformed();
-                    }
+                    currentPhase = Phase.Performed;
+                    context.PerformedAndStayPerformed();
+                }
+                else
+                {
+                    currentPhase = Phase.WaitForRelease;
                 }
                 break;
+            case Phase.WaitForRelease:
+                if (!context.ControlIsActuated(releasePoint))
+                {
+                    if (context.time - _currentTapTime <= tapDuration)
+                    {
+                        currentPhase = Phase.Tap;
+                        _currentReleaseTime = context.time;
+                    }
+                    else
+                    {
+                        context.Canceled();
+                    }
+                }
 
-            case InputActionPhase.Performed:
-                Debug.Log("performed" + _holdTime + " seconds");
-
-                if (!context.ControlIsActuated())
+                break;
+            case Phase.Performed:
+                if (!context.ControlIsActuated(releasePoint))
                 {
                     context.Canceled();
-//               Debug.Log("Cancelled actuated 1 ");
-                }
-                if(!context.ControlIsActuated(releasePoint))
-                {
-                    context.Canceled();
-//                    Debug.Log("Cancelled actuated 2");
-
+                    Reset();
                 }
                 break;
-
-            case InputActionPhase.Canceled:
-                Debug.Log("canceled");
-                Reset();
-                break;
-
         }
     }
+    private enum Phase
+    {
+        None,
+        Tap,
+        WaitForRelease,
+        Performed,
+    }
 
+    private Phase currentPhase;
     public void Reset()
     {
+        Debug.Log("canceled");
+        currentPhase = Phase.None;
         _tapCounter = 0;
-        _holdTime = 0;
     }
 }

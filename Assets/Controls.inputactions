@@ -33,15 +33,6 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "RunOrDash",
-                    "type": "Button",
-                    "id": "a01182da-0edd-40e3-a1d7-9d54e6f24fd1",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "MultiTapOrHold(duration=0.3,pressPoint=0.5)",
-                    "initialStateCheck": true
-                },
-                {
                     "name": "AirDash",
                     "type": "Button",
                     "id": "a449c966-36ba-4b8b-94dd-de538fa4d3d5",
@@ -66,6 +57,15 @@
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Run",
+                    "type": "Button",
+                    "id": "d0ff13c3-b779-43ba-80e3-2d9c0196b25c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "MultiTapOrHold",
                     "initialStateCheck": true
                 }
             ],
@@ -358,28 +358,6 @@
                 },
                 {
                     "name": "",
-                    "id": "e877625c-102b-4802-88b8-a14395b07648",
-                    "path": "<Keyboard>/a",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "RunOrDash",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "06fff161-ef31-4e9f-9904-518f6f5bf0a4",
-                    "path": "<Keyboard>/d",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "RunOrDash",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "69478adf-fb99-47ee-9b45-9f5f13ea6438",
                     "path": "<Keyboard>/a",
                     "interactions": "",
@@ -487,6 +465,39 @@
                     "action": "SuperJump",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "24697049-9df2-4465-8b93-f45f625502f8",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SuperJump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c61ade6e-757e-4e3a-910a-4b8a19cfa866",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Run",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5613b751-e9b4-46a8-852f-d12858055be3",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Run",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -1001,6 +1012,45 @@
                     "processors": "",
                     "groups": "XR",
                     "action": "TrackedDeviceOrientation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Archive",
+            "id": "48ab29e2-3218-475e-822b-ad3c67dc39f2",
+            "actions": [
+                {
+                    "name": "RunOrDash",
+                    "type": "Button",
+                    "id": "45d8f6d4-ea3d-42f3-a1f5-7df13212694b",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "37c72f40-e80a-4421-9740-d9fc85f198cf",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "RunOrDash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f9e33a26-3a3d-4b64-82e5-9acd9c790cb8",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "RunOrDash",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

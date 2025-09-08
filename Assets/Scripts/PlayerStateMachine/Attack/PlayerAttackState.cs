@@ -62,8 +62,8 @@ public class PlayerAttackState : PlayerBaseState
 
     private void PerformAttack(PlayerController player)
     {
-        lastAttack = player.InputReader.UseAttackInput();
-        lastMove = player.InputReader.UseMovementInput();
+        lastAttack = player.InputReader.currentAttackInput;
+        lastMove = player.InputReader.currentMoveInput;
         Debug.Log(lastMove);
         if (player.IsAttacking && !player.OnAttackCoolDown)
         {

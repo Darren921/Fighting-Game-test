@@ -78,7 +78,7 @@ public class PlayerStateManager : MonoBehaviour
     public void CheckForTransition(PlayerStateTypes transitionType)
     {
         if (transitionType.HasFlag(PlayerStateTypes.Neutral))
-            if (player.PlayerMove == Vector3.zero && player.IsGrounded)
+            if (player.PlayerMove == Vector3.zero && player.IsGrounded && player.Rb.linearVelocity.magnitude < 0.1f)
             {
 //                print($"Fired from {currentState}");
                 SwitchState(PlayerStateTypes.Neutral);
@@ -90,7 +90,7 @@ public class PlayerStateManager : MonoBehaviour
         
         if(transitionType.HasFlag(PlayerStateTypes.Walking)) if (player.PlayerMove.x != 0) SwitchState(PlayerStateTypes.Walking);
         
-        if(transitionType.HasFlag(PlayerStateTypes.Running)) if (player.IsRunning  && !player.IsDashing ) SwitchState(PlayerStateTypes.Running);
+        if(transitionType.HasFlag(PlayerStateTypes.Running)) if (player.IsRunning  && player.InputReader.currentMoveInput != InputReader.MovementInputResult.Backward ) SwitchState(PlayerStateTypes.Running);
 
         if(transitionType.HasFlag(PlayerStateTypes.Dash)) if (player.IsDashing  && !player.IsRunning ) SwitchState(PlayerStateTypes.Dash);
 

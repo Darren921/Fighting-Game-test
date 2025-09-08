@@ -13,27 +13,24 @@ public class PlayerRunningState : PlayerMovingState
         {
             player.StartCoroutine(DecelerationCurve(player));
         }
+
         if (player.PlayerMove == Vector3.zero && decelerating == false)
         {
-                Debug.Log("HEH");
-                playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Neutral);
+//            Debug.Log("HEH");
+            playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Neutral);
         }
-
-        //switch states 
-        if(decelerating) return;
-        if (player.InputReader.currentMoveInput == InputReader.MovementInputResult.Backward && player.IsGrounded)
+        
+        if (player.InputReader.currentMoveInput == InputReader.MovementInputResult.Backward )
         {
-            player.IsRunning = false;
-            player.IsWalking = true;
-            playerStateManager.SwitchToLastState();
-        }
-        else if (player.InputReader.currentMoveInput == InputReader.MovementInputResult.Backward && !player.IsGrounded)
-        {
+//            Debug.Log("BACK");
             player.IsRunning = false;
             player.IsWalking = true;
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Walking);
         }
 
+        //switch states 
+        if(decelerating ) return;
+        
         playerStateManager.CheckForTransition( PlayerStateManager.PlayerStateTypes.Attack | PlayerStateManager.PlayerStateTypes.CrouchMove);
         if (player.PlayerMove.x != 0 && player.IsCrouching) playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.CrouchMove);
         
@@ -57,6 +54,7 @@ public class PlayerRunningState : PlayerMovingState
     internal override void ExitState(PlayerStateManager playerStateManager, PlayerController player)
     {
 
+        player.IsRunning = false;
 //        Debug.Log(player.rb.linearVelocity);
     }
 }

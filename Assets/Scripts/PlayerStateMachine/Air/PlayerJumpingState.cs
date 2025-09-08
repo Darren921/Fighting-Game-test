@@ -14,11 +14,11 @@ public class PlayerJumpingState : PlayerBaseState
     private float xJumpVal; // check Try jump method for changes 
     private Collider collider;
     private bool jumpTriggered;
-    private InputReader.MovementInputResult enterInput;
     private int jumpCharges;
     private bool atJumpHeight;
     private bool doubleJumpReady ;
 
+    private Coroutine jumpCoroutine;
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player)
     {
         
@@ -27,11 +27,15 @@ public class PlayerJumpingState : PlayerBaseState
         collider = player.GetComponent<Collider>();
         player.Animator.SetBool(player.Jump, true);
         player.IsRunning = false;
-        TryJump(player);
+        TryJump(player);       
         jumpCharges--;
         player.OnJump += HandleJumpInput; 
 
     }
+
+  
+     
+    
 
     private void HandleJumpInput()
     {
@@ -61,6 +65,7 @@ public class PlayerJumpingState : PlayerBaseState
             playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Attack | PlayerStateManager.PlayerStateTypes.AirDash);
             if (jumpCharges > 0 && atJumpHeight && doubleJumpReady && jumpTriggered)
             {
+                Debug.Log("Double Jumpped");
                 player.Animator.SetBool(player.Jump, true);
                 doubleJumpReady = false;
                 jumpCharges--;
@@ -93,19 +98,19 @@ public class PlayerJumpingState : PlayerBaseState
     {
         // jumping based off on custom  gravity to ensure the player jumps to same height each time 
         velocity = player.GravityManager.SetJumpVelocity(player);
-        xJumpVal = player.InputReader.currentMoveInput switch
+         Debug.Log(player.InputReader.currentMoveInput);
+        var moveInput = player.InputReader.currentMoveInput;
+
+        xJumpVal = moveInput switch
         {
-            
             InputReader.MovementInputResult.Up => 0,
-            InputReader.MovementInputResult.Forward => !player.Reversed ? 3 : -3,
-            InputReader.MovementInputResult.Backward => !player.Reversed ? -3 : 3,
+          //  InputReader.MovementInputResult.Forward => !player.Reversed ? 3 : -3,
+         //   InputReader.MovementInputResult.Backward => !player.Reversed ? -3 : 3,
             InputReader.MovementInputResult.UpRight => 3,
             InputReader.MovementInputResult.UpLeft => -3,
             _ => xJumpVal
         };
-
-        enterInput = player.InputReader.currentMoveInput;
-
+        
     }
 
 

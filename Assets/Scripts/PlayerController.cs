@@ -30,7 +30,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     private Controls _controls;
     private Controls.PlayerActions _playerActions;
     internal InputReader InputReader;
-    [SerializeField] internal CharacterSO characterData;
+    internal CharacterSO characterData;
     internal Animator Animator;
     internal GravityManager GravityManager;
     internal HitDetection PlayerHitDetection;
@@ -101,6 +101,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         Animator = GetComponent<Animator>();
         Rb = GetComponent<Rigidbody>();
         RaycastDistance = 2.0231f;
+        HitDetection.OnDeath += OnPlayerDeath;
+
     }
 
     public void InitializePlayer(InputDevice device)
@@ -109,9 +111,16 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         _controls = new Controls();
         //creates a new set of controls for the chosen device 
         _controls.devices = new[] { device };
-        _playerActions = _controls.Player;
-        _playerActions.RunOrDash.performed += OnRunOrDash;
-        _playerActions.RunOrDash.canceled += OnRunOrDash;
+        if (device != null)
+        {
+            _playerActions = _controls.Player;
+        }
+        else
+        {
+            _playerActions = new Controls.PlayerActions();
+        }
+        _playerActions.Run.performed += OnRun;
+        _playerActions.Run.canceled += OnRun;
         _playerActions.DashMacro.performed += OnDashMacro;
         _playerActions.AirDash.performed += OnAirDash;
         _playerActions.Move.performed += OnMove;
@@ -119,19 +128,16 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         _playerActions.Attack.performed += OnAttack;
         _playerActions.Jumping.performed += OnJumping;
         _playerActions.SuperJump.performed += OnSuperJump;
-
-        print(gameObject.gameObject.name);
-
+       
         OnEnablePlayer();
+//        print(gameObject.gameObject.name);
         SetUpCharacterVariables();
     }
     private void OnDisable() => OnDisablePlayer();
 
     public void OnEnablePlayer()
     {
-        // add player events here 
         _playerActions.Enable();
-        HitDetection.OnDeath += OnPlayerDeath;
     }
     public void OnDisablePlayer()
     {
@@ -295,7 +301,33 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         SuperJumpActive = true;
     }
 
-    public void OnRunOrDash(InputAction.CallbackContext context)
+    public void OnRun(InputAction.CallbackContext context)
+    {
+        if (InputReader.currentMoveInput == InputReader.MovementInputResult.None) InputReader.GetValidMoveInput();
+        if (context.performed && InputReader.currentMoveInput != InputReader.MovementInputResult.Backward)
+        {
+            
+            print(InputReader.currentMoveInput);
+            IsRunning = true;
+            IsWalking = false;
+        }
+       
+        if (IsRunning && context.canceled)
+        {
+            if (PlayerMove.x != 0)
+            {
+                print("canceled run");
+                IsRunning = false;
+                IsWalking = true;
+            }
+            
+            
+        }
+
+    }
+
+
+    /*public void OnRunOrDash(InputAction.CallbackContext context)
     {
         var contextHold = context.interaction as MultiTapOrHold;
 
@@ -340,7 +372,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         DashDir = InputReader.currentMoveInput;
         IsRunning = false;
         IsWalking = false;
-    }
+    }*/
 
    
 

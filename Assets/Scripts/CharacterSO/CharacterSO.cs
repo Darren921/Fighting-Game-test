@@ -7,9 +7,11 @@ public class CharacterSO : ScriptableObject
     public float gravScale;
 
     // All character data is here, add and remove as needed 
+    
+    [Header ("Health")]
     public int health;
-    
-    
+    [Header ("Misc")]
+    public string characterName;
     [Header("Movement")]
     public int walkSpeed;
     public int runSpeed;

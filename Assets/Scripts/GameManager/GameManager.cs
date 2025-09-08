@@ -10,6 +10,7 @@ using UnityEngine.Timeline;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private PlayerController[] players;
+   [SerializeField] private CharacterSODataBase characterDatabase;
 
     private readonly List<InputDevice> _availableDevices = new ();
 
@@ -18,10 +19,13 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-       
+        // CHANGE THIS TO ACCEPT INPUT FROM CHARACTER SELECTION, THIS HURTS TO LEAVE
+        foreach (var player in players)
+        {
+            player.characterData = characterDatabase.GetCharacterSODataBase(0);
+        }
         HitDetection.OnDeath += OnPlayerDeath;
         Application.targetFrameRate = 60;
-        print(Application.targetFrameRate);
     //    Time.timeScale = 0.1f;
     
         // temp method to add devices to a pool in order to connect them to a player 
@@ -80,11 +84,13 @@ public class GameManager : MonoBehaviour
             if (i < _availableDevices.Count)
             {
                 players[i].InitializePlayer(_availableDevices[i]);
-                Debug.Log($"Assigned {_availableDevices[i].name} to Player {i + 1}");
+//                Debug.Log($"Assigned {_availableDevices[i].name} to Player {i + 1}");
             }
             else
             {
-                Debug.LogWarning($"No input device available for Player {i + 1}");
+                if(!_availableDevices.Contains( Keyboard.current) ) players[i].InitializePlayer(Keyboard.current);
+                else players[i].InitializePlayer(new Gamepad());
+//                Debug.LogWarning($"No input device available for Player {i + 1}");
             }
 
         }

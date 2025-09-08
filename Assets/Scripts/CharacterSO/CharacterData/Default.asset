@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gravScale: 1.5
   health: 100
+  characterName: Default
   walkSpeed: 7
   runSpeed: 15
   jumpHeight: 5

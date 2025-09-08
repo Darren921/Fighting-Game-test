@@ -56,7 +56,7 @@ public class InputReader : MonoBehaviour
         HeavyLeft,
         HeavyRight,
     }
-    
+
     private Dictionary<( MovementInputResult, AttackInputResult), AttackInputResult>
         attackMoveActions = new()
         {
@@ -93,9 +93,9 @@ public class InputReader : MonoBehaviour
     public MovementInputResult currentMoveInput { get; private set; }
     public AttackInputResult currentAttackInput { get; private set; }
     public int currentAttackInputFrame { get; private set; }
-    
-    public Queue<bufferedInput<MovementInputResult>> movementBuffer = new();
-    public Queue<bufferedInput<AttackInputResult>> attackBuffer = new();
+
+    public List<bufferedInput<MovementInputResult>> movementBuffer = new();
+    public List<bufferedInput<AttackInputResult>> attackBuffer = new();
 
     private float bufferTime;
 
@@ -109,8 +109,8 @@ public class InputReader : MonoBehaviour
     {
         public T input;
         public int curFrame;
-        
-        
+
+
         public bufferedInput(T input, int curFrame)
         {
             this.input = input;
@@ -133,17 +133,17 @@ public class InputReader : MonoBehaviour
     public void AddMovementInput(MovementInputResult result)
     {
         if (movementBuffer.Count >= bufferCap)
-            movementBuffer.Dequeue();
-        
-        movementBuffer.Enqueue(new bufferedInput<MovementInputResult>(result,Time.frameCount));
+            movementBuffer.RemoveAt(0);
+
+        movementBuffer.Add(new bufferedInput<MovementInputResult>(result, Time.frameCount));
     }
 
     public void AddAttackInput(AttackInputResult result)
     {
         result = checkForNormals(result, currentMoveInput);
         if (attackBuffer.Count >= bufferCap)
-            movementBuffer.Dequeue();
-        attackBuffer.Enqueue(new bufferedInput<AttackInputResult>(result, Time.frameCount));
+            attackBuffer.RemoveAt(0);
+        attackBuffer.Add(new bufferedInput<AttackInputResult>(result, Time.frameCount));
     }
 
 
@@ -164,19 +164,12 @@ public class InputReader : MonoBehaviour
     private void UpdateInputBuffers()
     {
         var curFrame = Time.frameCount;
-        while (movementBuffer.Count > 0 && curFrame - movementBuffer.Peek().curFrame > bufferTime)
-        {
-            movementBuffer.Dequeue();
-        }
+        movementBuffer.RemoveAll(i => curFrame - i.curFrame > bufferTime);
+        attackBuffer.RemoveAll(i => curFrame - i.curFrame > bufferTime);
 
-        while (attackBuffer.Count > 0 && curFrame - attackBuffer.Peek().curFrame > bufferTime)
-        {
-            attackBuffer.Dequeue();
-        }
-
-        currentMoveInput = movementBuffer.Count > 0 ? movementBuffer.Peek().input : MovementInputResult.None;
-        currentAttackInput = attackBuffer.Count > 0 ? attackBuffer.Peek().input : AttackInputResult.None;
-        currentAttackInputFrame = attackBuffer.Count > 0 ? attackBuffer.Peek().curFrame : 0;
+        currentMoveInput = movementBuffer.Count > 0 ? movementBuffer[^1].input: MovementInputResult.None;
+        currentAttackInput = attackBuffer.Count > 0 ? attackBuffer[^1].input : AttackInputResult.None;
+        currentAttackInputFrame = attackBuffer.Count > 0 ? attackBuffer[^1].curFrame : 0;
 
         movementinputsVisual.Clear();
         foreach (var input in movementBuffer)
@@ -210,25 +203,24 @@ public class InputReader : MonoBehaviour
 //            print(playerInput);
         AddMovementInput(lookup[(player.PlayerMove.x, player.PlayerMove.y)]);
     }
-    
+
     private AttackInputResult checkForNormals(AttackInputResult attackInputResult, MovementInputResult movementInput)
     {
         return attackMoveActions.GetValueOrDefault((movementInput, attackInputResult), attackInputResult);
     }
-    
-    public AttackInputResult UseAttackInput()
+
+    public void GetValidMoveInput()
     {
-        if (attackBuffer.Count == 0) return AttackInputResult.None;
-        var input = attackBuffer.Dequeue().input;
-        Debug.Log(input);
-        return input;
+        if (currentMoveInput == MovementInputResult.None)
+        {
+            var validinput = movementBuffer.Find(i => i.input != MovementInputResult.None);
+            currentMoveInput = validinput.input ;
+            print(currentMoveInput);
+        }
     }
 
-    public MovementInputResult UseMovementInput()
-    {
-        if (movementBuffer.Count == 0) return MovementInputResult.None;
-        var input = movementBuffer.Dequeue().input;
-        Debug.Log(input);
-        return input;
-    }
+
+
+   
+
 }

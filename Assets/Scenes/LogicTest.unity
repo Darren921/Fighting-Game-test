@@ -380,7 +380,6 @@ MonoBehaviour:
   left: -631945130
   right: 1963678224
   airborne: -910879650
-  characterData: {fileID: 11400000, guid: 28b0b532bdd76744db2584cf70cda34a, type: 2}
   raycastPos: {fileID: 744356548}
   hitBox: {fileID: 1046104389}
 --- !u!65 &258787194
@@ -515,7 +514,6 @@ MonoBehaviour:
   left: -631945130
   right: 1963678224
   airborne: -910879650
-  characterData: {fileID: 11400000, guid: 56c510574c45cff42bccd06bc0328275, type: 2}
   raycastPos: {fileID: 2016436064}
   hitBox: {fileID: 798404573}
 --- !u!1 &330585543
@@ -1678,6 +1676,7 @@ MonoBehaviour:
   players:
   - {fileID: 258787200}
   - {fileID: 129694266}
+  characterDatabase: {fileID: 11400000, guid: 196084961f61835498a3a0e7d5f00a37, type: 2}
 --- !u!1 &1591072586
 GameObject:
   m_ObjectHideFlags: 0
