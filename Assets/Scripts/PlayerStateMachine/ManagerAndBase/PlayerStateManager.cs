@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 [Serializable]
 public class PlayerStateManager : MonoBehaviour
@@ -90,7 +91,7 @@ public class PlayerStateManager : MonoBehaviour
         
         if(transitionType.HasFlag(PlayerStateTypes.Walking)) if (player.PlayerMove.x != 0) SwitchState(PlayerStateTypes.Walking);
         
-        if(transitionType.HasFlag(PlayerStateTypes.Running)) if (player.IsRunning  && player.InputReader.currentMoveInput != InputReader.MovementInputResult.Backward ) SwitchState(PlayerStateTypes.Running);
+        if(transitionType.HasFlag(PlayerStateTypes.Running)) if (player.IsRunning  && player.InputReader.currentMoveInput != InputReader.MovementInputResult.Backward && player.InputReader.currentMoveInput != InputReader.MovementInputResult.None ) SwitchState(PlayerStateTypes.Running);
 
         if(transitionType.HasFlag(PlayerStateTypes.Dash)) if (player.IsDashing  && !player.IsRunning ) SwitchState(PlayerStateTypes.Dash);
 

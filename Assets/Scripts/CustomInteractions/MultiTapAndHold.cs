@@ -52,6 +52,8 @@ public class MultiTapOrHold : IInputInteraction
                     currentPhase = Phase.WaitForRelease;
                     _currentTapTime = context.time;
                     context.Started();
+                    context.SetTimeout(totalDuration);
+                    Debug.Log("MultiTapOrHold: Started");
                 }
 
                 break;
@@ -63,6 +65,7 @@ public class MultiTapOrHold : IInputInteraction
                 {
                     currentPhase = Phase.Performed;
                     context.PerformedAndStayPerformed();
+                    Debug.Log("MultiTapOrHold: Performed");
                 }
                 else
                 {
@@ -76,10 +79,13 @@ public class MultiTapOrHold : IInputInteraction
                     {
                         currentPhase = Phase.Tap;
                         _currentReleaseTime = context.time;
+                        Debug.Log("MultiTapOrHold: Performed");
+
                     }
                     else
                     {
                         context.Canceled();
+                        Debug.Log("MultiTapOrHold: Canceled");
                     }
                 }
 
@@ -87,6 +93,7 @@ public class MultiTapOrHold : IInputInteraction
             case Phase.Performed:
                 if (!context.ControlIsActuated(releasePoint))
                 {
+                    Debug.Log("MultiTapOrHold: Canceled");
                     context.Canceled();
                     Reset();
                 }
@@ -104,7 +111,7 @@ public class MultiTapOrHold : IInputInteraction
     private Phase currentPhase;
     public void Reset()
     {
-        Debug.Log("canceled");
+//        Debug.Log("canceled");
         currentPhase = Phase.None;
         _tapCounter = 0;
     }
