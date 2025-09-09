@@ -119,9 +119,9 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""AirDash"",
+                    ""name"": ""Dash"",
                     ""type"": ""Button"",
-                    ""id"": ""a449c966-36ba-4b8b-94dd-de538fa4d3d5"",
+                    ""id"": ""64c3bc92-79be-4fdc-ad65-320571f059b0"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": ""MultiTap(tapTime=0.2,tapDelay=0.75,pressPoint=0.5)"",
@@ -444,67 +444,67 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""69478adf-fb99-47ee-9b45-9f5f13ea6438"",
+                    ""id"": ""986feb2e-b1db-4b97-b5d3-283233b68f2b"",
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""AirDash"",
+                    ""action"": ""Dash"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""92536284-de76-4e1b-9dbe-d255d34e5e82"",
+                    ""id"": ""afcdad20-90e4-47af-beb4-946af86afb92"",
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""AirDash"",
+                    ""action"": ""Dash"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""aeb934f6-902c-4617-a0eb-d1919b396d81"",
+                    ""id"": ""43dd2d23-fedc-4a95-bcbb-7e6de8f6a150"",
                     ""path"": ""<Gamepad>/leftStick/left"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Gamepad"",
-                    ""action"": ""AirDash"",
+                    ""action"": ""Dash"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""98d01adc-0bb8-4b4b-ae55-ff147180d0ab"",
+                    ""id"": ""f456b420-8bbf-4b16-91b7-c7a1408b324c"",
                     ""path"": ""<Gamepad>/leftStick/right"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Gamepad"",
-                    ""action"": ""AirDash"",
+                    ""action"": ""Dash"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""7f251909-b9c4-4908-8b38-b6ce6ab83855"",
+                    ""id"": ""7ae4e107-f597-4074-b8fa-58741b339424"",
                     ""path"": ""<Gamepad>/dpad/left"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Gamepad"",
-                    ""action"": ""AirDash"",
+                    ""action"": ""Dash"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""6b716f3f-4906-4a1e-9e77-f80b302215c8"",
+                    ""id"": ""b8404b9f-8600-4dc4-ba11-401595084f9e"",
                     ""path"": ""<Gamepad>/dpad/right"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Gamepad"",
-                    ""action"": ""AirDash"",
+                    ""action"": ""Dash"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -569,7 +569,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Run"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -580,7 +580,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Run"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -1211,7 +1211,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_DashMacro = m_Player.FindAction("DashMacro", throwIfNotFound: true);
-        m_Player_AirDash = m_Player.FindAction("AirDash", throwIfNotFound: true);
+        m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
         m_Player_Jumping = m_Player.FindAction("Jumping", throwIfNotFound: true);
         m_Player_SuperJump = m_Player.FindAction("SuperJump", throwIfNotFound: true);
         m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
@@ -1315,7 +1315,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_DashMacro;
-    private readonly InputAction m_Player_AirDash;
+    private readonly InputAction m_Player_Dash;
     private readonly InputAction m_Player_Jumping;
     private readonly InputAction m_Player_SuperJump;
     private readonly InputAction m_Player_Run;
@@ -1343,9 +1343,9 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @DashMacro => m_Wrapper.m_Player_DashMacro;
         /// <summary>
-        /// Provides access to the underlying input action "Player/AirDash".
+        /// Provides access to the underlying input action "Player/Dash".
         /// </summary>
-        public InputAction @AirDash => m_Wrapper.m_Player_AirDash;
+        public InputAction @Dash => m_Wrapper.m_Player_Dash;
         /// <summary>
         /// Provides access to the underlying input action "Player/Jumping".
         /// </summary>
@@ -1393,9 +1393,9 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @DashMacro.started += instance.OnDashMacro;
             @DashMacro.performed += instance.OnDashMacro;
             @DashMacro.canceled += instance.OnDashMacro;
-            @AirDash.started += instance.OnAirDash;
-            @AirDash.performed += instance.OnAirDash;
-            @AirDash.canceled += instance.OnAirDash;
+            @Dash.started += instance.OnDash;
+            @Dash.performed += instance.OnDash;
+            @Dash.canceled += instance.OnDash;
             @Jumping.started += instance.OnJumping;
             @Jumping.performed += instance.OnJumping;
             @Jumping.canceled += instance.OnJumping;
@@ -1425,9 +1425,9 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @DashMacro.started -= instance.OnDashMacro;
             @DashMacro.performed -= instance.OnDashMacro;
             @DashMacro.canceled -= instance.OnDashMacro;
-            @AirDash.started -= instance.OnAirDash;
-            @AirDash.performed -= instance.OnAirDash;
-            @AirDash.canceled -= instance.OnAirDash;
+            @Dash.started -= instance.OnDash;
+            @Dash.performed -= instance.OnDash;
+            @Dash.canceled -= instance.OnDash;
             @Jumping.started -= instance.OnJumping;
             @Jumping.performed -= instance.OnJumping;
             @Jumping.canceled -= instance.OnJumping;
@@ -1855,12 +1855,12 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnDashMacro(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "AirDash" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Dash" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnAirDash(InputAction.CallbackContext context);
+        void OnDash(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "Jumping" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>

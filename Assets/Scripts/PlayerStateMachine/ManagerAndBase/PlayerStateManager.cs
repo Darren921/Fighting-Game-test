@@ -93,7 +93,7 @@ public class PlayerStateManager : MonoBehaviour
         
         if(transitionType.HasFlag(PlayerStateTypes.Running)) if (player.IsRunning  && player.InputReader.currentMoveInput != InputReader.MovementInputResult.Backward && player.InputReader.currentMoveInput != InputReader.MovementInputResult.None ) SwitchState(PlayerStateTypes.Running);
 
-        if(transitionType.HasFlag(PlayerStateTypes.Dash)) if (player.IsDashing  && !player.IsRunning ) SwitchState(PlayerStateTypes.Dash);
+        if(transitionType.HasFlag(PlayerStateTypes.Dash)) if (player.IsDashing  ) SwitchState(PlayerStateTypes.Dash);
 
         if (transitionType.HasFlag(PlayerStateTypes.Attack)) if (player.IsAttacking && !player.OnAttackCoolDown) SwitchState(PlayerStateTypes.Attack);
        

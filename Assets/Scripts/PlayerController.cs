@@ -122,7 +122,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         _playerActions.Run.performed += OnRun;
         _playerActions.Run.canceled += OnRun;
         _playerActions.DashMacro.performed += OnDashMacro;
-        _playerActions.AirDash.performed += OnAirDash;
+        _playerActions.Dash.performed += OnDash;
         _playerActions.Move.performed += OnMove;
         _playerActions.Move.canceled += OnMove;
         _playerActions.Attack.performed += OnAttack;
@@ -275,16 +275,34 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         IsRunning = false;
         IsWalking = false;
     }
-    public void OnAirDash(InputAction.CallbackContext context)
+
+    public void OnDash(InputAction.CallbackContext context)
     {
-        // air dash 
-        if (IsRunning || IsDashing || IsGrounded ) return;
-        print("entered dash");
-        IsDashing = true;
-        DashDir = InputReader.currentMoveInput;
-        IsRunning = false;
-        IsWalking = false;
+        switch (IsGrounded)
+        {
+            case false:
+            {
+                if (IsDashing || IsGrounded ) return;
+                print("entered dash");
+                IsDashing = true;
+                DashDir = InputReader.currentMoveInput;
+                IsRunning = false;
+                IsWalking = false;
+                break;
+            }
+            case true:
+            {
+                if (IsDashing || InputReader.currentMoveInput == InputReader.MovementInputResult.Forward ) return;
+                print("entered dash");
+                IsDashing = true;
+                DashDir = InputReader.GetValidMoveInput();
+                IsRunning = false;
+                IsWalking = false;
+                break;
+            }
+        }
     }
+    
 
     public void OnJumping(InputAction.CallbackContext context)
     {
@@ -303,10 +321,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     public void OnRun(InputAction.CallbackContext context)
     {
-        if (InputReader.currentMoveInput == InputReader.MovementInputResult.None) InputReader.GetValidMoveInput();
-        if (context.performed && InputReader.currentMoveInput != InputReader.MovementInputResult.Backward)
+        if (context.performed && InputReader.GetValidMoveInput() != InputReader.MovementInputResult.Backward && InputReader.GetValidMoveInput() != InputReader.MovementInputResult.None)
         {
-            
             print(InputReader.currentMoveInput);
             IsRunning = true;
             IsWalking = false;

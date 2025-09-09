@@ -209,14 +209,16 @@ public class InputReader : MonoBehaviour
         return attackMoveActions.GetValueOrDefault((movementInput, attackInputResult), attackInputResult);
     }
 
-    public void GetValidMoveInput()
+    public MovementInputResult GetValidMoveInput()
     {
         if (currentMoveInput == MovementInputResult.None)
         {
             var validinput = movementBuffer.Find(i => i.input != MovementInputResult.None);
             currentMoveInput = validinput.input ;
             print(currentMoveInput);
+            return validinput.input;
         }
+        return currentMoveInput;
     }
 
 
