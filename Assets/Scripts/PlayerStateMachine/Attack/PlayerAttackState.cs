@@ -153,7 +153,7 @@ public class PlayerAttackState : PlayerBaseState
             player.GravityManager.ApplyGravity(player);
         }
 
-        player.Rb.linearVelocity = new Vector3( player.Rb.linearVelocity.magnitude, player.GravityManager.GetVelocity(), 0);
+        player.Rb.linearVelocity = new Vector3( player.Rb.linearVelocity.x, player.GravityManager.GetVelocity(), 0);
         
 
 //        Debug.Log(player.gravityManager.GetVelocity());
