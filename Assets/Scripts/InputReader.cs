@@ -215,7 +215,7 @@ public class InputReader : MonoBehaviour
         {
             var validinput = movementBuffer.Find(i => i.input != MovementInputResult.None);
             currentMoveInput = validinput.input ;
-            print(currentMoveInput);
+//            print(currentMoveInput);
             return validinput.input;
         }
         return currentMoveInput;

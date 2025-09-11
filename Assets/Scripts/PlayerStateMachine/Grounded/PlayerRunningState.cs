@@ -9,16 +9,17 @@ public class PlayerRunningState : PlayerMovingState
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
         //controls the decel curve to make slow down movement more accurate 
-        if (player.PlayerMove == Vector3.zero && !decelerating)
+        if (player.PlayerMove == Vector3.zero && player.Rb.linearVelocity.magnitude > 0.1f)
         {
-            player.StartCoroutine(DecelerationCurve(player));
+            if (!player.decelerating)
+            {
+                player.decelerating = true;
+                player.StartCoroutine(player.DecelerationCurve(player));
+            }
         }
 
-        if (player.PlayerMove == Vector3.zero && decelerating == false)
-        {
-//            Debug.Log("HEH");
-            playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Neutral);
-        }
+        playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Attack);
+     
         
         if (player.InputReader.currentMoveInput == InputReader.MovementInputResult.Backward )
         {
@@ -29,9 +30,14 @@ public class PlayerRunningState : PlayerMovingState
         }
 
         //switch states 
-        if(decelerating ) return;
+        if(player.decelerating ) return;
         
-        playerStateManager.CheckForTransition( PlayerStateManager.PlayerStateTypes.Attack | PlayerStateManager.PlayerStateTypes.CrouchMove);
+        if (player.PlayerMove == Vector3.zero && player.Rb.linearVelocity.magnitude < 0.1f)
+        {
+//            Debug.Log("HEH");
+            playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Neutral);
+        }
+        playerStateManager.CheckForTransition(  PlayerStateManager.PlayerStateTypes.CrouchMove );
         if (player.PlayerMove.x != 0 && player.IsCrouching) playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.CrouchMove);
         
         if (player.IsWalking) playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Walking);
@@ -55,6 +61,6 @@ public class PlayerRunningState : PlayerMovingState
     {
 
         player.IsRunning = false;
-//        Debug.Log(player.rb.linearVelocity);
+      Debug.Log(player.Rb.linearVelocity);
     }
 }

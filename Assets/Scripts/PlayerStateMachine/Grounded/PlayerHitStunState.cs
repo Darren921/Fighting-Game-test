@@ -23,7 +23,7 @@ public class PlayerHitStunState : PlayerBaseState
         player.OnDisablePlayer();
         player.HitStun = true;
         Time.timeScale = 0f;
-        yield return new WaitForFrames(3);
+        yield return new WaitForFrames(10);
         player.OnEnablePlayer();
         Time.timeScale = 1f;
         player.HitStun = false;

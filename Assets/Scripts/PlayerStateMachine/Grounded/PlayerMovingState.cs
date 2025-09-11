@@ -10,7 +10,6 @@ public abstract class PlayerMovingState : PlayerBaseState
     protected Vector3 moveDir;
     protected Vector3 _smoothedMoveDir;
     protected Vector3 _smoothedMoveVelocity;
-    protected bool decelerating;
 
     protected virtual float moveSpeed => 1;
     
@@ -47,20 +46,7 @@ public abstract class PlayerMovingState : PlayerBaseState
     {
         moveDir = newDir.normalized;
     }
-    protected IEnumerator DecelerationCurve(PlayerController player)
-    {
-        if (decelerating) yield break;
-        decelerating = true;
-
-        while (player.Rb.linearVelocity.magnitude > 0.1f)
-        {
-            var decelerationCurve = player.Rb.linearVelocity.normalized * (2 * Time.deltaTime);
-//            Debug.Log(decelerationCurve);
-            player.Rb.linearVelocity -= decelerationCurve;
-            yield return null;
-        }
-        decelerating = false;
-    }
+ 
 
    
     internal override void ExitState(PlayerStateManager playerStateManager, PlayerController player)

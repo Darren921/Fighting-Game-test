@@ -52,23 +52,19 @@ public class PlayerDashState : PlayerMovingState
 
         //grab the last inputs given 
         if (IsDashing || player.IsDashing) return;
-        player.StartCoroutine(DecelerationCurve(player));
 
-        if (player.PlayerMove == Vector3.zero && decelerating == false)
+        if (player.PlayerMove == Vector3.zero && player.decelerating == false)
         { 
             Debug.Log("HEH");
             playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Neutral | PlayerStateManager.PlayerStateTypes.Attack);
         }
         
-        if(decelerating)return;
+        if(player.decelerating)return;
         playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Walking );
 
     }
 
-    internal override void FixedUpdateState(PlayerStateManager playerStateManager, PlayerController player)
-    {
-       
-    }
+    
 
     internal override void ExitState(PlayerStateManager playerStateManager, PlayerController player)
     {

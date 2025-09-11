@@ -98,7 +98,7 @@ public class PlayerJumpingState : PlayerBaseState
     {
         // jumping based off on custom  gravity to ensure the player jumps to same height each time 
         velocity = player.GravityManager.SetJumpVelocity(player);
-         Debug.Log(player.InputReader.currentMoveInput);
+//         Debug.Log(player.InputReader.currentMoveInput);
         var moveInput = player.InputReader.currentMoveInput;
 
         xJumpVal = moveInput switch

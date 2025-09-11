@@ -20,7 +20,10 @@ public class PlayerAttackState : PlayerBaseState
         {
             player.Animator.SetBool(player.Idle, false);
         }
+//        Debug.Log(player.Rb.linearVelocity); 
+        
 
+      
 //           Debug.Log(lastMove); 
 //           Debug.Log(lastAttack);
     }
@@ -56,6 +59,7 @@ public class PlayerAttackState : PlayerBaseState
         {
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Crouching);
         }
+
 
 //        Debug.Log(player.gravityManager.GetVelocity());
     }
@@ -149,7 +153,9 @@ public class PlayerAttackState : PlayerBaseState
             player.GravityManager.ApplyGravity(player);
         }
 
-        player.Rb.linearVelocity = new Vector3(player.Rb.linearVelocity.x, player.GravityManager.GetVelocity(), 0);
+        player.Rb.linearVelocity = new Vector3( player.Rb.linearVelocity.magnitude, player.GravityManager.GetVelocity(), 0);
+        
+
 //        Debug.Log(player.gravityManager.GetVelocity());
     }
 

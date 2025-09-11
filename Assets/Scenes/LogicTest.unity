@@ -380,6 +380,12 @@ MonoBehaviour:
   left: -631945130
   right: 1963678224
   airborne: -910879650
+  decelerationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   raycastPos: {fileID: 744356548}
   hitBox: {fileID: 1046104389}
 --- !u!65 &258787194
@@ -441,7 +447,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 120
-  m_CollisionDetection: 2
+  m_CollisionDetection: 3
 --- !u!95 &258787197
 Animator:
   serializedVersion: 7
@@ -458,7 +464,7 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
+  m_AnimatePhysics: 1
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
@@ -514,6 +520,30 @@ MonoBehaviour:
   left: -631945130
   right: 1963678224
   airborne: -910879650
+  decelerationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: -0.020748138
+      value: 1.0039978
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0.0006866455
+      inSlope: -0.024831958
+      outSlope: -0.024831958
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.26425493
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   raycastPos: {fileID: 2016436064}
   hitBox: {fileID: 798404573}
 --- !u!1 &330585543
@@ -4214,9 +4244,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 543450652921126627}
+  - component: {fileID: 258787199}
   - component: {fileID: 258787198}
   - component: {fileID: 258787200}
-  - component: {fileID: 258787199}
   - component: {fileID: 258787197}
   - component: {fileID: 258787196}
   - component: {fileID: 258787195}

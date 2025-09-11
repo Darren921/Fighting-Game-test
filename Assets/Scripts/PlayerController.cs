@@ -35,8 +35,9 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     internal GravityManager GravityManager;
     internal HitDetection PlayerHitDetection;
     internal PlayerKnockBack PlayerKnockBack;
+    
     #endregion
-
+ 
     #region Crouching and Dashing variables
 
     internal bool IsCrouching;
@@ -71,13 +72,17 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     internal float RunSpeed;
     internal bool IsWalking;
     internal bool IsRunning;
+    [Tooltip("This controls the Decel curve")]
+    [SerializeField]internal AnimationCurve decelerationCurve;
 
     #endregion
 
     #region Jump Variables
-
+   
+    [Tooltip("Origin of the grounded Raycast, DO NOT TOUCH PLEASE")]
     [SerializeField] internal Transform raycastPos;
-    internal float JumpHeight; //Switch to player character data S.O when created 5 
+    
+    internal float JumpHeight; 
     internal float RaycastDistance; //2.023f
     internal float GravScale; // (Hold for now )  character data affects gravity 5 
     internal float Velocity;
@@ -89,7 +94,9 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     internal bool jumpPressed;
 
     #endregion
-
+   
+    internal float decelerationDuration = 1f;
+    internal bool decelerating;
 
     private void Awake()
     {
@@ -142,13 +149,15 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     public void OnDisablePlayer()
     {
         _playerActions.Disable();
-        InputReader.enabled = false;
-        HitDetection.OnDeath -= OnPlayerDeath;
+ 
     }
 
     private void OnPlayerDeath()
     {
-        OnDisablePlayer();
+        InputReader.enabled = false;
+        HitDetection.OnDeath -= OnPlayerDeath;
+        _playerActions.Disable();
+
     }
 
 
@@ -260,7 +269,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     {
         //convert and passes input to attack type for the input reader 
         PlayerAttackAction?.Invoke(ReturnAttackType(context.ReadValue<float>()));
-        if (OnAttackCoolDown || IsAttacking) return;
+        if (OnAttackCoolDown || IsAttacking ) return; //ASK IF IS RUNNING 
         IsAttacking = true;
         Animator.SetBool(Attacking, true);
     }
@@ -342,7 +351,24 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     }
 
+    internal IEnumerator DecelerationCurve(PlayerController player)
+    {
+        decelerating = true;
+        var elapsedTime = 0f;
 
+
+        while (elapsedTime < decelerationDuration)
+        {
+            var decelerationCurve = player.decelerationCurve.Evaluate(elapsedTime / decelerationDuration);
+            player.Rb.linearVelocity = Vector3.Lerp(player.Rb.linearVelocity, new Vector3(0.1f,0,0), decelerationCurve) ;
+            Debug.Log( player.Rb.linearVelocity.magnitude);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        decelerating = false;
+
+    }
     /*public void OnRunOrDash(InputAction.CallbackContext context)
     {
         var contextHold = context.interaction as MultiTapOrHold;

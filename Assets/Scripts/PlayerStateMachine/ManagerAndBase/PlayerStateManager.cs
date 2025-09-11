@@ -20,7 +20,7 @@ public class PlayerStateManager : MonoBehaviour
         HitStun = 1 << 9,
     }
 
-    private  Dictionary<PlayerStateTypes, PlayerBaseState> _states;
+    internal  Dictionary<PlayerStateTypes, PlayerBaseState> _states;
     public string CurrentStateName => currentState?.GetType().Name; 
 
     [SerializeReference] internal PlayerBaseState currentState;
@@ -71,6 +71,7 @@ public class PlayerStateManager : MonoBehaviour
             currentState?.ExitState(this,player);
             lastState = currentState;
             currentState = state;
+            Debug.Log(currentState.GetType().Name);
             currentState?.EnterState(this,player);
 
         }

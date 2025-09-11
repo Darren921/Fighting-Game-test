@@ -28,8 +28,11 @@ public class HitDetection : MonoBehaviour, IDamageable
         if (other.gameObject.CompareTag("HitBox"))
         {
             var target = OnHit(_player, otherPlayer);
-            target.GetComponent<PlayerStateManager>().SwitchState(PlayerStateManager.PlayerStateTypes.HitStun);
-            target.PlayerHitDetection.TakeDamage(10);
+            if (target != null)
+            {
+                target.GetComponent<PlayerStateManager>().SwitchState(PlayerStateManager.PlayerStateTypes.HitStun);
+                target.PlayerHitDetection.TakeDamage(10);
+            }
         }
         else if (other.gameObject.CompareTag("Wall"))
         {
@@ -41,25 +44,25 @@ public class HitDetection : MonoBehaviour, IDamageable
     private PlayerController OnHit(PlayerController sender, PlayerController receiver)
     {
         
-        /*//Check the players buffers for last attack frame  and decide the player hit
+        //Check the players buffers for last attack frame  and decide the player hit
         var attackBufferSender = sender.GetComponentInParent<InputReader>();
         var attackBufferReceiver = receiver.GetComponentInParent<InputReader>();
         
         if (attackBufferSender.currentAttackInput != InputReader.AttackInputResult.None &&
             attackBufferReceiver.currentAttackInput != InputReader.AttackInputResult.None)
         {
-            var result = attackBufferSender.LastValidAttackInputFrame < attackBufferReceiver.LastValidAttackInputFrame ?  sender : receiver ;
+            var result = attackBufferSender.currentAttackInput < attackBufferReceiver.currentAttackInput ?  sender : receiver ;
             print(result);
             return result;
         } 
-        if (attackBufferSender.LastValidAttackInput != InputReader.AttackInputResult.None && attackBufferReceiver.LastValidAttackInput == InputReader.AttackInputResult.None)
+        if (attackBufferSender.currentAttackInput != InputReader.AttackInputResult.None && attackBufferReceiver.currentAttackInput == InputReader.AttackInputResult.None)
         {
             return receiver;
         }
-        if (attackBufferSender.LastValidAttackInput == InputReader.AttackInputResult.None && attackBufferReceiver.LastValidAttackInput != InputReader.AttackInputResult.None)
+        if (attackBufferSender.currentAttackInput == InputReader.AttackInputResult.None && attackBufferReceiver.currentAttackInput != InputReader.AttackInputResult.None)
         {
             return sender;
-        } */
+        } 
         return null;
     }
 
