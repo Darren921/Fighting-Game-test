@@ -13,7 +13,7 @@ public class PlayerNeutralState : PlayerBaseState
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player )
     {
         idleCoroutine = player.StartCoroutine(CheckIfIdle(player));
-        player.Rb.linearVelocity = Vector3.zero;
+        player.rb.linearVelocity = Vector3.zero;
 //        Debug.Log("Entered PlayerNeutralState");
     }
 
@@ -37,7 +37,7 @@ public class PlayerNeutralState : PlayerBaseState
         {
             player.GravityManager.ApplyGravity(player);
             
-            player.Rb.linearVelocity  = new Vector3(player.Rb.linearVelocity.x,player.GravityManager.GetVelocity() * 0.25f,0);
+            player.rb.linearVelocity  = new Vector3(player.rb.linearVelocity.x,player.GravityManager.GetVelocity() * 0.25f,0);
         }
       
     }

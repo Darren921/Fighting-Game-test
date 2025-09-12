@@ -18,7 +18,7 @@ public abstract class PlayerMovingState : PlayerBaseState
 //        Debug.Log("Entered " + playerStateManager.currentState);
         
         _player = player;
-        player.Rb.linearVelocity = Vector3.zero;
+        player.rb.linearVelocity = Vector3.zero;
     }
 
     internal override void FixedUpdateState(PlayerStateManager playerStateManager, PlayerController player)
@@ -30,11 +30,9 @@ public abstract class PlayerMovingState : PlayerBaseState
 
     protected void applyVelocity(PlayerController player)
     {
-        var velocity = new Vector3(_smoothedMoveDir.x * moveSpeed, player.Rb.linearVelocity.y);
-        if (Mathf.Abs(velocity.x) > 0.01f)
-        {
-            player.Rb.linearVelocity = velocity;    
-        }
+        var velocity = new Vector3(_smoothedMoveDir.x * moveSpeed, player.rb.linearVelocity.y);
+        player.rb.linearVelocity = velocity;    
+        
     }
 
     protected void smoothMovement()

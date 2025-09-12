@@ -44,7 +44,7 @@ public class PlayerJumpingState : PlayerBaseState
 
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
-        atJumpHeight = player.transform.localPosition.y > player.JumpHeight;
+        
         // check to see if player is jumping 
         switch (player.IsGrounded)
         {
@@ -56,14 +56,13 @@ public class PlayerJumpingState : PlayerBaseState
                 break;
         }
 
-        doubleJumpReady = player.PlayerMove == Vector3.zero && atJumpHeight && jumpCharges > 0 &&
-                          !player.SuperJumpActive;
+        doubleJumpReady = player.PlayerMove == Vector3.zero  && jumpCharges > 0 && !player.SuperJumpActive;
     
         //Transitioning states 
         if (!player.IsGrounded)
         {
             playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Attack | PlayerStateManager.PlayerStateTypes.AirDash);
-            if (jumpCharges > 0 && atJumpHeight && doubleJumpReady && jumpTriggered)
+            if (jumpCharges > 0 && doubleJumpReady && jumpTriggered)
             {
                 Debug.Log("Double Jumpped");
                 player.Animator.SetBool(player.Jump, true);
@@ -101,6 +100,7 @@ public class PlayerJumpingState : PlayerBaseState
 //         Debug.Log(player.InputReader.currentMoveInput);
         var moveInput = player.InputReader.currentMoveInput;
 
+        
         xJumpVal = moveInput switch
         {
             InputReader.MovementInputResult.Up => 0,
@@ -117,7 +117,7 @@ public class PlayerJumpingState : PlayerBaseState
     internal override void FixedUpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
         //performing jump and applying custom gravity 
-        player.Rb.linearVelocity = new Vector3(xJumpVal, player.GravityManager.GetVelocity(), 0);
+        player.rb.linearVelocity = new Vector3(xJumpVal, player.GravityManager.GetVelocity(), 0);
         if (!player.IsGrounded && player.gameObject.transform.localPosition.y > 0.1f )
         {
             player.GravityManager.ApplyGravity(player);

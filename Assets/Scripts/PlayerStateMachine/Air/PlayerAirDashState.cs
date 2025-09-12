@@ -40,11 +40,11 @@ public class PlayerAirDashState : PlayerDashState
     //    Debug.Log("PlayerDashState Dash");
         IsDashing = true;
         SetUpDash(player);
-        player.Rb.useGravity = false;
-        player.Rb.linearVelocity = new Vector3(NewDashVelo.x, 0, 0);
+        player.rb.useGravity = false;
+        player.rb.linearVelocity = new Vector3(NewDashVelo.x, 0, 0);
         yield return new WaitForSeconds(dashTime);
         player.GravityManager.ResetVelocity();
-        player.Rb.useGravity = true;
+        player.rb.useGravity = true;
         IsDashing = false;
         player.IsDashing = false;
 
@@ -76,7 +76,7 @@ public class PlayerAirDashState : PlayerDashState
         if (!player.IsGrounded && player.gameObject.transform.localPosition.y > 0.1f && !IsDashing )
         {
             player.GravityManager.ApplyGravity(player);
-            player.Rb.linearVelocity = new Vector3(player.Rb.linearVelocity.x, player.GravityManager.GetVelocity(), 0);
+            player.rb.linearVelocity = new Vector3(player.rb.linearVelocity.x, player.GravityManager.GetVelocity(), 0);
 
         }
     }

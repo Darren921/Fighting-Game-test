@@ -20,7 +20,6 @@ public class PlayerAttackState : PlayerBaseState
         {
             player.Animator.SetBool(player.Idle, false);
         }
-//        Debug.Log(player.Rb.linearVelocity); 
         
 
       
@@ -40,6 +39,7 @@ public class PlayerAttackState : PlayerBaseState
 
         player.Animator.SetBool(player.airborne, !player.IsGrounded);
 
+//        Debug.Log(player.Rb.linearVelocity); 
 
         if (player.IsAttacking && !player.OnAttackCoolDown)
         {
@@ -151,9 +151,9 @@ public class PlayerAttackState : PlayerBaseState
         if (!player.IsGrounded && player.transform.localPosition.y > 0.1f)
         {
             player.GravityManager.ApplyGravity(player);
+            player.rb.linearVelocity = new Vector3( player.rb.linearVelocity.x, player.GravityManager.GetVelocity(), 0);
         }
 
-        player.Rb.linearVelocity = new Vector3( player.Rb.linearVelocity.x, player.GravityManager.GetVelocity(), 0);
         
 
 //        Debug.Log(player.gravityManager.GetVelocity());

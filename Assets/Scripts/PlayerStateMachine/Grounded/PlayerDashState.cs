@@ -17,7 +17,6 @@ public class PlayerDashState : PlayerMovingState
     {
         Dir  = player.DashDir;
         Debug.Log(Dir);
-        player.Rb.linearVelocity = Vector3.zero;
       Debug.Log("PlayerDashState EnterState");
       switch (Dir)
       {
@@ -39,27 +38,26 @@ public class PlayerDashState : PlayerMovingState
     {
         Debug.Log("PlayerDashState Dash");
         IsDashing = true;
-        player.Rb.linearVelocity = new Vector3(NewDashVelo.x, _jumpVelocity, 0);
+        player.rb.linearVelocity = new Vector3(NewDashVelo.x, _jumpVelocity, 0);
+        Debug.Log(player.rb.linearVelocity);
         yield return new WaitForSeconds(dashTime);
         IsDashing = false;
         player.IsDashing = false;
 
     }
 
+    internal override void FixedUpdateState(PlayerStateManager playerStateManager, PlayerController player)
+    {
+    }
+
 
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
-
         //grab the last inputs given 
-        if (IsDashing || player.IsDashing) return;
+        if (IsDashing || player.IsDashing ) return;
 
-        if (player.PlayerMove == Vector3.zero && player.decelerating == false)
-        { 
-            Debug.Log("HEH");
-            playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Neutral | PlayerStateManager.PlayerStateTypes.Attack);
-        }
-        
-        if(player.decelerating)return;
+        Debug.Log("HEH"); 
+        playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Neutral | PlayerStateManager.PlayerStateTypes.Attack);
         playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Walking );
 
     }

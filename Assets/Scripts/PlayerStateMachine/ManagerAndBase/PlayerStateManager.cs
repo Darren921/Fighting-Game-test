@@ -79,29 +79,34 @@ public class PlayerStateManager : MonoBehaviour
 
     public void CheckForTransition(PlayerStateTypes transitionType)
     {
+        
         if (transitionType.HasFlag(PlayerStateTypes.Neutral))
-            if (player.PlayerMove == Vector3.zero && player.IsGrounded && player.Rb.linearVelocity.magnitude < 0.1f)
-            {
-//                print($"Fired from {currentState}");
-                SwitchState(PlayerStateTypes.Neutral);
-            }
+            if (player.PlayerMove == Vector3.zero && player.IsGrounded) { SwitchState(PlayerStateTypes.Neutral); }
         
-        if (transitionType.HasFlag(PlayerStateTypes.AirDash)) if (player.IsDashing && player.AtDashHeight) SwitchState(PlayerStateTypes.AirDash);
+        if (transitionType.HasFlag(PlayerStateTypes.AirDash))
+            if (player.IsDashing && player.AtDashHeight) SwitchState(PlayerStateTypes.AirDash);
         
-        if(transitionType.HasFlag(PlayerStateTypes.Jumping)) if (player.PlayerMove.y > 0  ) SwitchState(PlayerStateTypes.Jumping);
+        if(transitionType.HasFlag(PlayerStateTypes.Jumping))
+            if (player.PlayerMove.y > 0  ) SwitchState(PlayerStateTypes.Jumping);
         
-        if(transitionType.HasFlag(PlayerStateTypes.Walking)) if (player.PlayerMove.x != 0) SwitchState(PlayerStateTypes.Walking);
+        if(transitionType.HasFlag(PlayerStateTypes.Walking)) 
+            if (player.PlayerMove.x != 0) SwitchState(PlayerStateTypes.Walking);
         
-        if(transitionType.HasFlag(PlayerStateTypes.Running)) if (player.IsRunning  && player.InputReader.currentMoveInput != InputReader.MovementInputResult.Backward && player.InputReader.currentMoveInput != InputReader.MovementInputResult.None ) SwitchState(PlayerStateTypes.Running);
+        if(transitionType.HasFlag(PlayerStateTypes.Running)) 
+            if (player.IsRunning  && player.InputReader.currentMoveInput != InputReader.MovementInputResult.Backward && player.InputReader.currentMoveInput != InputReader.MovementInputResult.None ) SwitchState(PlayerStateTypes.Running);
 
-        if(transitionType.HasFlag(PlayerStateTypes.Dash)) if (player.IsDashing  ) SwitchState(PlayerStateTypes.Dash);
+        if(transitionType.HasFlag(PlayerStateTypes.Dash)) 
+            if (player.IsDashing  ) SwitchState(PlayerStateTypes.Dash);
 
-        if (transitionType.HasFlag(PlayerStateTypes.Attack)) if (player.IsAttacking && !player.OnAttackCoolDown) SwitchState(PlayerStateTypes.Attack);
+        if (transitionType.HasFlag(PlayerStateTypes.Attack)) 
+            if (player.IsAttacking && !player.OnAttackCoolDown) SwitchState(PlayerStateTypes.Attack);
        
-        if (transitionType.HasFlag(PlayerStateTypes.CrouchMove))if (player.IsCrouching && player.PlayerMove.x != 0 && !player.IsAttacking) SwitchState(PlayerStateTypes.CrouchMove);
+        if (transitionType.HasFlag(PlayerStateTypes.CrouchMove))
+            if (player.IsCrouching && player.PlayerMove.x != 0 && !player.IsAttacking) SwitchState(PlayerStateTypes.CrouchMove);
         
 
-        if (transitionType.HasFlag(PlayerStateTypes.Crouching)) if (player.PlayerMove.y < 0 && player.IsGrounded) SwitchState(PlayerStateTypes.Crouching);
+        if (transitionType.HasFlag(PlayerStateTypes.Crouching)) 
+            if (player.PlayerMove.y < 0 && player.IsGrounded) SwitchState(PlayerStateTypes.Crouching);
         
     }
 

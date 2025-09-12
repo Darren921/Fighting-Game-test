@@ -9,7 +9,7 @@ public class PlayerRunningState : PlayerMovingState
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
         //controls the decel curve to make slow down movement more accurate 
-        if (player.PlayerMove == Vector3.zero && player.Rb.linearVelocity.magnitude > 0.1f)
+        if (player.PlayerMove == Vector3.zero )
         {
             if (!player.decelerating)
             {
@@ -32,7 +32,7 @@ public class PlayerRunningState : PlayerMovingState
         //switch states 
         if(player.decelerating ) return;
         
-        if (player.PlayerMove == Vector3.zero && player.Rb.linearVelocity.magnitude < 0.1f)
+        if (player.PlayerMove == Vector3.zero && player.rb.linearVelocity.magnitude < 0.1f)
         {
 //            Debug.Log("HEH");
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Neutral);
@@ -61,6 +61,6 @@ public class PlayerRunningState : PlayerMovingState
     {
 
         player.IsRunning = false;
-      Debug.Log(player.Rb.linearVelocity);
+      Debug.Log(player.rb.linearVelocity);
     }
 }

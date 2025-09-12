@@ -86,7 +86,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     internal float RaycastDistance; //2.023f
     internal float GravScale; // (Hold for now )  character data affects gravity 5 
     internal float Velocity;
-    internal Rigidbody Rb;
+    internal Rigidbody rb;
     internal InputReader.MovementInputResult DashDir;
     internal bool IsGrounded;
     internal bool SuperJumpActive;
@@ -95,8 +95,9 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     #endregion
    
-    internal float decelerationDuration = 1f;
+    internal float decelerationDuration = 1;
     internal bool decelerating;
+    private float elapsedTime;
 
     private void Awake()
     {
@@ -106,10 +107,10 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         IsGrounded = true;
         InputReader = GetComponent<InputReader>();
         Animator = GetComponent<Animator>();
-        Rb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
         RaycastDistance = 2.0231f;
         HitDetection.OnDeath += OnPlayerDeath;
-
+        Animator.keepAnimatorStateOnDisable = false;
     }
 
     public void InitializePlayer(InputDevice device)
@@ -198,22 +199,22 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
                 
                 if (gameObject.transform.position.x < collision.gameObject.GetComponent<Collider>().bounds.center.x)
                 {
-                    Rb.AddForce(-13, 1.5f, 0);
+                    rb.AddForce(-13, 1.5f, 0);
                 }
                 else
                 {
-                    Rb.AddForce(13, 1.5f, 0);
+                    rb.AddForce(13, 1.5f, 0);
                 }
             }
             else
             {
                 if (gameObject.transform.position.x < collision.gameObject.GetComponent<Collider>().bounds.center.x)
                 {
-                    Rb.AddForce(-1, -5f, 0, ForceMode.VelocityChange);
+                    rb.AddForce(-1, -5f, 0, ForceMode.VelocityChange);
                 }
                 else
                 {
-                    Rb.AddForce(1, -5f, 0, ForceMode.VelocityChange);
+                    rb.AddForce(1, -5f, 0, ForceMode.VelocityChange);
                 }
             }
         }
@@ -269,7 +270,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     {
         //convert and passes input to attack type for the input reader 
         PlayerAttackAction?.Invoke(ReturnAttackType(context.ReadValue<float>()));
-        if (OnAttackCoolDown || IsAttacking ) return; //ASK IF IS RUNNING 
+        if (OnAttackCoolDown || IsAttacking ) return; 
         IsAttacking = true;
         Animator.SetBool(Attacking, true);
     }
@@ -304,7 +305,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
                 if (IsDashing || InputReader.currentMoveInput == InputReader.MovementInputResult.Forward ) return;
                 print("entered dash");
                 IsDashing = true;
-                DashDir = InputReader.GetValidMoveInput();
+                DashDir = InputReader.currentMoveInput;
                 IsRunning = false;
                 IsWalking = false;
                 break;
@@ -332,7 +333,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     {
         if (context.performed && InputReader.GetValidMoveInput() != InputReader.MovementInputResult.Backward && InputReader.GetValidMoveInput() != InputReader.MovementInputResult.None)
         {
-            print(InputReader.currentMoveInput);
+//            print(InputReader.currentMoveInput);
             IsRunning = true;
             IsWalking = false;
         }
@@ -354,20 +355,19 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     internal IEnumerator DecelerationCurve(PlayerController player)
     {
         decelerating = true;
-        var elapsedTime = 0f;
-
+        
 
         while (elapsedTime < decelerationDuration)
         {
-            var decelerationCurve = player.decelerationCurve.Evaluate(elapsedTime / decelerationDuration);
-            player.Rb.linearVelocity = Vector3.Lerp(player.Rb.linearVelocity, new Vector3(0.1f,0,0), decelerationCurve) ;
-            Debug.Log( player.Rb.linearVelocity.magnitude);
+        //    var decelerationCurve = player.decelerationCurve.Evaluate(elapsedTime / decelerationDuration);
+            player.rb.linearVelocity = Vector3.Lerp(player.rb.linearVelocity, new Vector3(0.5f,0,0), decelerationDuration) ;
+            Debug.Log( player.rb.linearVelocity.magnitude);
             elapsedTime += Time.deltaTime;
+            Debug.Log(elapsedTime);
             yield return null;
         }
-
         decelerating = false;
-
+        elapsedTime = 0f;
     }
     /*public void OnRunOrDash(InputAction.CallbackContext context)
     {

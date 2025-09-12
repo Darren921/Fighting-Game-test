@@ -19,7 +19,7 @@ public class PlayerKnockBack : MonoBehaviour
         while (elapsedTime < KnockBackTime)
         {
             elapsedTime += Time.fixedDeltaTime;
-            player.Rb.linearVelocity = hitForce;
+            player.rb.linearVelocity = hitForce;
             yield return new WaitForFixedUpdate();
         }
         _isBeingKnockedBack = false;
@@ -43,7 +43,7 @@ public class PlayerKnockBack : MonoBehaviour
         while (elapsedTime < KnockBackTime)
         {
             elapsedTime += Time.fixedDeltaTime;
-            player.Rb.linearVelocity = hitForce;
+            player.rb.linearVelocity = hitForce;
             yield return new WaitForFixedUpdate();
         }
         _isBeingKnockedBack = false;
