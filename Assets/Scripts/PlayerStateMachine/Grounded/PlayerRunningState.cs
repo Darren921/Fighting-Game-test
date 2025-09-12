@@ -11,8 +11,9 @@ public class PlayerRunningState : PlayerMovingState
         //controls the decel curve to make slow down movement more accurate 
         if (player.PlayerMove == Vector3.zero )
         {
-            if (!player.decelerating)
+            if (!player.decelerating && !player.decelActive)
             {
+                player.decelActive = true;
                 player.decelerating = true;
                 player.StartCoroutine(player.DecelerationCurve(player));
             }
@@ -30,15 +31,10 @@ public class PlayerRunningState : PlayerMovingState
         }
 
         //switch states 
-        if(player.decelerating ) return;
+        if(player.decelerating || !player.decelActive ) return;
         
-        if (player.PlayerMove == Vector3.zero && player.rb.linearVelocity.magnitude < 0.1f)
-        {
-//            Debug.Log("HEH");
-            playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Neutral);
-        }
-        playerStateManager.CheckForTransition(  PlayerStateManager.PlayerStateTypes.CrouchMove );
-        if (player.PlayerMove.x != 0 && player.IsCrouching) playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.CrouchMove);
+      
+        playerStateManager.CheckForTransition(  PlayerStateManager.PlayerStateTypes.CrouchMove | PlayerStateManager.PlayerStateTypes.Neutral );
         
         if (player.IsWalking) playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Walking);
 
@@ -62,5 +58,6 @@ public class PlayerRunningState : PlayerMovingState
 
         player.IsRunning = false;
       Debug.Log(player.rb.linearVelocity);
+      player.decelActive = false;
     }
 }

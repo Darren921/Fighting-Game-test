@@ -83,7 +83,7 @@ public class PlayerStateManager : MonoBehaviour
         if (transitionType.HasFlag(PlayerStateTypes.Neutral))
             if (player.PlayerMove == Vector3.zero && player.IsGrounded) { SwitchState(PlayerStateTypes.Neutral); }
         
-        if (transitionType.HasFlag(PlayerStateTypes.AirDash))
+        if (transitionType.HasFlag(PlayerStateTypes.AirDash)  )
             if (player.IsDashing && player.AtDashHeight) SwitchState(PlayerStateTypes.AirDash);
         
         if(transitionType.HasFlag(PlayerStateTypes.Jumping))
@@ -96,7 +96,7 @@ public class PlayerStateManager : MonoBehaviour
             if (player.IsRunning  && player.InputReader.currentMoveInput != InputReader.MovementInputResult.Backward && player.InputReader.currentMoveInput != InputReader.MovementInputResult.None ) SwitchState(PlayerStateTypes.Running);
 
         if(transitionType.HasFlag(PlayerStateTypes.Dash)) 
-            if (player.IsDashing  ) SwitchState(PlayerStateTypes.Dash);
+            if (player.IsDashing && player.IsGrounded && player.InputReader.GetValidMoveInput() != InputReader.MovementInputResult.Forward ) SwitchState(PlayerStateTypes.Dash);
 
         if (transitionType.HasFlag(PlayerStateTypes.Attack)) 
             if (player.IsAttacking && !player.OnAttackCoolDown) SwitchState(PlayerStateTypes.Attack);

@@ -98,6 +98,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     internal float decelerationDuration = 1;
     internal bool decelerating;
     private float elapsedTime;
+    internal bool decelActive;
 
     private void Awake()
     {
@@ -134,6 +135,10 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         _playerActions.Move.performed += OnMove;
         _playerActions.Move.canceled += OnMove;
         _playerActions.Attack.performed += OnAttack;
+        // _playerActions.Light.performed += OnLight;
+        // _playerActions.Medium.performed += OnMedium;
+        // _playerActions.Heavy.performed += OnLight; // I don't need to explain this comment
+
         _playerActions.Jumping.performed += OnJumping;
         _playerActions.SuperJump.performed += OnSuperJump;
        
@@ -266,14 +271,35 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         }
     }
 
+    public void OnLight(InputAction.CallbackContext context)
+    {
+        if (OnAttackCoolDown || IsAttacking) return;
+        IsAttacking = true;
+        Animator.SetBool(Attacking, true);
+    }
+
+    public void OnMedium(InputAction.CallbackContext context)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void OnHeavy(InputAction.CallbackContext context)
+    {
+        throw new NotImplementedException();
+    }
+
     public void OnAttack(InputAction.CallbackContext context)
     {
         //convert and passes input to attack type for the input reader 
         PlayerAttackAction?.Invoke(ReturnAttackType(context.ReadValue<float>()));
-        if (OnAttackCoolDown || IsAttacking ) return; 
+        if (OnAttackCoolDown || IsAttacking) return;
         IsAttacking = true;
         Animator.SetBool(Attacking, true);
     }
+       
+        
+    
+
 
     public void OnDashMacro(InputAction.CallbackContext context)
     {
@@ -352,15 +378,17 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     }
 
+   
+
+
     internal IEnumerator DecelerationCurve(PlayerController player)
     {
         decelerating = true;
-        
 
-        while (elapsedTime < decelerationDuration)
+        while (elapsedTime < decelerationDuration && player.decelActive)
         {
         //    var decelerationCurve = player.decelerationCurve.Evaluate(elapsedTime / decelerationDuration);
-            player.rb.linearVelocity = Vector3.Lerp(player.rb.linearVelocity, new Vector3(0.5f,0,0), decelerationDuration) ;
+            player.rb.linearVelocity = Vector3.Lerp(player.rb.linearVelocity, new Vector3(0f,0,0), decelerationDuration) ;
             Debug.Log( player.rb.linearVelocity.magnitude);
             elapsedTime += Time.deltaTime;
             Debug.Log(elapsedTime);
