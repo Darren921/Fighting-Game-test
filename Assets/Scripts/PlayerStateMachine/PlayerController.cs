@@ -68,6 +68,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     #region Move Variables
 
     public Vector3 PlayerMove { get; private set; }
+    internal int jumpCharges { get; set; }
+
     internal float WalkSpeed;
     internal float RunSpeed;
     internal bool IsWalking;
@@ -197,6 +199,11 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         IsGrounded = GravityManager.CheckGrounded(this);
         
         //this needs to be rework (current anti head landing )
+        PreventHeadLanding(collision);
+    }
+
+    private void PreventHeadLanding(Collision collision)
+    {
         if (collision.gameObject.CompareTag("Player") && collision.gameObject != gameObject && !IsGrounded)
         {
             if (gameObject.GetComponent<Collider>().bounds.min.y > collision.gameObject.GetComponent<Collider>().bounds.max.y - 0.001)
@@ -249,7 +256,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
                 break;
         }
 
-        if (transform.localPosition.y < JumpHeight / 2)
+        if (transform.localPosition.y > JumpHeight / 2)
         {
             AtDashHeight = true;
         }
@@ -318,7 +325,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         {
             case false:
             {
-                if (IsDashing || IsGrounded ) return;
+                if (IsDashing || IsGrounded || jumpCharges <= 0) return;
                 print("entered dash");
                 IsDashing = true;
                 DashDir = InputReader.currentMoveInput;
@@ -357,7 +364,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     public void OnRun(InputAction.CallbackContext context)
     {
-        if (context.performed && InputReader.GetValidMoveInput() != InputReader.MovementInputResult.Backward && InputReader.GetValidMoveInput() != InputReader.MovementInputResult.None)
+        if (context.performed && InputReader.GetValidMoveInput() != InputReader.MovementInputResult.Backward && InputReader.GetValidMoveInput() != InputReader.MovementInputResult.None && IsGrounded)
         {
 //            print(InputReader.currentMoveInput);
             IsRunning = true;

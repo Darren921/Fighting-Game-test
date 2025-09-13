@@ -27,8 +27,9 @@ public class HitDetection : MonoBehaviour, IDamageable
         //Search for other hit box and then apply affects 
         if (other.gameObject.CompareTag("HitBox"))
         {
+            print("hit");
             var target = OnHit(_player, otherPlayer);
-            if (target != null)
+            if (target != null && !target.HitStun)
             {
                 target.GetComponent<PlayerStateManager>().SwitchState(PlayerStateManager.PlayerStateTypes.HitStun);
                 target.PlayerHitDetection.TakeDamage(10);
@@ -48,18 +49,22 @@ public class HitDetection : MonoBehaviour, IDamageable
         var attackBufferSender = sender.GetComponentInParent<InputReader>();
         var attackBufferReceiver = receiver.GetComponentInParent<InputReader>();
         
-        if (attackBufferSender.currentAttackInput != InputReader.AttackInputResult.None &&
-            attackBufferReceiver.currentAttackInput != InputReader.AttackInputResult.None)
+        Debug.Log(attackBufferSender.lastAttackInput );
+        Debug.Log(attackBufferReceiver.lastAttackInput );
+        
+
+        if (attackBufferSender.lastAttackInput != InputReader.AttackInputResult.None &&
+            attackBufferReceiver.lastAttackInput != InputReader.AttackInputResult.None)
         {
-            var result = attackBufferSender.currentAttackInput < attackBufferReceiver.currentAttackInput ?  sender : receiver ;
+            var result = attackBufferSender.lastAttackInputFrame < attackBufferReceiver.lastAttackInputFrame ?  sender : receiver ;
             print(result);
             return result;
         } 
-        if (attackBufferSender.currentAttackInput != InputReader.AttackInputResult.None && attackBufferReceiver.currentAttackInput == InputReader.AttackInputResult.None)
+        if (attackBufferSender.lastAttackInput != InputReader.AttackInputResult.None && attackBufferReceiver.lastAttackInput == InputReader.AttackInputResult.None)
         {
             return receiver;
         }
-        if (attackBufferSender.currentAttackInput == InputReader.AttackInputResult.None && attackBufferReceiver.currentAttackInput != InputReader.AttackInputResult.None)
+        if (attackBufferSender.lastAttackInput == InputReader.AttackInputResult.None && attackBufferReceiver.lastAttackInput != InputReader.AttackInputResult.None)
         {
             return sender;
         } 

@@ -14,7 +14,6 @@ public class PlayerJumpingState : PlayerBaseState
     private float xJumpVal; // check Try jump method for changes 
     private Collider collider;
     private bool jumpTriggered;
-    private int jumpCharges;
     private bool atJumpHeight;
     private bool doubleJumpReady ;
 
@@ -22,13 +21,13 @@ public class PlayerJumpingState : PlayerBaseState
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player)
     {
         
-        jumpCharges = player.characterData.jumpCharges;
+        player.jumpCharges = player.characterData.jumpCharges;
         //apply jump immediately when entering state to prevent update glitches   
         collider = player.GetComponent<Collider>();
         player.Animator.SetBool(player.Jump, true);
         player.IsRunning = false;
         TryJump(player);       
-        jumpCharges--;
+        player.jumpCharges--;
         player.OnJump += HandleJumpInput; 
 
     }
@@ -56,20 +55,20 @@ public class PlayerJumpingState : PlayerBaseState
                 break;
         }
 
-        doubleJumpReady = player.PlayerMove == Vector3.zero  && jumpCharges > 0 && !player.SuperJumpActive;
+        doubleJumpReady = player.PlayerMove == Vector3.zero  && player.jumpCharges > 0 && !player.SuperJumpActive;
     
         //Transitioning states 
         if (!player.IsGrounded)
         {
-            if(player.IsDashing && player.AtDashHeight && jumpCharges > 0) playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.AirDash);
+            if(player.IsDashing && player.AtDashHeight && player.jumpCharges > 0) playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.AirDash);
             playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Attack );
             
-            if (jumpCharges > 0 && doubleJumpReady && jumpTriggered)
+            if (player.jumpCharges > 0 && doubleJumpReady && jumpTriggered)
             {
                 Debug.Log("Double Jumpped");
                 player.Animator.SetBool(player.Jump, true);
                 doubleJumpReady = false;
-                jumpCharges--;
+                player.jumpCharges--;
                 TryJump(player);
                 jumpTriggered =  false;
             }

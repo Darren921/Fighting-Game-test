@@ -93,6 +93,10 @@ public class InputReader : MonoBehaviour
     public MovementInputResult currentMoveInput { get; private set; }
     public AttackInputResult currentAttackInput { get; private set; }
     public int currentAttackInputFrame { get; private set; }
+    
+    public AttackInputResult lastAttackInput { get; private set; }
+    public int lastAttackInputFrame { get; private set; }
+
 
     public List<bufferedInput<MovementInputResult>> movementBuffer = new();
     public List<bufferedInput<AttackInputResult>> attackBuffer = new();
@@ -143,6 +147,11 @@ public class InputReader : MonoBehaviour
         result = checkForNormals(result, currentMoveInput);
         if (attackBuffer.Count >= bufferCap)
             attackBuffer.RemoveAt(0);
+        if (result != AttackInputResult.None)
+        {
+            lastAttackInput = result;
+            lastAttackInputFrame = Time.frameCount;
+        }
         attackBuffer.Add(new bufferedInput<AttackInputResult>(result, Time.frameCount));
     }
 
@@ -213,7 +222,7 @@ public class InputReader : MonoBehaviour
     {
         if (currentMoveInput == MovementInputResult.None)
         {
-            var validinput = movementBuffer.Find(i => i.input != MovementInputResult.None);
+            var validinput = movementBuffer.FindLast(i => i.input != MovementInputResult.None);
             currentMoveInput = validinput.input ;
 //            print(currentMoveInput);
             return validinput.input;

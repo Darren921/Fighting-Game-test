@@ -57,8 +57,7 @@ public class PlayerDashState : PlayerMovingState
         if (IsDashing || player.IsDashing ) return;
 
         Debug.Log("HEH"); 
-        playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Neutral | PlayerStateManager.PlayerStateTypes.Attack);
-        playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Walking );
+        playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Neutral | PlayerStateManager.PlayerStateTypes.Attack | PlayerStateManager.PlayerStateTypes.Walking);
 
     }
 

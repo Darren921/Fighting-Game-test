@@ -71,7 +71,7 @@ public class PlayerStateManager : MonoBehaviour
             currentState?.ExitState(this,player);
             lastState = currentState;
             currentState = state;
-            Debug.Log(currentState.GetType().Name);
+//            Debug.Log(currentState.GetType().Name);
             currentState?.EnterState(this,player);
 
         }
@@ -93,7 +93,7 @@ public class PlayerStateManager : MonoBehaviour
             if (player.PlayerMove.x != 0) SwitchState(PlayerStateTypes.Walking);
         
         if(transitionType.HasFlag(PlayerStateTypes.Running)) 
-            if (player.IsRunning  && player.InputReader.currentMoveInput != InputReader.MovementInputResult.Backward && player.InputReader.currentMoveInput != InputReader.MovementInputResult.None ) SwitchState(PlayerStateTypes.Running);
+            if (player.IsRunning  ) SwitchState(PlayerStateTypes.Running);
 
         if(transitionType.HasFlag(PlayerStateTypes.Dash)) 
             if (player.IsDashing && player.IsGrounded && player.InputReader.GetValidMoveInput() != InputReader.MovementInputResult.Forward ) SwitchState(PlayerStateTypes.Dash);

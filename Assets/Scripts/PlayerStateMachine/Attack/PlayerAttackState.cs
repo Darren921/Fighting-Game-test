@@ -52,7 +52,7 @@ public class PlayerAttackState : PlayerBaseState
         playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Neutral);
         if (player.IsWalking)
         {
-            Debug.Log("going to moving");
+//            Debug.Log("going to moving");
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Walking);
         }
         else if (player.IsCrouching)
@@ -68,7 +68,7 @@ public class PlayerAttackState : PlayerBaseState
     {
         lastAttack = player.InputReader.currentAttackInput;
         lastMove = player.InputReader.currentMoveInput;
-        Debug.Log(lastMove);
+//        Debug.Log(lastMove);
         if (player.IsAttacking && !player.OnAttackCoolDown)
         {
             // choose attack based on input 
