@@ -136,10 +136,9 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         _playerActions.Dash.performed += OnDash;
         _playerActions.Move.performed += OnMove;
         _playerActions.Move.canceled += OnMove;
-        _playerActions.Attack.performed += OnAttack;
-        // _playerActions.Light.performed += OnLight;
-        // _playerActions.Medium.performed += OnMedium;
-        // _playerActions.Heavy.performed += OnLight; // I don't need to explain this comment
+        _playerActions.Light.performed += OnLight;
+        _playerActions.Medium.performed += OnMedium;
+        _playerActions.Heavy.performed += OnLight; // I don't need to explain this comment
 
         _playerActions.Jumping.performed += OnJumping;
         _playerActions.SuperJump.performed += OnSuperJump;
@@ -280,6 +279,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     public void OnLight(InputAction.CallbackContext context)
     {
+        PlayerAttackAction?.Invoke(InputReader.AttackInputResult.Light);
+        Animator.SetTrigger(Light);
         if (OnAttackCoolDown || IsAttacking) return;
         IsAttacking = true;
         Animator.SetBool(Attacking, true);
@@ -287,18 +288,24 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     public void OnMedium(InputAction.CallbackContext context)
     {
-        throw new NotImplementedException();
-    }
+        PlayerAttackAction?.Invoke(InputReader.AttackInputResult.Medium);
+        Animator.SetBool(Medium, true);
+        if (OnAttackCoolDown || IsAttacking) return;
+        IsAttacking = true;
+        Animator.SetBool(Attacking, true);    }
 
     public void OnHeavy(InputAction.CallbackContext context)
     {
-        throw new NotImplementedException();
+        PlayerAttackAction?.Invoke(InputReader.AttackInputResult.Heavy);
+        if (OnAttackCoolDown || IsAttacking) return;
+        IsAttacking = true;
+        Animator.SetBool(Attacking, true);    
     }
 
     public void OnAttack(InputAction.CallbackContext context)
     {
         //convert and passes input to attack type for the input reader 
-        PlayerAttackAction?.Invoke(ReturnAttackType(context.ReadValue<float>()));
+        //PlayerAttackAction?.Invoke(ReturnAttackType(context.ReadValue<float>()));
         if (OnAttackCoolDown || IsAttacking) return;
         IsAttacking = true;
         Animator.SetBool(Attacking, true);
@@ -404,6 +411,26 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         decelerating = false;
         elapsedTime = 0f;
     }
+    
+    /*
+    private InputReader.AttackInputResult ReturnAttackType(float attackVal)
+    {
+        //depending on the attacks scale number, (check controls and the attacks scale #) returns the corresponding attack 
+        var attackValAsInt = (int)attackVal;
+        var attackResult = attackValAsInt switch
+        {
+            1 => InputReader.AttackInputResult.Light,
+            2 => InputReader.AttackInputResult.Medium,
+            3 => InputReader.AttackInputResult.Heavy,
+            _ => InputReader.AttackInputResult.None,
+        };
+
+        return attackResult;
+    }
+    */
+    
+    
+    
     /*public void OnRunOrDash(InputAction.CallbackContext context)
     {
         var contextHold = context.interaction as MultiTapOrHold;
@@ -451,22 +478,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         IsWalking = false;
     }*/
 
-   
 
 
-   
-    private InputReader.AttackInputResult ReturnAttackType(float attackVal)
-    {
-        //depending on the attacks scale number, (check controls and the attacks scale #) returns the corresponding attack 
-        var attackValAsInt = (int)attackVal;
-        var attackResult = attackValAsInt switch
-        {
-            1 => InputReader.AttackInputResult.Light,
-            2 => InputReader.AttackInputResult.Medium,
-            3 => InputReader.AttackInputResult.Heavy,
-            _ => InputReader.AttackInputResult.None,
-        };
 
-        return attackResult;
-    }
+
 }
