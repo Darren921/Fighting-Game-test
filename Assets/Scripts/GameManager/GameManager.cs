@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviour
     {
         foreach (var player in players)
         {
-            player.Animator.enabled = false;
+            if(player.Animator is not null)  player.Animator.enabled = false;
             player.hitBox.SetActive(false);
             if (player.Health <= 0)
             {

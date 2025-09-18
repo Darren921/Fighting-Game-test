@@ -115,7 +115,6 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         rb = GetComponent<Rigidbody>();
         RaycastDistance = 2.0231f;
         HitDetection.OnDeath += OnPlayerDeath;
-        Animator.keepAnimatorStateOnDisable = false;
     }
 
     public void InitializePlayer(InputDevice device)
@@ -187,7 +186,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         // This is used at the end of each animation 
         IsAttacking = false;
         Animator.ResetTrigger(Attacking);
-        Animator.SetBool(Light, false);
+        Animator.ResetTrigger(Light);
         Animator.SetBool(Medium, false);
         Animator.SetBool(left, false);
         Animator.SetBool(right, false);
@@ -280,10 +279,10 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     public void OnLight(InputAction.CallbackContext context)
     {
         PlayerAttackAction?.Invoke(InputReader.AttackInputResult.Light);
+        Animator.SetTrigger(Attacking);    
         Animator.SetTrigger(Light);
         if (OnAttackCoolDown || IsAttacking) return;
         IsAttacking = true;
-        Animator.SetTrigger(Attacking);    
     }
 
     public void OnMedium(InputAction.CallbackContext context)
