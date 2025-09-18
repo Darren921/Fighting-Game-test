@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.Timeline;
 
 public class GameManager : MonoBehaviour
@@ -24,6 +25,9 @@ public class GameManager : MonoBehaviour
         {
             player.characterData = characterDatabase.GetCharacterSODataBase(0);
         }
+
+        Time.timeScale = 1;
+        
         HitDetection.OnDeath += OnPlayerDeath;
         Application.targetFrameRate = 60;
     //    Time.timeScale = 0.1f;
@@ -46,6 +50,10 @@ public class GameManager : MonoBehaviour
                 case InputDeviceChange.Reconnected:
                     OnConnect();
                     break;
+                case InputDeviceChange.Removed:
+                    break;
+                case InputDeviceChange.Disconnected:
+                    break;
             }
         };
     }
@@ -60,7 +68,7 @@ public class GameManager : MonoBehaviour
             {
                 player.gameObject.SetActive(false);
             }
-          
+            SceneManager.LoadScene("LogicTest");
         }
     }
 
@@ -72,19 +80,23 @@ public class GameManager : MonoBehaviour
 
     private void OnConnect()
     {
-        
         //var input1 = deviceIndex.GetValueOrDefault(players[0]);
         //players[0].InitializePlayer(input1);
         //var input2 = deviceIndex.GetValueOrDefault(players[1]);
         //players[1].InitializePlayer(input2);
         
         //temp method to give a player controls depending on device connected first 
+        connectPlayer();
+    }
+
+    private void connectPlayer()
+    {
         for (var i = 0; i < players.Length; i++)
         {
             if (i < _availableDevices.Count)
             {
                 players[i].InitializePlayer(_availableDevices[i]);
-//                Debug.Log($"Assigned {_availableDevices[i].name} to Player {i + 1}");
+                Debug.Log($"Assigned {_availableDevices[i].name} to Player {i + 1}");
             }
             else
             {
@@ -96,11 +108,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    
 
-
-
-        // Update is called once per frame
+    // Update is called once per frame
         private void Update()
         {
           CheckIfReversed();

@@ -50,6 +50,11 @@ public class PlayerStateManager : MonoBehaviour
     void Start()
     {
         player = GetComponent<PlayerController>();
+        ResetStateMachine();
+    }
+
+    public void ResetStateMachine()
+    {
         currentState = _states[PlayerStateTypes.Neutral];
         currentState.EnterState(this,player);
     }

@@ -48,6 +48,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     public Action OnJump;
     public Action<InputReader.AttackInputResult> PlayerAttackAction;
+    private PlayerStateManager playerStateManager;
     
     #region Attack Check Variables
 
@@ -106,6 +107,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     {
         PlayerKnockBack = GetComponent<PlayerKnockBack>();
         PlayerHitDetection = GetComponentInChildren<HitDetection>();
+        playerStateManager = GetComponent<PlayerStateManager>();
         GravityManager = GetComponent<GravityManager>();
         IsGrounded = true;
         InputReader = GetComponent<InputReader>();
@@ -147,7 +149,6 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 //        print(gameObject.gameObject.name);
         SetUpCharacterVariables();
     }
-    private void OnDisable() => OnDisablePlayer();
 
     public void OnEnablePlayer()
     {
@@ -156,15 +157,14 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     public void OnDisablePlayer()
     {
         _playerActions.Disable();
- 
     }
 
     private void OnPlayerDeath()
     {
         InputReader.enabled = false;
         HitDetection.OnDeath -= OnPlayerDeath;
-        _playerActions.Disable();
-
+        OnDisablePlayer();
+        playerStateManager.ResetStateMachine();
     }
 
 
@@ -186,7 +186,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         //This may need to change to separate ones for each attack
         // This is used at the end of each animation 
         IsAttacking = false;
-        Animator.SetBool(Attacking, false);
+        Animator.ResetTrigger(Attacking);
         Animator.SetBool(Light, false);
         Animator.SetBool(Medium, false);
         Animator.SetBool(left, false);
@@ -283,7 +283,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         Animator.SetTrigger(Light);
         if (OnAttackCoolDown || IsAttacking) return;
         IsAttacking = true;
-        Animator.SetBool(Attacking, true);
+        Animator.SetTrigger(Attacking);    
     }
 
     public void OnMedium(InputAction.CallbackContext context)
@@ -292,14 +292,15 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         Animator.SetBool(Medium, true);
         if (OnAttackCoolDown || IsAttacking) return;
         IsAttacking = true;
-        Animator.SetBool(Attacking, true);    }
+        Animator.SetTrigger(Attacking);    
+    }
 
     public void OnHeavy(InputAction.CallbackContext context)
     {
         PlayerAttackAction?.Invoke(InputReader.AttackInputResult.Heavy);
         if (OnAttackCoolDown || IsAttacking) return;
         IsAttacking = true;
-        Animator.SetBool(Attacking, true);    
+        Animator.SetTrigger(Attacking);    
     }
 
     public void OnAttack(InputAction.CallbackContext context)
@@ -308,7 +309,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         //PlayerAttackAction?.Invoke(ReturnAttackType(context.ReadValue<float>()));
         if (OnAttackCoolDown || IsAttacking) return;
         IsAttacking = true;
-        Animator.SetBool(Attacking, true);
+        Animator.SetTrigger(Attacking);    
     }
        
         
