@@ -187,7 +187,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         IsAttacking = false;
         Animator.ResetTrigger(Attacking);
         Animator.ResetTrigger(Light);
-        Animator.SetBool(Medium, false);
+        Animator.ResetTrigger(Medium);
         Animator.SetBool(left, false);
         Animator.SetBool(right, false);
     }
@@ -279,19 +279,21 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     public void OnLight(InputAction.CallbackContext context)
     {
         PlayerAttackAction?.Invoke(InputReader.AttackInputResult.Light);
-        Animator.SetTrigger(Attacking);    
-        Animator.SetTrigger(Light);
+      
         if (OnAttackCoolDown || IsAttacking) return;
         IsAttacking = true;
+        Animator.SetTrigger(Attacking);    
+        Animator.SetTrigger(Light);
     }
 
     public void OnMedium(InputAction.CallbackContext context)
     {
         PlayerAttackAction?.Invoke(InputReader.AttackInputResult.Medium);
-        Animator.SetBool(Medium, true);
         if (OnAttackCoolDown || IsAttacking) return;
         IsAttacking = true;
-        Animator.SetTrigger(Attacking);    
+        Animator.SetTrigger(Attacking);   
+        Animator.SetTrigger(Medium);
+
     }
 
     public void OnHeavy(InputAction.CallbackContext context)
@@ -318,12 +320,35 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     public void OnDashMacro(InputAction.CallbackContext context)
     {
         //shortcut for dash 
-        if (IsRunning || IsDashing || !IsGrounded ) return;
         print("entered dash");
-        IsDashing = true;
-        DashDir = InputReader.currentMoveInput;
-        IsRunning = false;
-        IsWalking = false;
+        if (InputReader.currentMoveInput != InputReader.MovementInputResult.Forward && InputReader.currentMoveInput != InputReader.MovementInputResult.None && IsGrounded )
+        {
+            print(InputReader.currentMoveInput);
+            IsDashing = true;
+            DashDir = InputReader.currentMoveInput;
+            IsRunning = false;
+            IsWalking = false;
+        }
+        else if (!IsGrounded)
+        {
+            print(InputReader.currentMoveInput);
+            IsDashing = true;
+            DashDir = InputReader.currentMoveInput;
+            IsRunning = false;
+            IsWalking = false;
+        }
+        else
+        {
+            IsRunning = true;
+            IsWalking = false;
+            if (!IsRunning || !context.canceled) return;
+            if (PlayerMove.x == 0) return;
+            print("canceled run");
+            IsRunning = false;
+            IsWalking = true;
+        }
+     
+        
     }
 
     public void OnDash(InputAction.CallbackContext context)
@@ -377,18 +402,12 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
             IsRunning = true;
             IsWalking = false;
         }
-       
-        if (IsRunning && context.canceled)
-        {
-            if (PlayerMove.x != 0)
-            {
-                print("canceled run");
-                IsRunning = false;
-                IsWalking = true;
-            }
-            
-            
-        }
+
+        if (!IsRunning || !context.canceled) return;
+        if (PlayerMove.x == 0) return;
+        print("canceled run");
+        IsRunning = false;
+        IsWalking = true;
 
     }
 

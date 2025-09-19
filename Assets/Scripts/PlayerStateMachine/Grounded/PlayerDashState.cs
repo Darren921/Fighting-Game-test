@@ -50,6 +50,10 @@ public class PlayerDashState : PlayerMovingState
     {
     }
 
+    protected override void applyVelocity(PlayerController player)
+    {
+    }
+
 
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {

@@ -49,9 +49,12 @@ public class PlayerRunningState : PlayerMovingState
         }
     }
 
-   
 
- 
+    protected override void applyVelocity(PlayerController player)
+    {
+        var velocity = new Vector3(_smoothedMoveDir.x * moveSpeed, player.rb.linearVelocity.y);
+        player.rb.linearVelocity = velocity;    
+    }
 
     internal override void ExitState(PlayerStateManager playerStateManager, PlayerController player)
     {

@@ -28,16 +28,11 @@ public abstract class PlayerMovingState : PlayerBaseState
         applyVelocity(player);
     }
 
-    protected void applyVelocity(PlayerController player)
-    {
-        var velocity = new Vector3(_smoothedMoveDir.x * moveSpeed, player.rb.linearVelocity.y);
-        player.rb.linearVelocity = velocity;    
-        
-    }
+    protected abstract void applyVelocity(PlayerController player);
 
     protected void smoothMovement()
     {
-        _smoothedMoveDir = Vector3.SmoothDamp(_smoothedMoveDir, moveDir, ref _smoothedMoveVelocity, 0.3f);
+        _smoothedMoveDir = Vector3.SmoothDamp(_smoothedMoveDir, moveDir, ref _smoothedMoveVelocity, 0.2f);
     }
 
     protected void setMoveDir(Vector3 newDir)
