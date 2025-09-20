@@ -8,6 +8,7 @@ public class PlayerRunningState : PlayerMovingState
     
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
+        player.IsRunning = true;
         //controls the decel curve to make slow down movement more accurate 
         if (player.PlayerMove == Vector3.zero )
         {

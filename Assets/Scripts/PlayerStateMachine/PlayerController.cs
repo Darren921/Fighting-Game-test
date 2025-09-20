@@ -123,14 +123,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         _controls = new Controls();
         //creates a new set of controls for the chosen device 
         _controls.devices = new[] { device };
-        if (device != null)
-        {
-            _playerActions = _controls.Player;
-        }
-        else
-        {
-            _playerActions = new Controls.PlayerActions();
-        }
+        _playerActions = device != null ? _controls.Player : new Controls.PlayerActions();
         _playerActions.Run.performed += OnRun;
         _playerActions.Run.canceled += OnRun;
         _playerActions.DashMacro.performed += OnDashMacro;
@@ -268,10 +261,12 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         PlayerMove = context.ReadValue<Vector3>();
         if (!IsRunning && PlayerMove.x != 0)
         {
+            print("walking");
             IsWalking = true;
         }
         else if (PlayerMove.x == 0)
         {
+            print("stop walking");
             IsWalking = false;
         }
     }
@@ -323,7 +318,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         print("entered dash");
         if (InputReader.currentMoveInput != InputReader.MovementInputResult.Forward && InputReader.currentMoveInput != InputReader.MovementInputResult.None && IsGrounded )
         {
-            print(InputReader.currentMoveInput);
+            print("dash back");
             IsDashing = true;
             DashDir = InputReader.currentMoveInput;
             IsRunning = false;
@@ -331,21 +326,22 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         }
         else if (!IsGrounded)
         {
-            print(InputReader.currentMoveInput);
+            print("air dash");
             IsDashing = true;
             DashDir = InputReader.currentMoveInput;
             IsRunning = false;
             IsWalking = false;
         }
         else
-        {
+        { 
+            print("sprinting");
             IsRunning = true;
-            IsWalking = false;
-            if (!IsRunning || !context.canceled) return;
-            if (PlayerMove.x == 0) return;
-            print("canceled run");
-            IsRunning = false;
-            IsWalking = true;
+           IsWalking = false;
+           if (!context.canceled) return;
+           print("sprint cancel ");
+           IsRunning = false;
+           IsWalking = true;
+
         }
      
         
@@ -424,7 +420,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
             player.rb.linearVelocity = Vector3.Lerp(player.rb.linearVelocity, new Vector3(0f,0,0), decelerationDuration) ;
             Debug.Log( player.rb.linearVelocity.magnitude);
             elapsedTime += Time.deltaTime;
-            Debug.Log(elapsedTime);
+//            Debug.Log(elapsedTime);
             yield return null;
         }
         decelerating = false;
