@@ -1,21 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerRunningState : PlayerMovingState
 {
-    protected override float moveSpeed => _player.RunSpeed;
+    protected override float MoveSpeed => Player.RunSpeed;
     
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
         player.IsRunning = true;
         //controls the decel curve to make slow down movement more accurate 
-        if (player.PlayerMove == Vector3.zero )
+        if (player.PlayerMove == Vector3.zero && !player.DashMarcoActive )
         {
-            if (!player.decelerating && !player.decelActive)
+            if (!player.Decelerating && !player.DecelActive)
             {
-                player.decelActive = true;
-                player.decelerating = true;
+                player.DecelActive = true;
+                player.Decelerating = true;
                 player.StartCoroutine(player.DecelerationCurve(player));
             }
         }
@@ -23,7 +21,7 @@ public class PlayerRunningState : PlayerMovingState
         playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Attack);
      
         
-        if (player.InputReader.currentMoveInput == InputReader.MovementInputResult.Backward )
+        if (player.InputReader.CurrentMoveInput == InputReader.MovementInputResult.Backward )
         {
 //            Debug.Log("BACK");
             player.IsRunning = false;
@@ -32,7 +30,7 @@ public class PlayerRunningState : PlayerMovingState
         }
 
         //switch states 
-        if(player.decelerating || !player.decelActive ) return;
+        if(player.Decelerating || !player.DecelActive ) return;
         
       
         playerStateManager.CheckForTransition(  PlayerStateManager.PlayerStateTypes.CrouchMove | PlayerStateManager.PlayerStateTypes.Neutral );
@@ -50,10 +48,16 @@ public class PlayerRunningState : PlayerMovingState
         }
     }
 
-
-    protected override void applyVelocity(PlayerController player)
+    internal override void FixedUpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
-        var velocity = new Vector3(_smoothedMoveDir.x * moveSpeed, player.rb.linearVelocity.y);
+        SetMoveDir(!player.DashMarcoActive ? new Vector2(player.PlayerMove.x, 0) : new Vector2(1, 0));
+        SmoothMovement();
+        ApplyVelocity(player);
+    }
+
+    protected override void ApplyVelocity(PlayerController player)
+    {
+        var velocity =  new Vector3(SmoothedMoveDir.x * MoveSpeed, player.rb.linearVelocity.y) ;
         player.rb.linearVelocity = velocity;    
     }
 
@@ -62,6 +66,6 @@ public class PlayerRunningState : PlayerMovingState
 
         player.IsRunning = false;
       Debug.Log(player.rb.linearVelocity);
-      player.decelActive = false;
+      player.DecelActive = false;
     }
 }

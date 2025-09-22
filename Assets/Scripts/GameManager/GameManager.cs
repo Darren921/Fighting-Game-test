@@ -1,13 +1,8 @@
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using UnityEngine.Timeline;
-
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private PlayerController[] players;
@@ -23,7 +18,7 @@ public class GameManager : MonoBehaviour
         // CHANGE THIS TO ACCEPT INPUT FROM CHARACTER SELECTION, THIS HURTS TO LEAVE
         foreach (var player in players)
         {
-            player.characterData = characterDatabase.GetCharacterSODataBase(0);
+            player.CharacterData = characterDatabase.GetCharacterSoDataBase(0);
         }
 
         Time.timeScale = 1;
@@ -86,10 +81,10 @@ public class GameManager : MonoBehaviour
         //players[1].InitializePlayer(input2);
         
         //temp method to give a player controls depending on device connected first 
-        connectPlayer();
+        ConnectPlayer();
     }
 
-    private void connectPlayer()
+    private void ConnectPlayer()
     {
         for (var i = 0; i < players.Length; i++)
         {

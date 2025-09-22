@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class GravityManager : MonoBehaviour
@@ -56,9 +55,8 @@ public class GravityManager : MonoBehaviour
 
     public float SetJumpVelocity(PlayerController player)
     {
-        var targetVelocity = 0f;
         //uses formula in order to get a constant jump height 
-        targetVelocity = !player.SuperJumpActive ? Mathf.Sqrt(player.JumpHeight * -2 * (Physics.gravity.y * player.GravScale)) : Mathf.Sqrt((player.JumpHeight * 2 ) *  -2 * (Physics.gravity.y * player.GravScale));
+        var  targetVelocity = !player.SuperJumpActive ? Mathf.Sqrt(player.JumpHeight * -2 * (Physics.gravity.y * player.GravScale)) : Mathf.Sqrt((player.JumpHeight * 2 ) *  -2 * (Physics.gravity.y * player.GravScale));
         return Velocity = targetVelocity;
     }
 }

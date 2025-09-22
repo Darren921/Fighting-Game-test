@@ -1,11 +1,7 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Interactions;
-using UnityEngine.Serialization;
 
 public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 {
@@ -17,8 +13,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     public readonly int Jump = Animator.StringToHash("Jumping");
     private readonly int Crouch = Animator.StringToHash("Crouching");
     private int Attacking => Animator.StringToHash("Attacking");
-    public int Light => Animator.StringToHash("Light");
-    public int Medium => Animator.StringToHash("Medium");
+    private int Light => Animator.StringToHash("Light");
+    private int Medium => Animator.StringToHash("Medium");
     public int left = Animator.StringToHash("Left");
     public int right = Animator.StringToHash("Right");
     public int airborne = Animator.StringToHash("Airborne");
@@ -30,14 +26,14 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     private Controls _controls;
     private Controls.PlayerActions _playerActions;
     internal InputReader InputReader;
-    internal CharacterSO characterData;
+    internal CharacterSO CharacterData;
     internal Animator Animator;
     internal GravityManager GravityManager;
     internal HitDetection PlayerHitDetection;
     internal PlayerKnockBack PlayerKnockBack;
-    
+
     #endregion
- 
+
     #region Crouching and Dashing variables
 
     internal bool IsCrouching;
@@ -48,8 +44,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     public Action OnJump;
     public Action<InputReader.AttackInputResult> PlayerAttackAction;
-    private PlayerStateManager playerStateManager;
-    
+    private PlayerStateManager _playerStateManager;
+
     #region Attack Check Variables
 
     public bool IsAttacking { get; private set; }
@@ -58,7 +54,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     #endregion
 
     #region Misc variables
-  
+
     internal bool Reversed;
     internal bool HitStun;
     internal int Health;
@@ -69,23 +65,24 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     #region Move Variables
 
     public Vector3 PlayerMove { get; private set; }
-    internal int jumpCharges { get; set; }
+    internal int JumpCharges { get; set; }
 
     internal float WalkSpeed;
     internal float RunSpeed;
     internal bool IsWalking;
     internal bool IsRunning;
-    [Tooltip("This controls the Decel curve")]
-    [SerializeField]internal AnimationCurve decelerationCurve;
+
+    [Tooltip("This controls the Decel curve")] [SerializeField]
+    internal AnimationCurve decelerationCurve;
 
     #endregion
 
     #region Jump Variables
-   
-    [Tooltip("Origin of the grounded Raycast, DO NOT TOUCH PLEASE")]
-    [SerializeField] internal Transform raycastPos;
-    
-    internal float JumpHeight; 
+
+    [Tooltip("Origin of the grounded Raycast, DO NOT TOUCH PLEASE")] [SerializeField]
+    internal Transform raycastPos;
+
+    internal float JumpHeight;
     internal float RaycastDistance; //2.023f
     internal float GravScale; // (Hold for now )  character data affects gravity 5 
     internal float Velocity;
@@ -94,20 +91,21 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     internal bool IsGrounded;
     internal bool SuperJumpActive;
     [SerializeField] internal GameObject hitBox;
-    internal bool jumpPressed;
+    internal bool JumpPressed;
 
     #endregion
-   
-    internal float decelerationDuration = 1;
-    internal bool decelerating;
-    private float elapsedTime;
-    internal bool decelActive;
+
+    private const float DecelerationDuration = 0.7f;
+    internal bool Decelerating;
+    private float _elapsedTime;
+    internal bool DecelActive;
+    internal bool DashMarcoActive;
 
     private void Awake()
     {
         PlayerKnockBack = GetComponent<PlayerKnockBack>();
         PlayerHitDetection = GetComponentInChildren<HitDetection>();
-        playerStateManager = GetComponent<PlayerStateManager>();
+        _playerStateManager = GetComponent<PlayerStateManager>();
         GravityManager = GetComponent<GravityManager>();
         IsGrounded = true;
         InputReader = GetComponent<InputReader>();
@@ -127,6 +125,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         _playerActions.Run.performed += OnRun;
         _playerActions.Run.canceled += OnRun;
         _playerActions.DashMacro.performed += OnDashMacro;
+        _playerActions.DashMacro.canceled += OnDashMacro;
+
         _playerActions.Dash.performed += OnDash;
         _playerActions.Move.performed += OnMove;
         _playerActions.Move.canceled += OnMove;
@@ -136,7 +136,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
         _playerActions.Jumping.performed += OnJumping;
         _playerActions.SuperJump.performed += OnSuperJump;
-       
+
         OnEnablePlayer();
 //        print(gameObject.gameObject.name);
         SetUpCharacterVariables();
@@ -146,6 +146,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     {
         _playerActions.Enable();
     }
+
     public void OnDisablePlayer()
     {
         _playerActions.Disable();
@@ -156,23 +157,22 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         InputReader.enabled = false;
         HitDetection.OnDeath -= OnPlayerDeath;
         OnDisablePlayer();
-        playerStateManager.ResetStateMachine();
+        _playerStateManager.ResetStateMachine();
     }
 
 
     private void SetUpCharacterVariables()
     {
         //All character data is added here (future ones must be added here as well)
-        
-        JumpHeight = characterData.jumpHeight;
-        GravScale = characterData.gravScale;
-        WalkSpeed = characterData.walkSpeed;
-        RunSpeed = characterData.runSpeed;
-        Health = characterData.health;
+
+        JumpHeight = CharacterData.jumpHeight;
+        GravScale = CharacterData.gravScale;
+        WalkSpeed = CharacterData.walkSpeed;
+        RunSpeed = CharacterData.runSpeed;
+        Health = CharacterData.health;
     }
 
 
-  
     public void SetAttacking()
     {
         //This may need to change to separate ones for each attack
@@ -188,7 +188,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     private void OnCollisionStay(Collision collision)
     {
         IsGrounded = GravityManager.CheckGrounded(this);
-        
+
         //this needs to be rework (current anti head landing )
         PreventHeadLanding(collision);
     }
@@ -197,9 +197,9 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     {
         if (collision.gameObject.CompareTag("Player") && collision.gameObject != gameObject && !IsGrounded)
         {
-            if (gameObject.GetComponent<Collider>().bounds.min.y > collision.gameObject.GetComponent<Collider>().bounds.max.y - 0.001)
+            if (gameObject.GetComponent<Collider>().bounds.min.y >
+                collision.gameObject.GetComponent<Collider>().bounds.max.y - 0.001)
             {
-                
                 if (gameObject.transform.position.x < collision.gameObject.GetComponent<Collider>().bounds.center.x)
                 {
                     rb.AddForce(-13, 1.5f, 0);
@@ -225,7 +225,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     private void OnCollisionExit(Collision other)
     {
-       IsGrounded = false;
+        IsGrounded = false;
     }
 
     private void Update()
@@ -252,21 +252,23 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
             AtDashHeight = true;
         }
     }
-     
+
 
     public void OnMove(InputAction.CallbackContext context)
     {
         //Turns off running and walking when player releases context or player stops 
         //default till running begins
         PlayerMove = context.ReadValue<Vector3>();
-        if (!IsRunning && PlayerMove.x != 0)
+        if (!IsRunning &&
+            _playerStateManager.currentState !=
+            _playerStateManager.States[PlayerStateManager.PlayerStateTypes.Running] && PlayerMove.x != 0)
         {
-            print("walking");
+//            print("walking");
             IsWalking = true;
         }
         else if (PlayerMove.x == 0)
         {
-            print("stop walking");
+            //           print("stop walking");
             IsWalking = false;
         }
     }
@@ -274,10 +276,10 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     public void OnLight(InputAction.CallbackContext context)
     {
         PlayerAttackAction?.Invoke(InputReader.AttackInputResult.Light);
-      
+
         if (OnAttackCoolDown || IsAttacking) return;
         IsAttacking = true;
-        Animator.SetTrigger(Attacking);    
+        Animator.SetTrigger(Attacking);
         Animator.SetTrigger(Light);
     }
 
@@ -286,9 +288,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         PlayerAttackAction?.Invoke(InputReader.AttackInputResult.Medium);
         if (OnAttackCoolDown || IsAttacking) return;
         IsAttacking = true;
-        Animator.SetTrigger(Attacking);   
+        Animator.SetTrigger(Attacking);
         Animator.SetTrigger(Medium);
-
     }
 
     public void OnHeavy(InputAction.CallbackContext context)
@@ -296,7 +297,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         PlayerAttackAction?.Invoke(InputReader.AttackInputResult.Heavy);
         if (OnAttackCoolDown || IsAttacking) return;
         IsAttacking = true;
-        Animator.SetTrigger(Attacking);    
+        Animator.SetTrigger(Attacking);
     }
 
     public void OnAttack(InputAction.CallbackContext context)
@@ -305,46 +306,48 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         //PlayerAttackAction?.Invoke(ReturnAttackType(context.ReadValue<float>()));
         if (OnAttackCoolDown || IsAttacking) return;
         IsAttacking = true;
-        Animator.SetTrigger(Attacking);    
+        Animator.SetTrigger(Attacking);
     }
-       
-        
-    
 
 
     public void OnDashMacro(InputAction.CallbackContext context)
     {
         //shortcut for dash 
-        print("entered dash");
-        if (InputReader.currentMoveInput != InputReader.MovementInputResult.Forward && InputReader.currentMoveInput != InputReader.MovementInputResult.None && IsGrounded )
+        print("entered dash Marco");
+        DashMarcoActive = true;
+        switch (context.performed)
         {
-            print("dash back");
-            IsDashing = true;
-            DashDir = InputReader.currentMoveInput;
-            IsRunning = false;
-            IsWalking = false;
+            case true when InputReader.CurrentMoveInput is not (InputReader.MovementInputResult.Forward
+                or InputReader.MovementInputResult.None) && IsGrounded:
+                print("dash back");
+                PerformDash();
+                break;
+            case true when !IsGrounded:
+                print("air dash");
+                PerformDash();
+                break;
+            case true:
+            {
+                print("sprinting");
+                IsRunning = true;
+                IsWalking = false;
+                if (!context.canceled) return;
+                print("sprint cancel ");
+                IsRunning = false;
+                break;
+            }
         }
-        else if (!IsGrounded)
-        {
-            print("air dash");
-            IsDashing = true;
-            DashDir = InputReader.currentMoveInput;
-            IsRunning = false;
-            IsWalking = false;
-        }
-        else
-        { 
-            print("sprinting");
-            IsRunning = true;
-           IsWalking = false;
-           if (!context.canceled) return;
-           print("sprint cancel ");
-           IsRunning = false;
-           IsWalking = true;
 
-        }
-     
-        
+        if (!context.canceled) return;
+        DashMarcoActive = false;
+    }
+
+    private void PerformDash()
+    {
+        IsDashing = true;
+        DashDir = InputReader.CurrentMoveInput;
+        IsRunning = false;
+        IsWalking = false;
     }
 
     public void OnDash(InputAction.CallbackContext context)
@@ -353,27 +356,21 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         {
             case false:
             {
-                if (IsDashing || IsGrounded || jumpCharges <= 0) return;
+                if (IsDashing || IsGrounded || JumpCharges <= 0) return;
                 print("entered dash");
-                IsDashing = true;
-                DashDir = InputReader.currentMoveInput;
-                IsRunning = false;
-                IsWalking = false;
+                PerformDash();
                 break;
             }
             case true:
             {
-                if (IsDashing || InputReader.currentMoveInput == InputReader.MovementInputResult.Forward ) return;
+                if (IsDashing || InputReader.CurrentMoveInput == InputReader.MovementInputResult.Forward) return;
                 print("entered dash");
-                IsDashing = true;
-                DashDir = InputReader.currentMoveInput;
-                IsRunning = false;
-                IsWalking = false;
+                PerformDash();
                 break;
             }
         }
     }
-    
+
 
     public void OnJumping(InputAction.CallbackContext context)
     {
@@ -381,120 +378,46 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         {
             OnJump?.Invoke();
         }
-
     }
 
     public void OnSuperJump(InputAction.CallbackContext context)
     {
-
         SuperJumpActive = true;
     }
 
     public void OnRun(InputAction.CallbackContext context)
     {
-        if (context.performed && InputReader.GetValidMoveInput() != InputReader.MovementInputResult.Backward && InputReader.GetValidMoveInput() != InputReader.MovementInputResult.None && IsGrounded)
+        if (context.performed && InputReader.GetValidMoveInput() is not (InputReader.MovementInputResult.Backward
+                or InputReader.MovementInputResult.None or InputReader.MovementInputResult.Down) && IsGrounded)
         {
-//            print(InputReader.currentMoveInput);
+            print(InputReader.CurrentMoveInput);
             IsRunning = true;
             IsWalking = false;
         }
 
-        if (!IsRunning || !context.canceled) return;
-        if (PlayerMove.x == 0) return;
+        if (!IsRunning || !context.canceled || PlayerMove.x == 0 || _playerStateManager.currentState ==
+            _playerStateManager.States[PlayerStateManager.PlayerStateTypes.Running]) return;
         print("canceled run");
         IsRunning = false;
         IsWalking = true;
-
     }
-
-   
-
 
     internal IEnumerator DecelerationCurve(PlayerController player)
     {
-        decelerating = true;
+        Decelerating = true;
 
-        while (elapsedTime < decelerationDuration && player.decelActive)
+        while (_elapsedTime < DecelerationDuration && player.DecelActive)
         {
-        //    var decelerationCurve = player.decelerationCurve.Evaluate(elapsedTime / decelerationDuration);
-            player.rb.linearVelocity = Vector3.Lerp(player.rb.linearVelocity, new Vector3(0f,0,0), decelerationDuration) ;
-            Debug.Log( player.rb.linearVelocity.magnitude);
-            elapsedTime += Time.deltaTime;
+            //    var decelerationCurve = player.decelerationCurve.Evaluate(elapsedTime / decelerationDuration);
+            player.rb.linearVelocity =
+                Vector3.Lerp(player.rb.linearVelocity, new Vector3(0f, 0, 0), DecelerationDuration);
+//          Debug.Log( player.rb.linearVelocity.magnitude);
+            _elapsedTime += Time.deltaTime;
 //            Debug.Log(elapsedTime);
             yield return null;
         }
-        decelerating = false;
-        elapsedTime = 0f;
+
+        Decelerating = false;
+        _elapsedTime = 0f;
     }
-    
-    /*
-    private InputReader.AttackInputResult ReturnAttackType(float attackVal)
-    {
-        //depending on the attacks scale number, (check controls and the attacks scale #) returns the corresponding attack 
-        var attackValAsInt = (int)attackVal;
-        var attackResult = attackValAsInt switch
-        {
-            1 => InputReader.AttackInputResult.Light,
-            2 => InputReader.AttackInputResult.Medium,
-            3 => InputReader.AttackInputResult.Heavy,
-            _ => InputReader.AttackInputResult.None,
-        };
-
-        return attackResult;
-    }
-    */
-    
-    
-    
-    /*public void OnRunOrDash(InputAction.CallbackContext context)
-    {
-        var contextHold = context.interaction as MultiTapOrHold;
-
-        //this method switches between sprint and dashing depending on time held 
-        if (IsRunning && context.canceled)
-        {
-            if (PlayerMove.x != 0)
-            {
-                print("canceled run");
-                IsRunning = false;
-                IsWalking = true;
-            }
-            else
-            {
-                IsRunning = false;
-            }
-
-            return;
-        }
-
-        //This is run section activated when the button is press and held after the second press 
-        if (contextHold is { Holding: true } && context.performed && IsGrounded)
-        {
-            if (InputReader.currentMoveInput == InputReader.MovementInputResult.Backward)
-            {
-                IsWalking = true;
-                return;
-            }
-
-            if (!IsDashing)
-            {
-                print("entered run");
-                IsRunning = true;
-                IsWalking = false;
-            }
-        }
-        //This is dash section activated when the button is pressed twice quickly 
-        if (contextHold is not { Holding: false } || !context.performed) return;
-        if (IsRunning || IsDashing || !IsGrounded || context.canceled) return;
-        print("entered dash");
-        IsDashing = true;
-        DashDir = InputReader.currentMoveInput;
-        IsRunning = false;
-        IsWalking = false;
-    }*/
-
-
-
-
-
 }

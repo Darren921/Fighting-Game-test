@@ -57,8 +57,8 @@ public class InputReader : MonoBehaviour
         HeavyRight,
     }
 
-    private Dictionary<( MovementInputResult, AttackInputResult), AttackInputResult>
-        attackMoveActions = new()
+    private readonly Dictionary<( MovementInputResult, AttackInputResult), AttackInputResult>
+        _attackMoveActions = new()
         {
             {
                 (MovementInputResult.None, AttackInputResult.Light), AttackInputResult.Light
@@ -89,36 +89,35 @@ public class InputReader : MonoBehaviour
             },
         };
 
-    PlayerController player;
-    public MovementInputResult currentMoveInput { get; private set; }
-    public AttackInputResult currentAttackInput { get; private set; }
-    public int currentAttackInputFrame { get; private set; }
-    
-    public AttackInputResult lastAttackInput { get; private set; }
-    public int lastAttackInputFrame { get; private set; }
+    private PlayerController _player;
+    public MovementInputResult CurrentMoveInput { get; private set; }
+    public AttackInputResult CurrentAttackInput { get; private set; }
+
+    public AttackInputResult LastAttackInput { get; private set; }
+    public int LastAttackInputFrame { get; private set; }
 
 
-    public List<bufferedInput<MovementInputResult>> movementBuffer = new();
-    public List<bufferedInput<AttackInputResult>> attackBuffer = new();
+    private readonly List<BufferedInput<MovementInputResult>> _movementBuffer = new();
+    private readonly List<BufferedInput<AttackInputResult>> _attackBuffer = new();
 
-    private float bufferTime;
+    private float _bufferTime;
 
-    [SerializeField] internal List<string> movementinputsVisual = new();
-    [SerializeField] internal List<string> AttackinputsVisual = new();
+    [SerializeField] internal List<string> movementInputsVisual = new();
+    [SerializeField] internal List<string> attackInputsVisual = new();
 
 
-    private int bufferCap;
+    private int _bufferCap;
 
-    public struct bufferedInput<T>
+    private struct BufferedInput<T>
     {
-        public T input;
-        public int curFrame;
+        public readonly T Input;
+        public readonly int CurFrame;
 
 
-        public bufferedInput(T input, int curFrame)
+        public BufferedInput(T input, int curFrame)
         {
-            this.input = input;
-            this.curFrame = curFrame;
+            Input = input;
+            CurFrame = curFrame;
         }
     }
 
@@ -134,34 +133,35 @@ public class InputReader : MonoBehaviour
             inputBuffer.Enqueue(new bufferedInput<T>(input, frame));
         }
     }*/
-    public void AddMovementInput(MovementInputResult result)
+    private void AddMovementInput(MovementInputResult result)
     {
-        if (movementBuffer.Count >= bufferCap)
-            movementBuffer.RemoveAt(0);
+        if (_movementBuffer.Count >= _bufferCap)
+            _movementBuffer.RemoveAt(0);
 
-        movementBuffer.Add(new bufferedInput<MovementInputResult>(result, Time.frameCount));
+        _movementBuffer.Add(new BufferedInput<MovementInputResult>(result, Time.frameCount));
     }
 
-    public void AddAttackInput(AttackInputResult result)
+    private void AddAttackInput(AttackInputResult result)
     {
-        result = checkForNormals(result, currentMoveInput);
-        if (attackBuffer.Count >= bufferCap)
-            attackBuffer.RemoveAt(0);
+        result = CheckForNormals(result, CurrentMoveInput);
+        if (_attackBuffer.Count >= _bufferCap)
+            _attackBuffer.RemoveAt(0);
         if (result != AttackInputResult.None)
         {
-            lastAttackInput = result;
-            lastAttackInputFrame = Time.frameCount;
+            LastAttackInput = result;
+            LastAttackInputFrame = Time.frameCount;
         }
-        attackBuffer.Add(new bufferedInput<AttackInputResult>(result, Time.frameCount));
+
+        _attackBuffer.Add(new BufferedInput<AttackInputResult>(result, Time.frameCount));
     }
 
 
     private void Awake()
     {
-        player = GetComponent<PlayerController>();
-        bufferTime = 5f;
-        bufferCap = 10;
-        player.PlayerAttackAction += AddAttackInput;
+        _player = GetComponent<PlayerController>();
+        _bufferTime = 5f;
+        _bufferCap = 10;
+        _player.PlayerAttackAction += AddAttackInput;
     }
 
     private void Update()
@@ -173,23 +173,22 @@ public class InputReader : MonoBehaviour
     private void UpdateInputBuffers()
     {
         var curFrame = Time.frameCount;
-        movementBuffer.RemoveAll(i => curFrame - i.curFrame > bufferTime);
-        attackBuffer.RemoveAll(i => curFrame - i.curFrame > bufferTime);
+        _movementBuffer.RemoveAll(i => curFrame - i.CurFrame > _bufferTime);
+        _attackBuffer.RemoveAll(i => curFrame - i.CurFrame > _bufferTime);
 
-        currentMoveInput = movementBuffer.Count > 0 ? movementBuffer[^1].input: MovementInputResult.None;
-        currentAttackInput = attackBuffer.Count > 0 ? attackBuffer[^1].input : AttackInputResult.None;
-        currentAttackInputFrame = attackBuffer.Count > 0 ? attackBuffer[^1].curFrame : 0;
+        CurrentMoveInput = _movementBuffer.Count > 0 ? _movementBuffer[^1].Input : MovementInputResult.None;
+        CurrentAttackInput = _attackBuffer.Count > 0 ? _attackBuffer[^1].Input : AttackInputResult.None;
 
-        movementinputsVisual.Clear();
-        foreach (var input in movementBuffer)
+        movementInputsVisual.Clear();
+        foreach (var input in _movementBuffer)
         {
-            movementinputsVisual.Add($"{input.input} (F{input.curFrame})");
+            movementInputsVisual.Add($"{input.Input} (F{input.CurFrame})");
         }
 
-        AttackinputsVisual.Clear();
-        foreach (var input in attackBuffer)
+        attackInputsVisual.Clear();
+        foreach (var input in _attackBuffer)
         {
-            AttackinputsVisual.Add($"{input.input} (F{input.curFrame})");
+            attackInputsVisual.Add($"{input.Input} (F{input.CurFrame})");
         }
     }
 
@@ -202,36 +201,29 @@ public class InputReader : MonoBehaviour
             [(0, 0)] = MovementInputResult.None,
             [(0, 1)] = MovementInputResult.Up,
             [(0, -1)] = MovementInputResult.Down,
-            [(1, 0)] = !player.Reversed ? MovementInputResult.Forward : MovementInputResult.Backward,
-            [(-1, 0)] = !player.Reversed ? MovementInputResult.Backward : MovementInputResult.Forward,
+            [(1, 0)] = !_player.Reversed ? MovementInputResult.Forward : MovementInputResult.Backward,
+            [(-1, 0)] = !_player.Reversed ? MovementInputResult.Backward : MovementInputResult.Forward,
             [(1, 1)] = MovementInputResult.UpRight,
             [(-1, 1)] = MovementInputResult.UpLeft,
             [(1, -1)] = MovementInputResult.DownRight,
             [(-1, -1)] = MovementInputResult.DownLeft
         };
 //            print(playerInput);
-        AddMovementInput(lookup[(player.PlayerMove.x, player.PlayerMove.y)]);
+        AddMovementInput(lookup[(_player.PlayerMove.x, _player.PlayerMove.y)]);
     }
 
-    private AttackInputResult checkForNormals(AttackInputResult attackInputResult, MovementInputResult movementInput)
+    private AttackInputResult CheckForNormals(AttackInputResult attackInputResult, MovementInputResult movementInput)
     {
-        return attackMoveActions.GetValueOrDefault((movementInput, attackInputResult), attackInputResult);
+        return _attackMoveActions.GetValueOrDefault((movementInput, attackInputResult), attackInputResult);
     }
 
     public MovementInputResult GetValidMoveInput()
     {
-        if (currentMoveInput == MovementInputResult.None)
-        {
-            var validinput = movementBuffer.FindLast(i => i.input != MovementInputResult.None);
-            currentMoveInput = validinput.input ;
-//            print(currentMoveInput);
-            return validinput.input;
-        }
-        return currentMoveInput;
+        if (CurrentMoveInput != MovementInputResult.None) return CurrentMoveInput;
+        var validInput = _movementBuffer.FindLast(i => i.Input != MovementInputResult.None);
+        CurrentMoveInput = validInput.Input;
+//      print(currentMoveInput);
+        return validInput.Input;
+
     }
-
-
-
-   
-
 }

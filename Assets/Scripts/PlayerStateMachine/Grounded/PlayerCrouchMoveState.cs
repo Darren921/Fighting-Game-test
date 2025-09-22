@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class PlayerCrouchMoveState : PlayerMovingState
 {
-    protected override float moveSpeed => _player.WalkSpeed;
-    protected override void applyVelocity(PlayerController player)
+    protected override float MoveSpeed => Player.WalkSpeed;
+    protected override void ApplyVelocity(PlayerController player)
     {
-        var velocity = new Vector3(_smoothedMoveDir.x * moveSpeed, player.rb.linearVelocity.y);
+        var velocity = new Vector3(SmoothedMoveDir.x * MoveSpeed, player.rb.linearVelocity.y);
         player.rb.linearVelocity = velocity;    
     }
 
