@@ -1,4 +1,3 @@
-using System.Globalization;
 using UnityEditor;
 
 [CustomEditor(typeof(PlayerStateManager))]

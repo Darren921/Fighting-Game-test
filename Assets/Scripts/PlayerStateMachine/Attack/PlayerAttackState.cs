@@ -44,8 +44,8 @@ public class PlayerAttackState : PlayerBaseState
 
     private void PerformAttack(PlayerController player)
     {
-        lastAttack = player.InputReader.currentAttackInput;
-        lastMove = player.InputReader.currentMoveInput;
+        lastAttack = player.InputReader.CurrentAttackInput;
+        lastMove = player.InputReader.CurrentMoveInput;
 //        Debug.Log(lastMove);
         if (!player.IsAttacking || player.OnAttackCoolDown) return;
         ChosenAttack( player,lastMove);

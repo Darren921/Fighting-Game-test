@@ -2,27 +2,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class HitDetection : MonoBehaviour, IDamageable
 {
     private PlayerController _player;
     [SerializeField] internal PlayerController otherPlayer;
     public static event Action OnDeath;
-
+    
     private void Awake()
     {
         _player = gameObject.GetComponentInParent<PlayerController>();
-    }
-
-    void Start()
-    {
-
-    }
-
-    private void OnCollisionEnter(Collision other)
-    {
-
     }
 
     private void OnTriggerEnter(Collider other)
@@ -42,38 +31,36 @@ public class HitDetection : MonoBehaviour, IDamageable
         {
             _player.AtBorder = true;
         }
-
     }
 
     private PlayerController OnHit(PlayerController sender, PlayerController receiver)
     {
-
         //Check the players buffers for last attack frame  and decide the player hit
         var attackBufferSender = sender.GetComponentInParent<InputReader>();
         var attackBufferReceiver = receiver.GetComponentInParent<InputReader>();
 
-        Debug.Log(attackBufferSender.lastAttackInput);
-        Debug.Log(attackBufferReceiver.lastAttackInput);
+        Debug.Log(attackBufferSender.LastAttackInput);
+        Debug.Log(attackBufferReceiver.LastAttackInput);
 
 
-        if (attackBufferSender.lastAttackInput != InputReader.AttackInputResult.None &&
-            attackBufferReceiver.lastAttackInput != InputReader.AttackInputResult.None)
+        if (attackBufferSender.LastAttackInput != InputReader.AttackInputResult.None &&
+            attackBufferReceiver.LastAttackInput != InputReader.AttackInputResult.None)
         {
-            var result = attackBufferSender.lastAttackInputFrame < attackBufferReceiver.lastAttackInputFrame
+            var result = attackBufferSender.LastAttackInputFrame < attackBufferReceiver.LastAttackInputFrame
                 ? sender
                 : receiver;
             print(result);
             return result;
         }
 
-        if (attackBufferSender.lastAttackInput != InputReader.AttackInputResult.None &&
-            attackBufferReceiver.lastAttackInput == InputReader.AttackInputResult.None)
+        if (attackBufferSender.LastAttackInput != InputReader.AttackInputResult.None &&
+            attackBufferReceiver.LastAttackInput == InputReader.AttackInputResult.None)
         {
             return receiver;
         }
 
-        if (attackBufferSender.lastAttackInput == InputReader.AttackInputResult.None &&
-            attackBufferReceiver.lastAttackInput != InputReader.AttackInputResult.None)
+        if (attackBufferSender.LastAttackInput == InputReader.AttackInputResult.None &&
+            attackBufferReceiver.LastAttackInput != InputReader.AttackInputResult.None)
         {
             return sender;
         }
@@ -81,25 +68,19 @@ public class HitDetection : MonoBehaviour, IDamageable
         return null;
     }
 
-
     public void TakeDamage(int damage)
     {
         // deal damage and active death event to trigger end of game 
 
         _player.Health -= damage;
 //        print(otherPlayer.name);
-        //      print(_player.name);
-        StartCoroutine(FlashRed(_player)); //Red when hit
-        if (!_player.AtBorder)
-        {
-            otherPlayer.StartCoroutine(otherPlayer.PlayerKnockBack.KnockBackOtherPlayer(_player));
-        }
-        else
-        {
-            otherPlayer.StartCoroutine(otherPlayer.PlayerKnockBack.KnockBackThisPlayer(otherPlayer));
-        }
+  //      print(_player.name);
 
-        if (_player.Health <= 0)
+  otherPlayer.StartCoroutine(!_player.AtBorder
+      ? otherPlayer.PlayerKnockBack.KnockBackOtherPlayer(_player)
+      : otherPlayer.PlayerKnockBack.KnockBackThisPlayer(otherPlayer));
+
+  if (_player.Health <= 0)
         {
             OnDeath?.Invoke();
         }

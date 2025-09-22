@@ -342,8 +342,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a36ba01377b4db49953ec8b144526b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementinputsVisual: []
-  AttackinputsVisual: []
+  movementInputsVisual: []
+  attackInputsVisual: []
 --- !u!114 &129694265
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -482,8 +482,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a36ba01377b4db49953ec8b144526b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementinputsVisual: []
-  AttackinputsVisual: []
+  movementInputsVisual: []
+  attackInputsVisual: []
 --- !u!114 &258787199
 MonoBehaviour:
   m_ObjectHideFlags: 0

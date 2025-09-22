@@ -1,43 +1,40 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
 public abstract class PlayerMovingState : PlayerBaseState
 {
-    protected PlayerController _player; 
-    protected Vector3 moveDir;
-    protected Vector3 _smoothedMoveDir;
-    protected Vector3 _smoothedMoveVelocity;
+    protected PlayerController Player; 
+    protected Vector3 MoveDir;
+    protected Vector3 SmoothedMoveDir;
+    protected Vector3 SmoothedMoveVelocity;
 
-    protected virtual float moveSpeed => 1;
+    protected virtual float MoveSpeed => 1;
     
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player)
     {
 //        Debug.Log("Entered " + playerStateManager.currentState);
         
-        _player = player;
+        Player = player;
         player.rb.linearVelocity = Vector3.zero;
     }
 
     internal override void FixedUpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
-        setMoveDir(new Vector2(player.PlayerMove.x, 0));
-        smoothMovement();
-        applyVelocity(player);
+        SetMoveDir(new Vector2(player.PlayerMove.x, 0));
+        SmoothMovement();
+        ApplyVelocity(player);
     }
 
-    protected abstract void applyVelocity(PlayerController player);
+    protected abstract void ApplyVelocity(PlayerController player);
 
-    protected void smoothMovement()
+    protected void SmoothMovement()
     {
-        _smoothedMoveDir = Vector3.SmoothDamp(_smoothedMoveDir, moveDir, ref _smoothedMoveVelocity, 0.2f);
+        SmoothedMoveDir = Vector3.SmoothDamp(SmoothedMoveDir, MoveDir, ref SmoothedMoveVelocity, 0.2f);
     }
 
-    protected void setMoveDir(Vector3 newDir)
+    protected void SetMoveDir(Vector3 newDir)
     {
-        moveDir = newDir.normalized;
+        MoveDir = newDir.normalized;
     }
  
 
@@ -45,8 +42,8 @@ public abstract class PlayerMovingState : PlayerBaseState
     internal override void ExitState(PlayerStateManager playerStateManager, PlayerController player)
     {
       //   player.rb.linearVelocity = Vector3.zero;
-        _smoothedMoveVelocity = Vector3.zero;
-        _smoothedMoveDir = Vector3.zero;
+        SmoothedMoveVelocity = Vector3.zero;
+        SmoothedMoveDir = Vector3.zero;
 
     }
 }
