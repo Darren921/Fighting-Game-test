@@ -8,7 +8,7 @@ public class HitDetection : MonoBehaviour, IDamageable
     private PlayerController _player;
     [SerializeField] internal PlayerController otherPlayer;
     public static event Action OnDeath;
-    
+
     private void Awake()
     {
         _player = gameObject.GetComponentInParent<PlayerController>();
@@ -73,20 +73,22 @@ public class HitDetection : MonoBehaviour, IDamageable
         // deal damage and active death event to trigger end of game 
 
         _player.Health -= damage;
-//        print(otherPlayer.name);
-  //      print(_player.name);
+        //print(otherPlayer.name);
+        //print(_player.name);
+        StartCoroutine(FlashRed(_player)); //Red when hit
 
-  otherPlayer.StartCoroutine(!_player.AtBorder
-      ? otherPlayer.PlayerKnockBack.KnockBackOtherPlayer(_player)
-      : otherPlayer.PlayerKnockBack.KnockBackThisPlayer(otherPlayer));
 
-  if (_player.Health <= 0)
+        otherPlayer.StartCoroutine(!_player.AtBorder
+            ? otherPlayer.PlayerKnockBack.KnockBackOtherPlayer(_player)
+            : otherPlayer.PlayerKnockBack.KnockBackThisPlayer(otherPlayer));
+
+        if (_player.Health <= 0)
         {
             OnDeath?.Invoke();
         }
     }
 
-    private IEnumerator FlashRed(PlayerController player)//bro wtf, this took me way to long to do
+    private IEnumerator FlashRed(PlayerController player) //bro wtf, this took me way to long to do
     {
         SkinnedMeshRenderer[] renderers = player.GetComponentsInChildren<SkinnedMeshRenderer>();
         MaterialPropertyBlock block = new MaterialPropertyBlock();
