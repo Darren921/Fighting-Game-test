@@ -5,6 +5,10 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 {
+    private static readonly int StartUp = Animator.StringToHash("StartUp");
+    private static readonly int Active = Animator.StringToHash("Active");
+    private static readonly int Recovery = Animator.StringToHash("Recovery");
+
     #region Animator Hashed variables
 
     public readonly int Idle = Animator.StringToHash("Idle");
@@ -173,7 +177,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     }
 
 
-    public void SetAttacking()
+    public void ResetAttackingTrigger()
     {
         //This may need to change to separate ones for each attack
         // This is used at the end of each animation 
@@ -185,6 +189,29 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         Animator.SetBool(right, false);
     }
 
+    public void SetUpStartupFrame()
+    {
+        Animator.SetTrigger(StartUp);
+    }
+
+    public void SetUpActiveFrame()
+    {
+        Animator.SetTrigger(Active);
+        Animator.ResetTrigger(StartUp);
+
+    }
+
+    public void SetUpRecoveryFrame()
+    {
+        Animator.SetTrigger(Recovery);
+        Animator.ResetTrigger(Active);
+
+    }
+
+    public void ResetRecoveryFrame()
+    {
+        Animator.ResetTrigger(Recovery);
+    }
     private void OnCollisionStay(Collision collision)
     {
         IsGrounded = GravityManager.CheckGrounded(this);
@@ -370,7 +397,19 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
             }
         }
     }
-
+    public void OnRun(InputAction.CallbackContext context)
+    {
+        if (context.performed && InputReader.GetValidMoveInput() is not (InputReader.MovementInputResult.Backward or InputReader.MovementInputResult.None or InputReader.MovementInputResult.Down) && IsGrounded)
+        {
+            print(InputReader.CurrentMoveInput);
+            IsRunning = true;
+            IsWalking = false;
+        }
+        if (!IsRunning || !context.canceled || PlayerMove.x == 0 || _playerStateManager.currentState == _playerStateManager.States[PlayerStateManager.PlayerStateTypes.Running]) return;
+        print("canceled run");
+        IsRunning = false;
+        IsWalking = true;
+    }
 
     public void OnJumping(InputAction.CallbackContext context)
     {
@@ -385,22 +424,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         SuperJumpActive = true;
     }
 
-    public void OnRun(InputAction.CallbackContext context)
-    {
-        if (context.performed && InputReader.GetValidMoveInput() is not (InputReader.MovementInputResult.Backward
-                or InputReader.MovementInputResult.None or InputReader.MovementInputResult.Down) && IsGrounded)
-        {
-            print(InputReader.CurrentMoveInput);
-            IsRunning = true;
-            IsWalking = false;
-        }
-
-        if (!IsRunning || !context.canceled || PlayerMove.x == 0 || _playerStateManager.currentState ==
-            _playerStateManager.States[PlayerStateManager.PlayerStateTypes.Running]) return;
-        print("canceled run");
-        IsRunning = false;
-        IsWalking = true;
-    }
+  
 
     internal IEnumerator DecelerationCurve(PlayerController player)
     {

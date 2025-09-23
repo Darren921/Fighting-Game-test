@@ -93,6 +93,6 @@ public class PlayerAttackState : PlayerBaseState
 
     internal override void ExitState(PlayerStateManager playerStateManager, PlayerController player)
     {
-        player.SetAttacking();
+        player.ResetAttackingTrigger();
     }
 }
