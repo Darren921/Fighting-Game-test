@@ -5,9 +5,9 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 {
-    private static readonly int StartUp = Animator.StringToHash("StartUp");
-    private static readonly int Active = Animator.StringToHash("Active");
-    private static readonly int Recovery = Animator.StringToHash("Recovery");
+    public  readonly int StartUp = Animator.StringToHash("StartUp");
+    public  readonly int Active = Animator.StringToHash("Active");
+    public  readonly int Recovery = Animator.StringToHash("Recovery");
 
     #region Animator Hashed variables
 
@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     private readonly int Running = Animator.StringToHash("Running");
     public readonly int Jump = Animator.StringToHash("Jumping");
     private readonly int Crouch = Animator.StringToHash("Crouching");
-    private int Attacking => Animator.StringToHash("Attacking");
+    public int Attacking => Animator.StringToHash("Attacking");
     private int Light => Animator.StringToHash("Light");
     private int Medium => Animator.StringToHash("Medium");
     public int left = Animator.StringToHash("Left");
@@ -35,8 +35,10 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     internal GravityManager GravityManager;
     internal HitDetection PlayerHitDetection;
     internal PlayerKnockBack PlayerKnockBack;
+    private PlayerStateManager _playerStateManager;
 
     #endregion
+    
 
     #region Crouching and Dashing variables
 
@@ -46,10 +48,11 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     #endregion
 
+    #region PlayerActions
     public Action OnJump;
     public Action<InputReader.AttackInputResult> PlayerAttackAction;
-    private PlayerStateManager _playerStateManager;
-
+    #endregion
+    
     #region Attack Check Variables
 
     public bool IsAttacking { get; private set; }
@@ -63,6 +66,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     internal bool HitStun;
     internal int Health;
     internal bool AtBorder;
+    internal bool DashMarcoActive;
 
     #endregion
 
@@ -75,10 +79,6 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     internal float RunSpeed;
     internal bool IsWalking;
     internal bool IsRunning;
-
-    [Tooltip("This controls the Decel curve")] [SerializeField]
-    internal AnimationCurve decelerationCurve;
-
     #endregion
 
     #region Jump Variables
@@ -99,11 +99,13 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     #endregion
 
+    #region Decelerating Variables
     private const float DecelerationDuration = 0.7f;
     internal bool Decelerating;
     private float _elapsedTime;
     internal bool DecelActive;
-    internal bool DashMarcoActive;
+    #endregion
+   
 
     private void Awake()
     {

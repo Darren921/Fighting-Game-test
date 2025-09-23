@@ -14,14 +14,15 @@ public class HitDetection : MonoBehaviour, IDamageable
         _player = gameObject.GetComponentInParent<PlayerController>();
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         //Search for other hit box and then apply affects 
         if (other.gameObject.CompareTag("HitBox"))
         {
             print("hit");
             var target = OnHit(_player, otherPlayer);
-            if (target != null && !target.HitStun)
+
+            if (target != null && !target.HitStun && target.Animator.GetBool(target.Active))
             {
                 target.GetComponent<PlayerStateManager>().SwitchState(PlayerStateManager.PlayerStateTypes.HitStun);
                 target.PlayerHitDetection.TakeDamage(10);
@@ -31,6 +32,11 @@ public class HitDetection : MonoBehaviour, IDamageable
         {
             _player.AtBorder = true;
         }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+      
     }
 
     private PlayerController OnHit(PlayerController sender, PlayerController receiver)
