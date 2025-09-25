@@ -425,8 +425,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a36ba01377b4db49953ec8b144526b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementinputsVisual: []
-  AttackinputsVisual: []
+  movementInputsVisual: []
+  attackInputsVisual: []
 --- !u!114 &129694265
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -463,12 +463,6 @@ MonoBehaviour:
   left: -631945130
   right: 1963678224
   airborne: -910879650
-  decelerationCurve:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
   raycastPos: {fileID: 744356548}
   hitBox: {fileID: 0}
 --- !u!1 &240122862
@@ -641,8 +635,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a36ba01377b4db49953ec8b144526b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementinputsVisual: []
-  AttackinputsVisual: []
+  movementInputsVisual: []
+  attackInputsVisual: []
 --- !u!114 &258787199
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -679,12 +673,6 @@ MonoBehaviour:
   left: -631945130
   right: 1963678224
   airborne: -910879650
-  decelerationCurve:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
   raycastPos: {fileID: 2016436064}
   hitBox: {fileID: 0}
 --- !u!1 &310999853
@@ -1268,6 +1256,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[1]'
       value: 
       objectReference: {fileID: 2100000, guid: d40e7138037e7ac41b62e2e901d4d52b, type: 2}
+    - target: {fileID: 5822821947120931875, guid: 579fe6229c2fa75489044c10c86b1b1b, type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 3cdd0c79a6531ac4b9dd42477a151f3f, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2398,15 +2390,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: bfe7e7501b8591249a61abbfe47a8bfb, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -13.486191
+      value: -13.49
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: bfe7e7501b8591249a61abbfe47a8bfb, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.6020164
+      value: 5.61
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: bfe7e7501b8591249a61abbfe47a8bfb, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.5182538
+      value: -0.52
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: bfe7e7501b8591249a61abbfe47a8bfb, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2449,9 +2441,17 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3853268898807207900, guid: bfe7e7501b8591249a61abbfe47a8bfb, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3853268898807207900, guid: bfe7e7501b8591249a61abbfe47a8bfb, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 75c50f6715d5c7447899e13557f5e5f0, type: 2}
+    - target: {fileID: 3853268898807207900, guid: bfe7e7501b8591249a61abbfe47a8bfb, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 679713dd768e96c4e968cc20d49b0078, type: 2}
     - target: {fileID: 6148737315974723067, guid: bfe7e7501b8591249a61abbfe47a8bfb, type: 3}
       propertyPath: m_Materials.Array.size
       value: 2
@@ -2464,6 +2464,14 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[1]'
       value: 
       objectReference: {fileID: 2100000, guid: d40e7138037e7ac41b62e2e901d4d52b, type: 2}
+    - target: {fileID: 7021014693780275094, guid: bfe7e7501b8591249a61abbfe47a8bfb, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7021014693780275094, guid: bfe7e7501b8591249a61abbfe47a8bfb, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.293
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7323,7 +7331,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1707004171327806762
 GameObject:
   m_ObjectHideFlags: 0

@@ -46,13 +46,13 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Float: 0.008
-    - _Float_1: 0
+    - _Float: 0.01
+    - _Float_1: 37.54
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
     - _Color: {r: 0.031446517, g: 0.031446517, b: 0.031446517, a: 0}
-    - _Vector3: {r: 23.32, g: -7.9, b: -5.61, a: 0}
+    - _Vector3: {r: -231.3, g: 22.87, b: 9.44, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &376570776486061038
