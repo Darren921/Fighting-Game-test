@@ -33,7 +33,7 @@ public class PlayerHitStunState : PlayerBaseState
 
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
-        if (!player.HitStun)
+        if (!player.HitStun && !player.PlayerHitDetection.otherPlayer.IsActiveFrame)
         {
             playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Neutral | PlayerStateManager.PlayerStateTypes.Attack | PlayerStateManager.PlayerStateTypes.Crouching | PlayerStateManager.PlayerStateTypes.Dash | PlayerStateManager.PlayerStateTypes.Jumping | PlayerStateManager.PlayerStateTypes.Walking);
         }
@@ -45,6 +45,7 @@ public class PlayerHitStunState : PlayerBaseState
 
     internal override void ExitState(PlayerStateManager playerStateManager, PlayerController player)
     {
+        player.PlayerHitDetection._hit = false;
     }
     
     

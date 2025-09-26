@@ -5,9 +5,9 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 {
-    public  readonly int StartUp = Animator.StringToHash("StartUp");
-    public  readonly int Active = Animator.StringToHash("Active");
-    public  readonly int Recovery = Animator.StringToHash("Recovery");
+    public   int StartUp = Animator.StringToHash("StartUp");
+    public   int Active = Animator.StringToHash("Active");
+    public   int Recovery = Animator.StringToHash("Recovery");
 
     #region Animator Hashed variables
 
@@ -57,6 +57,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     public bool IsAttacking { get; private set; }
     public bool OnAttackCoolDown { get; set; }
+    public bool IsActiveFrame{get; private set;}
 
     #endregion
 
@@ -147,7 +148,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 //        print(gameObject.gameObject.name);
         SetUpCharacterVariables();
     }
-
+ 
     public void OnEnablePlayer()
     {
         _playerActions.Enable();
@@ -193,26 +194,26 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     public void SetUpStartupFrame()
     {
-        Animator.SetTrigger(StartUp);
+        Animator.SetBool(StartUp,true);
     }
 
     public void SetUpActiveFrame()
     {
-        Animator.SetTrigger(Active);
-        Animator.ResetTrigger(StartUp);
+        Animator.SetBool(Active,true);
+        Animator.SetBool(StartUp,false);
 
     }
 
     public void SetUpRecoveryFrame()
     {
-        Animator.SetTrigger(Recovery);
-        Animator.ResetTrigger(Active);
+        Animator.SetBool(Recovery,true);
+        Animator.SetBool(Active,false);
 
     }
 
     public void ResetRecoveryFrame()
     {
-        Animator.ResetTrigger(Recovery);
+        Animator.SetBool(Recovery,false);
     }
     private void OnCollisionStay(Collision collision)
     {
@@ -276,6 +277,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
                 break;
         }
 
+        IsActiveFrame = Animator.GetBool(Active);
         if (transform.localPosition.y > JumpHeight / 2)
         {
             AtDashHeight = true;
@@ -305,8 +307,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     public void OnLight(InputAction.CallbackContext context)
     {
         PlayerAttackAction?.Invoke(InputReader.AttackInputResult.Light);
-
-        if (OnAttackCoolDown || IsAttacking) return;
+     
+        if (OnAttackCoolDown || IsAttacking || !context.performed) return;
         IsAttacking = true;
         Animator.SetTrigger(Attacking);
         Animator.SetTrigger(Light);
@@ -315,7 +317,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     public void OnMedium(InputAction.CallbackContext context)
     {
         PlayerAttackAction?.Invoke(InputReader.AttackInputResult.Medium);
-        if (OnAttackCoolDown || IsAttacking) return;
+        if (OnAttackCoolDown || IsAttacking || !context.performed) return;
         IsAttacking = true;
         Animator.SetTrigger(Attacking);
         Animator.SetTrigger(Medium);
@@ -324,7 +326,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     public void OnHeavy(InputAction.CallbackContext context)
     {
         PlayerAttackAction?.Invoke(InputReader.AttackInputResult.Heavy);
-        if (OnAttackCoolDown || IsAttacking) return;
+        if (OnAttackCoolDown || IsAttacking || !context.performed) return;
         IsAttacking = true;
         Animator.SetTrigger(Attacking);
     }

@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class HitDetection : MonoBehaviour, IDamageable
@@ -8,22 +10,29 @@ public class HitDetection : MonoBehaviour, IDamageable
     private PlayerController _player;
     [SerializeField] internal PlayerController otherPlayer;
     public static event Action OnDeath;
+    internal bool _hit;
 
     private void Awake()
     {
         _player = gameObject.GetComponentInParent<PlayerController>();
     }
 
+    private void Update()
+    {
+       
+    }
+
     private void OnTriggerStay(Collider other)
     {
-        //Search for other hit box and then apply affects 
-        if (other.gameObject.CompareTag("HitBox"))
+        print(otherPlayer.IsActiveFrame);
+        
+        if (other.gameObject.CompareTag("HitBox") && otherPlayer.IsActiveFrame)
         {
             print("hit");
             var target = OnHit(_player, otherPlayer);
-
-            if (target != null && !target.HitStun && target.Animator.GetBool(target.Active))
+            if (target is not null && !target.HitStun && !_hit  )
             {
+                _hit  = true;
                 target.GetComponent<PlayerStateManager>().SwitchState(PlayerStateManager.PlayerStateTypes.HitStun);
                 target.PlayerHitDetection.TakeDamage(10);
             }
@@ -31,12 +40,13 @@ public class HitDetection : MonoBehaviour, IDamageable
         else if (other.gameObject.CompareTag("Wall"))
         {
             _player.AtBorder = true;
-        }
+        } 
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerExit(Collider other)
     {
-      
+        _player.AtBorder = false;
+        _hit  = false;
     }
 
     private PlayerController OnHit(PlayerController sender, PlayerController receiver)
