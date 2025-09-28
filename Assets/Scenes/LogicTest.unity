@@ -160,9 +160,10 @@ GameObject:
   m_Component:
   - component: {fileID: 70918146}
   - component: {fileID: 70918145}
-  - component: {fileID: 70918147}
+  - component: {fileID: 70918148}
   - component: {fileID: 70918143}
   - component: {fileID: 70918142}
+  - component: {fileID: 70918149}
   m_Layer: 0
   m_Name: CinemachineCamera
   m_TagString: Untagged
@@ -183,13 +184,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FramingMode: 2
-  FramingSize: 0.46
+  FramingSize: 0.814
   CenterOffset: {x: 0.05, y: 0}
   Damping: 0
   SizeAdjustment: 1
   LateralAdjustment: 0
-  FovRange: {x: 1, y: 100}
-  DollyRange: {x: -100, y: 100}
+  FovRange: {x: 46.15121, y: 77.424385}
+  DollyRange: {x: -44.5, y: 1}
   OrthoSizeRange: {x: 1, y: 1000}
 --- !u!114 &70918143
 MonoBehaviour:
@@ -213,8 +214,8 @@ MonoBehaviour:
       Size: {x: 1, y: 0.97}
       Offset: {x: 0, y: 0}
   CenterOnActivate: 1
-  TargetOffset: {x: 0, y: -1.58, z: 0}
-  Damping: {x: 0.5, y: 0.5}
+  TargetOffset: {x: 0, y: 0, z: 0}
+  Damping: {x: 0, y: 0}
   Lookahead:
     Enabled: 0
     Time: 0
@@ -271,14 +272,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 70918141}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.07827209, y: -0.0000000056443272, z: -0.000000001015129, w: 0.996932}
+  m_LocalRotation: {x: 0.0000000074277224, y: 0.000000024579872, z: -5.930448e-17, w: 1}
   m_LocalPosition: {x: -12.88, y: 8.186999, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &70918147
+--- !u!114 &70918148
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -292,11 +293,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TrackerSettings:
     BindingMode: 4
-    PositionDamping: {x: 1, y: 1, z: 1}
+    PositionDamping: {x: 0, y: 0, z: 0}
     AngularDampingMode: 0
     RotationDamping: {x: 1, y: 1, z: 1}
     QuaternionDamping: 1
   FollowOffset: {x: 0, y: 0, z: -10}
+--- !u!114 &70918149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 70918141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d75924d76b05344aa410607bc57db98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BoundingVolume: {fileID: 0}
+  SlowingDistance: 118.9
 --- !u!114 &129694260
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -658,8 +673,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.07827208, y: -0.000000005759531, z: 4.5219786e-10, w: 0.996932}
-  m_LocalPosition: {x: -12.942024, y: 8.956501, z: -4.623432}
+  m_LocalRotation: {x: 0.0000000074277224, y: 0.000000024579872, z: -1.8257247e-16, w: 1}
+  m_LocalPosition: {x: -13.234455, y: 8.226, z: -9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -726,7 +741,7 @@ MonoBehaviour:
   IgnoreTimeScale: 0
   WorldUpOverride: {fileID: 0}
   ChannelMask: -1
-  UpdateMethod: 2
+  UpdateMethod: 0
   BlendUpdateMethod: 1
   LensModeOverride:
     Enabled: 0
