@@ -111,6 +111,7 @@ public class HitDetection : MonoBehaviour, IDamageable
 
         foreach (var render in renderers)
         {
+            // you could use render.material instead and SerializeField refs?
             if (render != null)
             {
                 render.GetPropertyBlock(block);
