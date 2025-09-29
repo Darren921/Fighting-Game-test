@@ -17,6 +17,7 @@ public class PlayerStateManager : MonoBehaviour
         Dash = 1 << 7,
         AirDash = 1 << 8,
         HitStun = 1 << 9,
+        Blocking = 1 << 10,//NEW, FOR BLOCKING
     }
 
     internal  Dictionary<PlayerStateTypes, PlayerBaseState> States;
@@ -41,7 +42,8 @@ public class PlayerStateManager : MonoBehaviour
         { PlayerStateTypes.CrouchMove , new PlayerCrouchMoveState()},
         { PlayerStateTypes.Dash , new PlayerDashState() },
         { PlayerStateTypes.AirDash , new PlayerAirDashState() },
-        { PlayerStateTypes.HitStun , new PlayerHitStunState()}
+        { PlayerStateTypes.HitStun , new PlayerHitStunState()},
+        { PlayerStateTypes.Blocking, new PlayerBlockingState() } ,//NEW, FOR BLOCKING
         
     };
    }
@@ -108,7 +110,6 @@ public class PlayerStateManager : MonoBehaviour
         if (transitionType.HasFlag(PlayerStateTypes.CrouchMove))
             if (_player.IsCrouching && _player.PlayerMove.x != 0 && !_player.IsAttacking) SwitchState(PlayerStateTypes.CrouchMove);
         
-
         if (transitionType.HasFlag(PlayerStateTypes.Crouching)) 
             if (_player.PlayerMove.y < 0 && _player.IsGrounded) SwitchState(PlayerStateTypes.Crouching);
         

@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     public int left = Animator.StringToHash("Left");
     public int right = Animator.StringToHash("Right");
     public int airborne = Animator.StringToHash("Airborne");
+    public int blocking = Animator.StringToHash("Blocking");//NEW, FOR BLOCKING
 
     #endregion
 
@@ -58,6 +59,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     public bool IsAttacking { get; private set; }
     public bool OnAttackCoolDown { get; set; }
     public bool IsActiveFrame{get; private set;}
+    
+    public bool IsBeingAttacked;//NEW, FOR BLOCKING, idk where else to put this
 
     #endregion
 

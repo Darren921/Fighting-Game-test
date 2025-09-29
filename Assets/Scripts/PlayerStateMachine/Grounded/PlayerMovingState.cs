@@ -20,6 +20,12 @@ public abstract class PlayerMovingState : PlayerBaseState
 
     internal override void FixedUpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
+        if (player.IsBeingAttacked && player.InputReader.CurrentMoveInput == InputReader.MovementInputResult.Backward)
+        {
+            playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Blocking);
+            return;
+        }
+        
         SetMoveDir(new Vector2(player.PlayerMove.x, 0));
         SmoothMovement();
         ApplyVelocity(player);
