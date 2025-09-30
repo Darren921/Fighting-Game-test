@@ -46,7 +46,6 @@ public class HitDetection : MonoBehaviour, IDamageable
     private void OnTriggerExit(Collider other)
     {
         _player.AtBorder = false;
-        _hit  = false;
     }
 
     private PlayerController OnHit(PlayerController sender, PlayerController receiver)
@@ -114,9 +113,7 @@ public class HitDetection : MonoBehaviour, IDamageable
             // you could use render.material instead and SerializeField refs?
             if (render != null)
             {
-                render.GetPropertyBlock(block);
-                block.SetColor("_BaseColor", Color.red);
-                render.SetPropertyBlock(block);
+                
             }
         }
 
@@ -126,9 +123,7 @@ public class HitDetection : MonoBehaviour, IDamageable
         {
             if (render != null)
             {
-                render.GetPropertyBlock(block);
-                block.SetColor("_BaseColor", Color.white);
-                render.SetPropertyBlock(block);
+                
             }
         }
     }
