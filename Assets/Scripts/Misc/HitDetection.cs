@@ -90,7 +90,7 @@ public class HitDetection : MonoBehaviour, IDamageable
         _player.Health -= damage;
         //print(otherPlayer.name);
         //print(_player.name);
-        StartCoroutine(FlashRed(_player)); //Red when hit
+     //   StartCoroutine(FlashRed(_player)); //Red when hit
 
 
         otherPlayer.StartCoroutine(!_player.AtBorder

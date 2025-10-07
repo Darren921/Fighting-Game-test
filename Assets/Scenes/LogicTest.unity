@@ -441,12 +441,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f1743014679bc0499174aa45e187372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartUp: -1095283256
-  Active: 1286797620
-  Recovery: 171307423
-  left: -631945130
-  right: 1963678224
-  airborne: -910879650
+  IsBeingAttacked: 0
+  JumpCharges: 0
+  WalkSpeed: 0
+  RunSpeed: 0
   raycastPos: {fileID: 744356548}
   hitBox: {fileID: 1046104389}
 --- !u!65 &258787194
@@ -578,14 +576,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f1743014679bc0499174aa45e187372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartUp: -1095283256
-  Active: 1286797620
-  Recovery: 171307423
-  left: -631945130
-  right: 1963678224
-  airborne: -910879650
+  IsBeingAttacked: 0
+  JumpCharges: 0
+  WalkSpeed: 0
+  RunSpeed: 0
   raycastPos: {fileID: 2016436064}
-  hitBox: {fileID: 798404573}
+  hitBox: {fileID: 0}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -674,7 +670,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0.0000000074277224, y: 0.000000024579872, z: -1.8257247e-16, w: 1}
-  m_LocalPosition: {x: -13.234455, y: 8.226, z: -9}
+  m_LocalPosition: {x: -13.377641, y: 8.226, z: -9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1612,7 +1608,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.021, y: 1, z: 0}
-  m_LocalScale: {x: 0.12077, y: 1, z: 1}
+  m_LocalScale: {x: 0.038466454, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1591072590}

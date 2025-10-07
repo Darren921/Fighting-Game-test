@@ -16,7 +16,7 @@ public class PlayerKnockBack : MonoBehaviour
         _hitDirectionForce = ReturnHitForce(player.PlayerHitDetection.otherPlayer);
         var hitForce = hitDir * _hitDirectionForce;
         var elapsedTime = 0f;
-        while (elapsedTime < KnockBackTime)
+        while (elapsedTime < KnockBackTime && player.PlayerHitDetection._hit)
         {
             elapsedTime += Time.fixedDeltaTime;
             player.rb.linearVelocity = hitForce;

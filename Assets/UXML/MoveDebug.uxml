@@ -1,0 +1,7 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:Foldout text="MovementDebug" name="MoveDebug" style="align-items: flex-start; justify-content: flex-start; align-self: flex-start; align-content: auto;">
+        <uie:PropertyField binding-path="JumpCharges" name="Jumpcharges" focusable="false" style="min-height: auto;" />
+        <uie:PropertyField binding-path="WalkSpeed" name="WalkSpeed" focusable="false" style="min-height: auto;" />
+        <uie:PropertyField binding-path="RunSpeed" name="RunSpeed" focusable="false" style="min-height: auto;" />
+    </ui:Foldout>
+</ui:UXML>

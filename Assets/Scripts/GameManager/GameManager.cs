@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
+    public class ReadOnlyAttribute : PropertyAttribute { }
     [SerializeField] private PlayerController[] players;
    [SerializeField] private CharacterSODataBase characterDatabase;
 

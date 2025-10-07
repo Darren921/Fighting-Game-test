@@ -1,0 +1,15 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:Toggle label="Toggle Debug" value="false" toggle-on-label-click="false" name="ToggleDebug" style="width: 177px;" />
+    <ui:VisualElement name="Movement" focusable="false" style="flex-grow: 1;">
+        <ui:Foldout text="MovementSection&#10;" name="MovementSection">
+            <ui:Foldout text="MovementVars&#10;">
+                <uie:PropertyField binding-path="WalkSpeed" name="WalkSpeed" focusable="false" style="min-height: auto;" />
+                <uie:PropertyField binding-path="RunSpeed" name="RunSpeed" focusable="false" style="min-height: auto;" />
+                <uie:PropertyField binding-path="raycastPos" name="RaycastPos" focusable="false" style="min-height: auto;" />
+            </ui:Foldout>
+            <ui:Foldout text="Debug" name="Debug" style="align-items: flex-start; justify-content: flex-start; align-self: flex-start; align-content: auto;">
+                <uie:PropertyField binding-path="JumpCharges" name="Jumpcharges" focusable="false" style="min-height: auto;" />
+            </ui:Foldout>
+        </ui:Foldout>
+    </ui:VisualElement>
+</ui:UXML>

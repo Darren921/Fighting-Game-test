@@ -5,24 +5,24 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 {
-    public   int StartUp = Animator.StringToHash("StartUp");
-    public   int Active = Animator.StringToHash("Active");
-    public   int Recovery = Animator.StringToHash("Recovery");
+    private int StartUp = Animator.StringToHash("StartUp");
+    private int Active = Animator.StringToHash("Active");
+    private int Recovery = Animator.StringToHash("Recovery");
 
     #region Animator Hashed variables
 
-    public readonly int Idle = Animator.StringToHash("Idle");
+    internal readonly int Idle = Animator.StringToHash("Idle");
     private readonly int Walking = Animator.StringToHash("Walking");
     private readonly int Running = Animator.StringToHash("Running");
-    public readonly int Jump = Animator.StringToHash("Jumping");
+    internal readonly int Jump = Animator.StringToHash("Jumping");
     private readonly int Crouch = Animator.StringToHash("Crouching");
-    public int Attacking => Animator.StringToHash("Attacking");
+    private int Attacking => Animator.StringToHash("Attacking");
     private int Light => Animator.StringToHash("Light");
     private int Medium => Animator.StringToHash("Medium");
-    public int left = Animator.StringToHash("Left");
-    public int right = Animator.StringToHash("Right");
-    public int airborne = Animator.StringToHash("Airborne");
-    public int blocking = Animator.StringToHash("Blocking");//NEW, FOR BLOCKING
+    internal int left = Animator.StringToHash("Left");
+    internal int right = Animator.StringToHash("Right");
+    internal int airborne = Animator.StringToHash("Airborne");
+    internal int blocking = Animator.StringToHash("Blocking");//NEW, FOR BLOCKING
 
     #endregion
 
@@ -73,22 +73,20 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     internal bool DashMarcoActive;
 
     #endregion
-
     #region Move Variables
 
     public Vector3 PlayerMove { get; private set; }
-    internal int JumpCharges { get; set; }
-
-    internal float WalkSpeed;
-    internal float RunSpeed;
+    [GameManager.ReadOnly][SerializeField] internal int JumpCharges;
+    [SerializeField] internal float WalkSpeed;
+    [SerializeField] internal float RunSpeed;
     internal bool IsWalking;
     internal bool IsRunning;
     #endregion
 
     #region Jump Variables
 
-    [Tooltip("Origin of the grounded Raycast, DO NOT TOUCH PLEASE")] [SerializeField]
-    internal Transform raycastPos;
+    [Tooltip("Origin of the grounded Raycast, DO NOT TOUCH PLEASE")] 
+    [SerializeField] internal Transform raycastPos;
 
     internal float JumpHeight;
     internal float RaycastDistance; //2.023f
@@ -333,16 +331,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         IsAttacking = true;
         Animator.SetTrigger(Attacking);
     }
-
-    public void OnAttack(InputAction.CallbackContext context)
-    {
-        //convert and passes input to attack type for the input reader 
-        //PlayerAttackAction?.Invoke(ReturnAttackType(context.ReadValue<float>()));
-        if (OnAttackCoolDown || IsAttacking) return;
-        IsAttacking = true;
-        Animator.SetTrigger(Attacking);
-    }
-
+    
 
     public void OnDashMacro(InputAction.CallbackContext context)
     {
@@ -378,6 +367,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     private void PerformDash()
     {
+        if(!IsDashing)
         IsDashing = true;
         DashDir = InputReader.CurrentMoveInput;
         IsRunning = false;

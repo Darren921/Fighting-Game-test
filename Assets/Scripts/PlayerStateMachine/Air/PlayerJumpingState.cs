@@ -105,8 +105,8 @@ public class PlayerJumpingState : PlayerBaseState
         xJumpVal = moveInput switch
         {
             InputReader.MovementInputResult.Up => 0,
-          //  InputReader.MovementInputResult.Forward => !player.Reversed ? 3 : -3,
-         //   InputReader.MovementInputResult.Backward => !player.Reversed ? -3 : 3,
+            InputReader.MovementInputResult.Forward => !player.Reversed ? 3 : -3,   
+            InputReader.MovementInputResult.Backward => !player.Reversed ? -3 : 3,
             InputReader.MovementInputResult.UpRight => 3,
             InputReader.MovementInputResult.UpLeft => -3,
             _ => xJumpVal
