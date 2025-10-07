@@ -12,11 +12,6 @@ public class PlayerCrouchMoveState : PlayerMovingState
 
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
-        if (player.IsBeingAttacked && player.InputReader.CurrentMoveInput == InputReader.MovementInputResult.Backward)
-        {
-            playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Blocking);
-            return;
-        }
         switch (player.IsCrouching)
         {
             // state swap

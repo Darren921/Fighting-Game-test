@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     internal GravityManager GravityManager;
     internal HitDetection PlayerHitDetection;
     internal PlayerKnockBack PlayerKnockBack;
-    private PlayerStateManager _playerStateManager;
+    public PlayerStateManager _playerStateManager;
 
     #endregion
     
@@ -420,6 +420,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     {
         SuperJumpActive = true;
     }
+    
+    
 
   
 

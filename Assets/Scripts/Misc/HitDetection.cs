@@ -19,20 +19,30 @@ public class HitDetection : MonoBehaviour, IDamageable
 
     private void Update()
     {
-       
+
     }
 
     private void OnTriggerStay(Collider other)
     {
         print(otherPlayer.IsActiveFrame);
-        
+
         if (other.gameObject.CompareTag("HitBox") && otherPlayer.IsActiveFrame)
         {
             print("hit");
             var target = OnHit(_player, otherPlayer);
             if (target is not null && !target.HitStun && !_hit  )
             {
-                _hit  = true;
+                bool isWalkingBack =
+                    (target._playerStateManager.CurrentStateName == "PlayerWalkingState" ||
+                     target._playerStateManager.CurrentStateName == "PlayerCrouchMoveState") &&
+                    target.InputReader.CurrentMoveInput == InputReader.MovementInputResult.Backward;
+
+                if (isWalkingBack)
+                {
+                    target._playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Blocking);
+                    return;
+                }
+                _hit = true;
                 target.GetComponent<PlayerStateManager>().SwitchState(PlayerStateManager.PlayerStateTypes.HitStun);
                 target.PlayerHitDetection.TakeDamage(10);
             }
@@ -40,7 +50,7 @@ public class HitDetection : MonoBehaviour, IDamageable
         else if (other.gameObject.CompareTag("Wall"))
         {
             _player.AtBorder = true;
-        } 
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -90,7 +100,6 @@ public class HitDetection : MonoBehaviour, IDamageable
         _player.Health -= damage;
         //print(otherPlayer.name);
         //print(_player.name);
-     //   StartCoroutine(FlashRed(_player)); //Red when hit
 
 
         otherPlayer.StartCoroutine(!_player.AtBorder
@@ -103,28 +112,4 @@ public class HitDetection : MonoBehaviour, IDamageable
         }
     }
 
-    private IEnumerator FlashRed(PlayerController player) //bro wtf, this took me way to long to do
-    {
-        SkinnedMeshRenderer[] renderers = player.GetComponentsInChildren<SkinnedMeshRenderer>();
-        MaterialPropertyBlock block = new MaterialPropertyBlock();
-
-        foreach (var render in renderers)
-        {
-            // you could use render.material instead and SerializeField refs?
-            if (render != null)
-            {
-                
-            }
-        }
-
-        yield return new WaitForSeconds(0.1f);
-
-        foreach (var render in renderers)
-        {
-            if (render != null)
-            {
-                
-            }
-        }
-    }
 }

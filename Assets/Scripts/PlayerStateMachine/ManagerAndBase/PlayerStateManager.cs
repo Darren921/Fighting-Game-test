@@ -112,7 +112,6 @@ public class PlayerStateManager : MonoBehaviour
         
         if (transitionType.HasFlag(PlayerStateTypes.Crouching)) 
             if (_player.PlayerMove.y < 0 && _player.IsGrounded) SwitchState(PlayerStateTypes.Crouching);
-        
     }
 
     public void SwitchToLastState()
