@@ -7,13 +7,14 @@ public class PlayerDashState : PlayerMovingState
     protected Vector3 DashDir;
     protected Vector3 NewDashVelo;
     protected const float DashTime = 0.3f;
-    protected const float DashDistance = 3f;
+    protected const float DashDistance = 1.5f;
     protected bool IsDashing;
     private float _jumpVelocity;
     private Coroutine _dashCoroutine;
 
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player)
     {
+        Debug.Log("Entering Dash State");
         SetUpDash(player);
         player.StartCoroutine(Dash(player));
     }
@@ -30,7 +31,7 @@ public class PlayerDashState : PlayerMovingState
                 _jumpVelocity = 0;
                 break;
             case InputReader.MovementInputResult.Backward:
-                DashDir =  !player.Reversed ? new Vector3(-1, 0f, 0 ) : new Vector3(2, 0f, 0);
+                DashDir =  !player.Reversed ? new Vector3(-1, 0f, 0 ) : new Vector3(1, 0f, 0);
                 _jumpVelocity = 5 ;
                 break;
         }
@@ -46,8 +47,7 @@ public class PlayerDashState : PlayerMovingState
         Debug.Log(player.rb.linearVelocity);
         yield return new WaitForSeconds(DashTime);
         IsDashing = false;
-        player.IsDashing = false;
-
+      
     }
 
     internal override void FixedUpdateState(PlayerStateManager playerStateManager, PlayerController player)
@@ -62,7 +62,7 @@ public class PlayerDashState : PlayerMovingState
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
         //grab the last inputs given 
-        if (IsDashing || player.IsDashing || !player.IsGrounded) return;
+        if (IsDashing  || !player.IsGrounded) return;
 
     Debug.Log("HEH"); 
         playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Neutral | PlayerStateManager.PlayerStateTypes.Attack | PlayerStateManager.PlayerStateTypes.Walking);

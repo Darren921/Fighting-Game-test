@@ -10,7 +10,7 @@ public class PlayerCrouchingState : PlayerBaseState
     {
     
         // swap states 
-        playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Neutral | PlayerStateManager.PlayerStateTypes.Attack | PlayerStateManager.PlayerStateTypes.Jumping | PlayerStateManager.PlayerStateTypes.CrouchMove);
+        playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Neutral | PlayerStateManager.PlayerStateTypes.Attack | PlayerStateManager.PlayerStateTypes.Jumping );
         if (!player.IsCrouching && player.IsWalking)
         {
          playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Walking);

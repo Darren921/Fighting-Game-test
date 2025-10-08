@@ -28,15 +28,6 @@ public class PlayerRunningState : PlayerMovingState
             player.IsWalking = true;
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Walking);
         }
-
-        //switch states 
-        if(player.Decelerating || !player.DecelActive ) return;
-        
-      
-        playerStateManager.CheckForTransition(  PlayerStateManager.PlayerStateTypes.CrouchMove | PlayerStateManager.PlayerStateTypes.Neutral );
-        
-        if (player.IsWalking) playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Walking);
-
         switch (player.PlayerMove.y)
         {
             case > 0:
@@ -46,6 +37,15 @@ public class PlayerRunningState : PlayerMovingState
                 playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Crouching);
                 break;
         }
+        
+        //switch states 
+        if(player.Decelerating || !player.DecelActive ) return;
+        
+      
+        playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Neutral );
+        
+        if (player.IsWalking) playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Walking);
+
     }
 
     internal override void FixedUpdateState(PlayerStateManager playerStateManager, PlayerController player)

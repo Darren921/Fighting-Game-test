@@ -68,26 +68,24 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     internal bool Reversed;
     internal bool HitStun;
-    internal int Health;
+    internal float Health;
     internal bool AtBorder;
     internal bool DashMarcoActive;
 
     #endregion
     #region Move Variables
-
-    public Vector3 PlayerMove { get; private set; }
-    [GameManager.ReadOnly][SerializeField] internal int JumpCharges;
+    [field: SerializeField]public Vector3 PlayerMove { get; private set; }
     [SerializeField] internal float WalkSpeed;
     [SerializeField] internal float RunSpeed;
-    internal bool IsWalking;
-    internal bool IsRunning;
+    [SerializeField] internal bool IsWalking;
+    [SerializeField] internal bool IsRunning;
     #endregion
 
     #region Jump Variables
 
     [Tooltip("Origin of the grounded Raycast, DO NOT TOUCH PLEASE")] 
     [SerializeField] internal Transform raycastPos;
-
+    [SerializeField] internal int JumpCharges;
     internal float JumpHeight;
     internal float RaycastDistance; //2.023f
     internal float GravScale; // (Hold for now )  character data affects gravity 5 

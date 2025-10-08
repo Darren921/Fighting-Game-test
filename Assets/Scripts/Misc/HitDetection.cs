@@ -24,7 +24,7 @@ public class HitDetection : MonoBehaviour, IDamageable
 
     private void OnTriggerStay(Collider other)
     {
-        print(otherPlayer.IsActiveFrame);
+//        print(otherPlayer.IsActiveFrame);
 
         if (other.gameObject.CompareTag("HitBox") && otherPlayer.IsActiveFrame)
         {
@@ -93,7 +93,7 @@ public class HitDetection : MonoBehaviour, IDamageable
         return null;
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
         // deal damage and active death event to trigger end of game 
 

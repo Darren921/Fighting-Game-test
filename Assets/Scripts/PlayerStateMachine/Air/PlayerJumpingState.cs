@@ -55,7 +55,7 @@ public class PlayerJumpingState : PlayerBaseState
                 break;
         }
 
-        doubleJumpReady = player.PlayerMove == Vector3.zero  && player.JumpCharges > 0 && !player.SuperJumpActive;
+        doubleJumpReady =  player.JumpCharges > 0 && !player.SuperJumpActive;
     
         //Transitioning states 
         if (!player.IsGrounded)

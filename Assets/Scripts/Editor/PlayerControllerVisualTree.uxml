@@ -1,14 +1,29 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <ui:Toggle label="Toggle Debug" value="false" toggle-on-label-click="false" name="ToggleDebug" style="width: 177px;" />
-    <ui:VisualElement name="Movement" focusable="false" style="flex-grow: 1;">
-        <ui:Foldout text="MovementSection&#10;" name="MovementSection">
-            <ui:Foldout text="MovementVars&#10;">
+    <Style src="project://database/Assets/ToggleStyle.uss?fileID=7433441132597879392&amp;guid=b254946319d9c0d4da9c332a65c01fca&amp;type=3#ToggleStyle" />
+    <ui:VisualElement name="Toogles" view-data-key="toogles" style="flex-grow: 1; flex-direction: row; align-items: flex-start; justify-content: center; align-self: stretch; background-image: none;">
+        <ui:Toggle label="Toggle Vars" value="false" toggle-on-label-click="false" name="ToggleVariables" view-data-key="VarsMode" tooltip="Activate Variable Sections" style="width: 177px; justify-content: flex-start;" />
+        <ui:Toggle label="Toggle Debug" value="false" toggle-on-label-click="false" name="ToggleDebug" view-data-key="DebugMode" tooltip="Activate Debug Sections" style="width: 175px; flex-direction: row; align-items: auto;" />
+    </ui:VisualElement>
+    <ui:DropdownField label="Info Shown" name="InfoShown" view-data-key="sectionsShown" tooltip="Choose what sections to be displayed" />
+    <ui:VisualElement name="Movement" focusable="false" style="flex-grow: 1; background-color: rgba(55, 55, 55, 0.2);">
+        <ui:Foldout text="MovementSection" name="MovementSection" enabled="true" style="display: flex; -unity-font-style: bold;">
+            <ui:Foldout text="MovementVars" toggle-on-label-click="true" name="MovementVars" style="-unity-font-style: normal;">
                 <uie:PropertyField binding-path="WalkSpeed" name="WalkSpeed" focusable="false" style="min-height: auto;" />
                 <uie:PropertyField binding-path="RunSpeed" name="RunSpeed" focusable="false" style="min-height: auto;" />
-                <uie:PropertyField binding-path="raycastPos" name="RaycastPos" focusable="false" style="min-height: auto;" />
+                <uie:PropertyField binding-path="raycastPos" name="RaycastPos" focusable="false" view-data-key="RayCastPos" style="min-height: auto;" />
             </ui:Foldout>
-            <ui:Foldout text="Debug" name="Debug" style="align-items: flex-start; justify-content: flex-start; align-self: flex-start; align-content: auto;">
-                <uie:PropertyField binding-path="JumpCharges" name="Jumpcharges" focusable="false" style="min-height: auto;" />
+            <ui:Foldout text="Debug" name="Debug" style="align-items: flex-start; justify-content: flex-start; align-self: flex-start; align-content: auto; -unity-font-style: normal;">
+                <uie:PropertyField binding-path="&lt;PlayerMove&gt;k__BackingField" name="PlayerMove" focusable="false" label="PlayerMove" enabled="false" style="min-height: auto;" />
+                <uie:PropertyField binding-path="IsWalking" name="isWalking" focusable="false" enabled="false" style="min-height: auto;" />
+                <uie:PropertyField binding-path="IsRunning" name="IsRunning" focusable="false" enabled="false" style="min-height: auto;" />
+            </ui:Foldout>
+        </ui:Foldout>
+        <ui:Foldout text="JumpSection" name="JumpSection" enabled="true" style="display: flex; -unity-font-style: bold;">
+            <ui:Foldout text="JumpVars" name="JumpVars" enabled="true" style="-unity-font-style: normal;">
+                <uie:PropertyField binding-path="IsWalking" name="isWalking" focusable="false" enabled="false" style="min-height: auto;" />
+            </ui:Foldout>
+            <ui:Foldout text="Debug" name="Debug" style="align-items: flex-start; justify-content: flex-start; align-self: flex-start; align-content: auto; -unity-font-style: normal;">
+                <uie:PropertyField binding-path="JumpCharges" name="Jumpcharges" focusable="false" enabled="false" style="min-height: auto;" />
             </ui:Foldout>
         </ui:Foldout>
     </ui:VisualElement>
