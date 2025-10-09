@@ -46,13 +46,13 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Float: 0
+    - _Float: 0.0002
     - _Float_1: 0
     - _Float_2: 0
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
-    - _Color: {r: 0.17610055, g: 0.17610055, b: 0.17610055, a: 0}
+    - _Color: {r: 0, g: 0, b: 0, a: 0}
     - _Vector3: {r: 0, g: 0, b: 0, a: 0}
     - _Vector3_1: {r: 0, g: 0, b: 0, a: 0}
     - _Vector3_2: {r: 0, g: 0, b: 0, a: 0}
