@@ -37,16 +37,20 @@ public class PlayerControllerEditor : Editor
         
         Sections = allElements.Query().Where(element => element.name.Contains("Section")).ToList();
 
-
         vToggle.value = true;
         
         GetSectionNames();
 
         maskField = root.Q<MaskField>("InfoShown");
         maskField.choices = sectionNames;
+
+        var initialValue = (1 << sectionNames.Count) - 1; 
+        
+        maskField.value = initialValue; 
+        
+        
         UpdateDebugMode(dToggle.value);
         UpdateVariableMode(vToggle.value);
-        
         
         maskField.RegisterValueChangedCallback(OnDropDownChange );
         dToggle.RegisterValueChangedCallback(evt => { UpdateDebugMode(evt.newValue); });
@@ -58,10 +62,11 @@ public class PlayerControllerEditor : Editor
     {
         var selected = evt.newValue ;
        
+        Debug.Log(selected);
         for (var i = 0; i < Sections.Count; i++)
         {
             var section = Sections[i];
-       
+            Debug.Log(selected & (1 << i));
             section.style.display = (selected & (1 << i)) != 0 ? DisplayStyle.Flex : DisplayStyle.None;
         }
     }
@@ -73,8 +78,6 @@ public class PlayerControllerEditor : Editor
             sectionNames.Add(element.name);
             
         }
-
-     
     }
 
     private void UpdateDebugMode(bool isDebugMode)

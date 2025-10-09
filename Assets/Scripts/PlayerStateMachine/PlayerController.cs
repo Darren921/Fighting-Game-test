@@ -396,7 +396,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     {
         if (context.performed && InputReader.GetValidMoveInput() is not (InputReader.MovementInputResult.Backward or InputReader.MovementInputResult.None or InputReader.MovementInputResult.Down) && IsGrounded)
         {
-            print(InputReader.CurrentMoveInput);
+//            print(InputReader.CurrentMoveInput);
             IsRunning = true;
             IsWalking = false;
         }
