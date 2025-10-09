@@ -442,6 +442,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerStateManager: {fileID: 0}
+  IsCrouching: 0
+  IsDashing: 0
+  AtDashHeight: 0
+  <IsAttacking>k__BackingField: 0
+  <OnAttackCoolDown>k__BackingField: 0
+  <IsActiveFrame>k__BackingField: 0
   IsBeingAttacked: 0
   <PlayerMove>k__BackingField: {x: 0, y: 0, z: 0}
   WalkSpeed: 0
@@ -450,7 +456,22 @@ MonoBehaviour:
   IsRunning: 0
   raycastPos: {fileID: 744356548}
   JumpCharges: 0
+  JumpHeight: 0
+  Velocity: 0
+  DashDir: 0
+  IsGrounded: 0
+  SuperJumpActive: 0
   hitBox: {fileID: 1046104389}
+  JumpPressed: 0
+  DecelerationDuration: 0.7
+  Decelerating: 0
+  _elapsedTime: 0
+  DecelActive: 0
+  Reversed: 0
+  HitStun: 0
+  Health: 0
+  AtBorder: 0
+  DashMarcoActive: 0
 --- !u!65 &258787194
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -581,15 +602,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerStateManager: {fileID: 0}
+  IsCrouching: 0
+  IsDashing: 0
+  AtDashHeight: 0
+  <IsAttacking>k__BackingField: 0
+  <OnAttackCoolDown>k__BackingField: 0
+  <IsActiveFrame>k__BackingField: 0
   IsBeingAttacked: 0
   <PlayerMove>k__BackingField: {x: 0, y: 0, z: 0}
-  WalkSpeed: 12
-  RunSpeed: 12
+  WalkSpeed: 0
+  RunSpeed: 0
   IsWalking: 0
   IsRunning: 0
   raycastPos: {fileID: 2016436064}
   JumpCharges: 0
+  JumpHeight: 0
+  Velocity: 0
+  DashDir: 0
+  IsGrounded: 0
+  SuperJumpActive: 0
   hitBox: {fileID: 798404573}
+  JumpPressed: 0
+  DecelerationDuration: 0.7
+  Decelerating: 0
+  _elapsedTime: 0
+  DecelActive: 0
+  Reversed: 0
+  HitStun: 0
+  Health: 0
+  AtBorder: 0
+  DashMarcoActive: 0
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -897,22 +939,26 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &418530176
-Transform:
+--- !u!224 &418530176
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 418530168}
-  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -14.84, y: 5.6, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 543450652921126627}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -14.84, y: 5.6}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &450182428
 GameObject:
   m_ObjectHideFlags: 0
@@ -24587,10 +24633,10 @@ SceneRoots:
   - {fileID: 832575519}
   - {fileID: 1591072590}
   - {fileID: 330585546}
-  - {fileID: 418530176}
   - {fileID: 482439806}
   - {fileID: 1476741606}
   - {fileID: 450182430}
   - {fileID: 545120085}
   - {fileID: 70918146}
   - {fileID: 555979994}
+  - {fileID: 418530176}

@@ -22,11 +22,11 @@ public class PlayerAirDashState : PlayerDashState
         switch (Dir)
         {
             case InputReader.MovementInputResult.None or InputReader.MovementInputResult.Forward:
-                DashDir = !player.Reversed ? new Vector3(1.5f, 0, 0) : new Vector3(-1.5f, 0, 0);
+                DashDir = !player.Reversed ? new Vector3(2f, 0, 0) : new Vector3(-2f, 0, 0);
                 //          Debug.Log(dashDir);
                 break;
             case InputReader.MovementInputResult.Backward:
-                DashDir = !player.Reversed ? new Vector3(-1.5f, 0f, 0) : new Vector3(1.5f, 0f, 0);
+                DashDir = !player.Reversed ? new Vector3(-2f, 0f, 0) : new Vector3(2f, 0f, 0);
                 //          Debug.Log(dashDir);
                 break;
         }
@@ -42,6 +42,7 @@ public class PlayerAirDashState : PlayerDashState
         SetUpDash(player);
         player.rb.useGravity = false;
         player.rb.linearVelocity = new Vector3(NewDashVelo.x, 0, 0);
+        Debug.Log( player.rb.linearVelocity);
         yield return new WaitForSeconds(DashTime);
         player.GravityManager.ResetVelocity();
         player.rb.useGravity = true;

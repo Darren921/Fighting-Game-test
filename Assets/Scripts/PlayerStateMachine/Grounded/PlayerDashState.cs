@@ -27,7 +27,7 @@ public class PlayerDashState : PlayerMovingState
         switch (Dir)
         {
             case InputReader.MovementInputResult.None or  InputReader.MovementInputResult.Forward:
-                DashDir =  !player.Reversed ? new Vector3(2, 0, 0 ) : new Vector3(-1, 0, 0);
+                DashDir =  !player.Reversed ? new Vector3(2, 0, 0 ) : new Vector3(-2, 0, 0);
                 _jumpVelocity = 0;
                 break;
             case InputReader.MovementInputResult.Backward:

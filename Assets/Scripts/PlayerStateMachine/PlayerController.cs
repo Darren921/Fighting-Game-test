@@ -5,9 +5,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 {
-    private int StartUp = Animator.StringToHash("StartUp");
-    private int Active = Animator.StringToHash("Active");
-    private int Recovery = Animator.StringToHash("Recovery");
+
 
     #region Animator Hashed variables
 
@@ -23,7 +21,9 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     internal int right = Animator.StringToHash("Right");
     internal int airborne = Animator.StringToHash("Airborne");
     internal int blocking = Animator.StringToHash("Blocking");//NEW, FOR BLOCKING
-
+    private int StartUp = Animator.StringToHash("StartUp");
+    private int Active = Animator.StringToHash("Active");
+    private int Recovery = Animator.StringToHash("Recovery");
     #endregion
 
     #region Class references
@@ -43,9 +43,9 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     #region Crouching and Dashing variables
 
-    internal bool IsCrouching;
-    internal bool IsDashing;
-    internal bool AtDashHeight;
+    [SerializeReference]  internal bool IsCrouching;
+    [SerializeField]  internal bool IsDashing;
+    [SerializeField]  internal bool AtDashHeight;
 
     #endregion
 
@@ -56,23 +56,14 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     
     #region Attack Check Variables
 
-    public bool IsAttacking { get; private set; }
-    public bool OnAttackCoolDown { get; set; }
-    public bool IsActiveFrame{get; private set;}
+    [field: SerializeField] public bool IsAttacking { get; private set; }
+    [field: SerializeField]  public bool OnAttackCoolDown { get; set; }
+    [field: SerializeField]  public bool IsActiveFrame{get; private set;}
     
     public bool IsBeingAttacked;//NEW, FOR BLOCKING, idk where else to put this
 
     #endregion
-
-    #region Misc variables
-
-    internal bool Reversed;
-    internal bool HitStun;
-    internal float Health;
-    internal bool AtBorder;
-    internal bool DashMarcoActive;
-
-    #endregion
+    
     #region Move Variables
     [field: SerializeField]public Vector3 PlayerMove { get; private set; }
     [SerializeField] internal float WalkSpeed;
@@ -86,26 +77,35 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     [Tooltip("Origin of the grounded Raycast, DO NOT TOUCH PLEASE")] 
     [SerializeField] internal Transform raycastPos;
     [SerializeField] internal int JumpCharges;
-    internal float JumpHeight;
+    [SerializeField] internal float JumpHeight;
     internal float RaycastDistance; //2.023f
     internal float GravScale; // (Hold for now )  character data affects gravity 5 
-    internal float Velocity;
+    [SerializeField] internal float Velocity;
     internal Rigidbody rb;
-    internal InputReader.MovementInputResult DashDir;
-    internal bool IsGrounded;
-    internal bool SuperJumpActive;
-    [SerializeField] internal GameObject hitBox;
-    internal bool JumpPressed;
+     [SerializeField] internal InputReader.MovementInputResult DashDir;
+     [SerializeField] internal bool IsGrounded;
+     [SerializeField] internal bool SuperJumpActive;
+     [SerializeField] internal GameObject hitBox;
+     [SerializeField] internal bool JumpPressed;
 
     #endregion
 
     #region Decelerating Variables
-    private const float DecelerationDuration = 0.7f;
-    internal bool Decelerating;
-    private float _elapsedTime;
-    internal bool DecelActive;
+    [SerializeField]  private float DecelerationDuration = 0.7f;
+    [SerializeField] internal bool Decelerating;
+    [SerializeField]   private float _elapsedTime;
+    [SerializeField]  internal bool DecelActive;
     #endregion
-   
+  
+    #region Misc variables
+
+    [SerializeField] internal bool Reversed;
+    [SerializeField]  internal bool HitStun;
+    [SerializeField]  internal float Health;
+    [SerializeField]  internal bool AtBorder;
+    [SerializeField]  internal bool DashMarcoActive;
+
+    #endregion
 
     private void Awake()
     {

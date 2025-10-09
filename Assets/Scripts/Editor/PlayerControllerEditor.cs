@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.UIElements;
+using UnityEngine;
 using UnityEngine.UIElements;
 using Toggle = UnityEngine.UIElements.Toggle;
 
@@ -18,7 +20,7 @@ public class PlayerControllerEditor : Editor
 
     //private List<Toggle> sectionToggles;
     private List<VisualElement> Sections;
-    private DropdownField dropdownField;
+    private MaskField maskField;
     private List<string> sectionNames = new List<string>();
 // variables 
     public override VisualElement CreateInspectorGUI()
@@ -36,28 +38,31 @@ public class PlayerControllerEditor : Editor
         Sections = allElements.Query().Where(element => element.name.Contains("Section")).ToList();
 
 
-     
-        dropdownField = root.Q<DropdownField>("InfoShown");
-        dropdownField.choices = sectionNames;
-      
+        vToggle.value = true;
+        
         GetSectionNames();
+
+        maskField = root.Q<MaskField>("InfoShown");
+        maskField.choices = sectionNames;
         UpdateDebugMode(dToggle.value);
         UpdateVariableMode(vToggle.value);
         
         
-        dropdownField.RegisterValueChangedCallback(OnDropDownChange);
+        maskField.RegisterValueChangedCallback(OnDropDownChange );
         dToggle.RegisterValueChangedCallback(evt => { UpdateDebugMode(evt.newValue); });
         vToggle.RegisterValueChangedCallback(evt => { UpdateVariableMode(evt.newValue); });
         return root;
     }
 
-    private void OnDropDownChange(ChangeEvent<string> evt)
+    private void OnDropDownChange(ChangeEvent<int> evt)
     {
-        foreach (var section in Sections)
+        var selected = evt.newValue ;
+       
+        for (var i = 0; i < Sections.Count; i++)
         {
-            section.style.display = section.name == evt.newValue || evt.newValue == "All"
-                ? DisplayStyle.Flex
-                : DisplayStyle.None;
+            var section = Sections[i];
+       
+            section.style.display = (selected & (1 << i)) != 0 ? DisplayStyle.Flex : DisplayStyle.None;
         }
     }
 
@@ -66,10 +71,10 @@ public class PlayerControllerEditor : Editor
         foreach (var element in Sections.Where(element => !sectionNames.Contains(element.name)))
         {
             sectionNames.Add(element.name);
+            
         }
 
-        sectionNames.Insert(0, "None");
-        sectionNames.Add("All");
+     
     }
 
     private void UpdateDebugMode(bool isDebugMode)
