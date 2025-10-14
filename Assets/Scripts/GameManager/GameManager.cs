@@ -14,12 +14,12 @@ public class GameManager : MonoBehaviour
     private const int MinDistance = 1;
 
 
-    private void Start()
+    private void Awake()
     {
         // CHANGE THIS TO ACCEPT INPUT FROM CHARACTER SELECTION, THIS HURTS TO LEAVE
         foreach (var player in players)
         {
-            player.CharacterData = characterDatabase.GetCharacterSoDataBase(0);
+            player.CharacterData = characterDatabase.defaultCharacterSo;
         }
 
         Time.timeScale = 1;

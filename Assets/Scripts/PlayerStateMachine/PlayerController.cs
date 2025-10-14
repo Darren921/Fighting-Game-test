@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     private Controls _controls;
     private Controls.PlayerActions _playerActions;
     internal InputReader InputReader;
-    internal CharacterSO CharacterData;
+   [SerializeField] internal CharacterSO CharacterData;
     internal Animator Animator;
     internal GravityManager GravityManager;
     internal HitDetection PlayerHitDetection;

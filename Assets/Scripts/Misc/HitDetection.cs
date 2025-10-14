@@ -10,6 +10,7 @@ public class HitDetection : MonoBehaviour, IDamageable
     private PlayerController _player;
     [SerializeField] internal PlayerController otherPlayer;
     public static event Action OnDeath;
+    public static event Action OnPlayerHit;
     internal bool _hit;
 
     private void Awake()
@@ -98,10 +99,9 @@ public class HitDetection : MonoBehaviour, IDamageable
         // deal damage and active death event to trigger end of game 
 
         _player.Health -= damage;
+        OnPlayerHit?.Invoke();
         //print(otherPlayer.name);
         //print(_player.name);
-
-
         otherPlayer.StartCoroutine(!_player.AtBorder
             ? otherPlayer.PlayerKnockBack.KnockBackOtherPlayer(_player)
             : otherPlayer.PlayerKnockBack.KnockBackThisPlayer(otherPlayer));
@@ -112,4 +112,5 @@ public class HitDetection : MonoBehaviour, IDamageable
         }
     }
 
+    
 }

@@ -52,21 +52,20 @@ public class PlayerControllerEditor : Editor
         UpdateDebugMode(dToggle.value);
         UpdateVariableMode(vToggle.value);
         
-        maskField.RegisterValueChangedCallback(OnDropDownChange );
+        maskField.RegisterValueChangedCallback(OnMaskFieldChange );
         dToggle.RegisterValueChangedCallback(evt => { UpdateDebugMode(evt.newValue); });
         vToggle.RegisterValueChangedCallback(evt => { UpdateVariableMode(evt.newValue); });
         return root;
     }
 
-    private void OnDropDownChange(ChangeEvent<int> evt)
+    private void OnMaskFieldChange(ChangeEvent<int> evt)
     {
         var selected = evt.newValue ;
-       
-        Debug.Log(selected);
+        // Debug.Log(selected);
         for (var i = 0; i < Sections.Count; i++)
         {
             var section = Sections[i];
-            Debug.Log(selected & (1 << i));
+        // Debug.Log(selected & (1 << i));
             section.style.display = (selected & (1 << i)) != 0 ? DisplayStyle.Flex : DisplayStyle.None;
         }
     }

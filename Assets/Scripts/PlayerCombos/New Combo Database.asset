@@ -12,4 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cea638831894414ea00a1739721c6d6, type: 3}
   m_Name: New Combo Database
   m_EditorClassIdentifier: 
-  combos: []
+  combos:
+  - Attacks: 
+    Movement: 
+    timeLeft: 0

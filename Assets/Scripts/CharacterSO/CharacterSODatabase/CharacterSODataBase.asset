@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: CharacterSODataBase
   m_EditorClassIdentifier: 
   defaultCharacterSo: {fileID: 11400000, guid: 56c510574c45cff42bccd06bc0328275, type: 2}
-  characterSo:
+  characterSoList:
   - {fileID: 11400000, guid: 56c510574c45cff42bccd06bc0328275, type: 2}
   - {fileID: 11400000, guid: 28b0b532bdd76744db2584cf70cda34a, type: 2}
