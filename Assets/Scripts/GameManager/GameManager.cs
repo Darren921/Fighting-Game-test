@@ -1,27 +1,31 @@
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Timeline;
-
+using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
+    public class ReadOnlyAttribute : PropertyAttribute { }
     [SerializeField] private PlayerController[] players;
+   [SerializeField] private CharacterSODataBase characterDatabase;
 
     private readonly List<InputDevice> _availableDevices = new ();
 
     private const int MinDistance = 1;
 
 
-    private void Start()
+    private void Awake()
     {
-       
+        // CHANGE THIS TO ACCEPT INPUT FROM CHARACTER SELECTION, THIS HURTS TO LEAVE
+        foreach (var player in players)
+        {
+            player.CharacterData = characterDatabase.defaultCharacterSo;
+        }
+
+        Time.timeScale = 1;
+        
         HitDetection.OnDeath += OnPlayerDeath;
         Application.targetFrameRate = 60;
-        print(Application.targetFrameRate);
     //    Time.timeScale = 0.1f;
     
         // temp method to add devices to a pool in order to connect them to a player 
@@ -42,6 +46,10 @@ public class GameManager : MonoBehaviour
                 case InputDeviceChange.Reconnected:
                     OnConnect();
                     break;
+                case InputDeviceChange.Removed:
+                    break;
+                case InputDeviceChange.Disconnected:
+                    break;
             }
         };
     }
@@ -50,13 +58,13 @@ public class GameManager : MonoBehaviour
     {
         foreach (var player in players)
         {
-            player.Animator.enabled = false;
+            if(player.Animator is not null)  player.Animator.enabled = false;
             player.hitBox.SetActive(false);
             if (player.Health <= 0)
             {
                 player.gameObject.SetActive(false);
             }
-          
+            SceneManager.LoadScene("LogicTest");
         }
     }
 
@@ -68,13 +76,17 @@ public class GameManager : MonoBehaviour
 
     private void OnConnect()
     {
-        
         //var input1 = deviceIndex.GetValueOrDefault(players[0]);
         //players[0].InitializePlayer(input1);
         //var input2 = deviceIndex.GetValueOrDefault(players[1]);
         //players[1].InitializePlayer(input2);
         
         //temp method to give a player controls depending on device connected first 
+        ConnectPlayer();
+    }
+
+    private void ConnectPlayer()
+    {
         for (var i = 0; i < players.Length; i++)
         {
             if (i < _availableDevices.Count)
@@ -84,17 +96,16 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning($"No input device available for Player {i + 1}");
+                if(!_availableDevices.Contains( Keyboard.current) ) players[i].InitializePlayer(Keyboard.current);
+                else players[i].InitializePlayer(new Gamepad());
+//                Debug.LogWarning($"No input device available for Player {i + 1}");
             }
 
         }
     }
 
-    
 
-
-
-        // Update is called once per frame
+    // Update is called once per frame
         private void Update()
         {
           CheckIfReversed();

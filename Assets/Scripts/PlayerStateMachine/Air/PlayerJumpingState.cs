@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -13,24 +14,27 @@ public class PlayerJumpingState : PlayerBaseState
     private float xJumpVal; // check Try jump method for changes 
     private Collider collider;
     private bool jumpTriggered;
-    private InputReader.MovementInputResult enterInput;
-    private int jumpCharges;
     private bool atJumpHeight;
     private bool doubleJumpReady ;
 
+    private Coroutine jumpCoroutine;
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player)
     {
         
-        jumpCharges = player.characterData.jumpCharges;
+        player.JumpCharges = player.CharacterData.jumpCharges;
         //apply jump immediately when entering state to prevent update glitches   
         collider = player.GetComponent<Collider>();
         player.Animator.SetBool(player.Jump, true);
         player.IsRunning = false;
-        TryJump(player);
-        jumpCharges--;
+        TryJump(player);       
+        player.JumpCharges--;
         player.OnJump += HandleJumpInput; 
 
     }
+
+  
+     
+    
 
     private void HandleJumpInput()
     {
@@ -39,7 +43,7 @@ public class PlayerJumpingState : PlayerBaseState
 
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
-        atJumpHeight = player.transform.localPosition.y > player.JumpHeight;
+        
         // check to see if player is jumping 
         switch (player.IsGrounded)
         {
@@ -51,18 +55,20 @@ public class PlayerJumpingState : PlayerBaseState
                 break;
         }
 
-        doubleJumpReady = player.PlayerMove == Vector3.zero && atJumpHeight && jumpCharges > 0 &&
-                          !player.SuperJumpActive;
-
+        doubleJumpReady =  player.JumpCharges > 0 && !player.SuperJumpActive;
+    
         //Transitioning states 
         if (!player.IsGrounded)
         {
-            playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Attack | PlayerStateManager.PlayerStateTypes.AirDash);
-            if (jumpCharges > 0 && atJumpHeight && doubleJumpReady && jumpTriggered)
+            if(player.IsDashing && player.AtDashHeight && player.JumpCharges > 0) playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.AirDash);
+            playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Attack );
+            
+            if (player.JumpCharges > 0 && doubleJumpReady && jumpTriggered)
             {
+                Debug.Log("Double Jumpped");
                 player.Animator.SetBool(player.Jump, true);
                 doubleJumpReady = false;
-                jumpCharges--;
+                player.JumpCharges--;
                 TryJump(player);
                 jumpTriggered =  false;
             }
@@ -73,7 +79,7 @@ public class PlayerJumpingState : PlayerBaseState
             playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Neutral | PlayerStateManager.PlayerStateTypes.Walking | PlayerStateManager.PlayerStateTypes.Crouching | PlayerStateManager.PlayerStateTypes.Jumping | PlayerStateManager.PlayerStateTypes.Walking );
             if (!player.IsGrounded)
             {
-                switch (player.InputReader.currentMoveInput)
+                switch (player.InputReader.CurrentMoveInput)
                 {
                     case InputReader.MovementInputResult.Backward:
                         playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Walking);
@@ -92,23 +98,27 @@ public class PlayerJumpingState : PlayerBaseState
     {
         // jumping based off on custom  gravity to ensure the player jumps to same height each time 
         velocity = player.GravityManager.SetJumpVelocity(player);
-        xJumpVal = player.InputReader.LastValidMovementInput switch
+        var moveInput = player.InputReader.GetValidMoveInput();
+        Debug.Log(player.InputReader.CurrentMoveInput);
+
+        
+        xJumpVal = moveInput switch
         {
             InputReader.MovementInputResult.Up => 0,
+            InputReader.MovementInputResult.Forward => !player.Reversed ? 3 : -3,   
+            InputReader.MovementInputResult.Backward => !player.Reversed ? -3 : 3,
             InputReader.MovementInputResult.UpRight => 3,
             InputReader.MovementInputResult.UpLeft => -3,
             _ => xJumpVal
         };
-
-        enterInput = player.InputReader.LastValidMovementInput;
-
+        
     }
 
 
     internal override void FixedUpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
         //performing jump and applying custom gravity 
-        player.Rb.linearVelocity = new Vector3(xJumpVal, player.GravityManager.GetVelocity(), 0);
+        player.rb.linearVelocity = new Vector3(xJumpVal, player.GravityManager.GetVelocity(), 0);
         if (!player.IsGrounded && player.gameObject.transform.localPosition.y > 0.1f )
         {
             player.GravityManager.ApplyGravity(player);

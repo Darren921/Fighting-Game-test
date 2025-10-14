@@ -1,71 +1,55 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
 public abstract class PlayerMovingState : PlayerBaseState
 {
-    protected PlayerController _player; 
-    protected Vector3 moveDir;
-    protected Vector3 _smoothedMoveDir;
-    protected Vector3 _smoothedMoveVelocity;
-    protected bool decelerating;
+    protected PlayerController Player; 
+    protected Vector3 MoveDir;
+    protected Vector3 SmoothedMoveDir;
+    protected Vector3 SmoothedMoveVelocity;
 
-    protected virtual float moveSpeed => 1;
+    protected virtual float MoveSpeed => 1;
     
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player)
     {
 //        Debug.Log("Entered " + playerStateManager.currentState);
-        _player = player;
+        
+        Player = player;
+        player.rb.linearVelocity = Vector3.zero;
     }
 
     internal override void FixedUpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
-        setMoveDir(new Vector2(player.PlayerMove.x, 0));
-        smoothMovement();
-        applyVelocity(player);
-    }
-
-    protected void applyVelocity(PlayerController player)
-    {
-        var velocity = new Vector3(_smoothedMoveDir.x * moveSpeed, player.Rb.linearVelocity.y);
-        if (Mathf.Abs(velocity.x) > 0.01f)
+        if (player.IsBeingAttacked && player.InputReader.CurrentMoveInput == InputReader.MovementInputResult.Backward)
         {
-            player.Rb.linearVelocity = velocity;    
+            playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Blocking);
+            return;
         }
+        
+        SetMoveDir(new Vector2(player.PlayerMove.x, 0));
+        SmoothMovement();
+        ApplyVelocity(player);
     }
 
-    protected void smoothMovement()
+    protected abstract void ApplyVelocity(PlayerController player);
+
+    protected void SmoothMovement()
     {
-        _smoothedMoveDir = Vector3.SmoothDamp(_smoothedMoveDir, moveDir, ref _smoothedMoveVelocity, 0.3f);
+        SmoothedMoveDir = Vector3.SmoothDamp(SmoothedMoveDir, MoveDir, ref SmoothedMoveVelocity, 0.2f);
     }
 
-    protected void setMoveDir(Vector3 newDir)
+    protected void SetMoveDir(Vector3 newDir)
     {
-        moveDir = newDir.normalized;
+        MoveDir = newDir.normalized;
     }
-    protected IEnumerator DecelerationCurve(PlayerController player)
-    {
-        if (decelerating) yield break;
-        decelerating = true;
-
-        while (player.Rb.linearVelocity.magnitude > 0.1f)
-        {
-            var decelerationCurve = player.Rb.linearVelocity.normalized * (2 * Time.deltaTime);
-            Debug.Log(decelerationCurve);
-            player.Rb.linearVelocity -= decelerationCurve;
-            yield return null;
-        }
-        decelerating = false;
-    }
+ 
 
    
     internal override void ExitState(PlayerStateManager playerStateManager, PlayerController player)
     {
       //   player.rb.linearVelocity = Vector3.zero;
-        _smoothedMoveVelocity = Vector3.zero;
-        _smoothedMoveDir = Vector3.zero;
+        SmoothedMoveVelocity = Vector3.zero;
+        SmoothedMoveDir = Vector3.zero;
 
     }
 }

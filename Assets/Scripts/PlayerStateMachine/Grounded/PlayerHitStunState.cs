@@ -5,12 +5,13 @@ using UnityEngine;
 
 [Serializable]
 public class PlayerHitStunState : PlayerBaseState
-{ 
-  
-    
-    
+{
+    private static readonly int Hit = Animator.StringToHash("Hit");
+
+
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player)
     {
+        //player.CharacterData.
         player.StartCoroutine(WaitForHitStun(player));
     }
 
@@ -23,7 +24,9 @@ public class PlayerHitStunState : PlayerBaseState
         player.OnDisablePlayer();
         player.HitStun = true;
         Time.timeScale = 0f;
-        yield return new WaitForFrames(3);
+        Debug.Log("HitStun");
+        yield return new WaitForSecondsRealtime(0.3f);
+        Debug.Log("HitStun complete");
         player.OnEnablePlayer();
         Time.timeScale = 1f;
         player.HitStun = false;
@@ -31,7 +34,8 @@ public class PlayerHitStunState : PlayerBaseState
 
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
-        if (!player.HitStun)
+        if(player.HitStun )player.Animator.SetBool(Hit,true);
+        if (!player.HitStun && !player.PlayerHitDetection.otherPlayer.IsActiveFrame)
         {
             playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Neutral | PlayerStateManager.PlayerStateTypes.Attack | PlayerStateManager.PlayerStateTypes.Crouching | PlayerStateManager.PlayerStateTypes.Dash | PlayerStateManager.PlayerStateTypes.Jumping | PlayerStateManager.PlayerStateTypes.Walking);
         }
@@ -43,6 +47,9 @@ public class PlayerHitStunState : PlayerBaseState
 
     internal override void ExitState(PlayerStateManager playerStateManager, PlayerController player)
     {
+        player.PlayerHitDetection._hit = false;
+        player.Animator.SetBool(Hit,false);
+
     }
     
     

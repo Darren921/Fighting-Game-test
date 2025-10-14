@@ -1,83 +1,85 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerAirDashState : PlayerDashState
 {
-    private  int _airDashCharges; 
+    private int _airDashCharges;
+
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player)
     {
-        _airDashCharges = player.characterData.airDashCharges;
+        _airDashCharges = player.CharacterData.airDashCharges;
         _airDashCharges--;
         player.StartCoroutine(AirDash(player));
-        
+
 //      Debug.Log(newDashVelo);
-     
     }
 
-    private void SetUpDash(PlayerController player)
+    protected override void SetUpDash(PlayerController player)
     {
-        Dir  = player.DashDir;
-     //   Debug.Log(dir);
-    //    Debug.Log("PlayerDashState EnterState");
+        Dir = player.DashDir;
+        //   Debug.Log(dir);
+        //    Debug.Log("PlayerDashState EnterState");
         switch (Dir)
         {
-            case InputReader.MovementInputResult.None or  InputReader.MovementInputResult.Forward:
-                DashDir =  !player.Reversed ? new Vector3(1.5f, 0, 0 ) : new Vector3(-1.5f, 0, 0);
-      //          Debug.Log(dashDir);
+            case InputReader.MovementInputResult.None or InputReader.MovementInputResult.Forward:
+                DashDir = !player.Reversed ? new Vector3(2f, 0, 0) : new Vector3(-2f, 0, 0);
+                //          Debug.Log(dashDir);
                 break;
             case InputReader.MovementInputResult.Backward:
-                DashDir =  !player.Reversed ? new Vector3(-1.5f, 0f, 0 ) : new Vector3(1.5f, 0f, 0);
-      //          Debug.Log(dashDir);
+                DashDir = !player.Reversed ? new Vector3(-2f, 0f, 0) : new Vector3(2f, 0f, 0);
+                //          Debug.Log(dashDir);
                 break;
         }
-        NewDashVelo = DashDir * (dashDistance / dashTime);
+
+        NewDashVelo = DashDir * (DashDistance / DashTime);
     }
 
 
     private IEnumerator AirDash(PlayerController player)
     {
-    //    Debug.Log("PlayerDashState Dash");
+        //    Debug.Log("PlayerDashState Dash");
         IsDashing = true;
         SetUpDash(player);
-        player.Rb.useGravity = false;
-        player.Rb.linearVelocity = new Vector3(NewDashVelo.x, 0, 0);
-        yield return new WaitForSeconds(dashTime);
+        player.rb.useGravity = false;
+        player.rb.linearVelocity = new Vector3(NewDashVelo.x, 0, 0);
+        Debug.Log( player.rb.linearVelocity);
+        yield return new WaitForSeconds(DashTime);
         player.GravityManager.ResetVelocity();
-        player.Rb.useGravity = true;
+        player.rb.useGravity = true;
         IsDashing = false;
         player.IsDashing = false;
-
     }
+
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
-  //      if(!player.isGrounded ||   isDashing || player.Dashing) return;
+        //      if(!player.isGrounded ||   isDashing || player.Dashing) return;
 
         playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Attack);
-        if (_airDashCharges > 0 && player.IsDashing && !IsDashing && player.AtDashHeight) 
+        if (_airDashCharges > 0 && player.IsDashing && !IsDashing && player.AtDashHeight)
         {
-          //  Debug.Log("PlayerDashState Dash again");
+            //  Debug.Log("PlayerDashState Dash again");
             _airDashCharges--;
             player.GravityManager.ResetVelocity();
 
             player.StartCoroutine(AirDash(player));
         }
+
         if (player.IsGrounded)
         {
-            playerStateManager.CheckForTransition( PlayerStateManager.PlayerStateTypes.Neutral | PlayerStateManager.PlayerStateTypes.Walking );
+            playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Neutral |
+                                                  PlayerStateManager.PlayerStateTypes.Walking);
         }
-       // Debug.Log(player.GravityManager.GetVelocity());
+        // Debug.Log(player.GravityManager.GetVelocity());
     }
 
     internal override void FixedUpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
 //        Debug.Log(player.gravityManager.GetVelocity());
 
-        if (!player.IsGrounded && player.gameObject.transform.localPosition.y > 0.1f && !IsDashing )
+        if (!player.IsGrounded && player.gameObject.transform.localPosition.y > 0.1f && !IsDashing)
         {
             player.GravityManager.ApplyGravity(player);
-            player.Rb.linearVelocity = new Vector3(player.Rb.linearVelocity.x, player.GravityManager.GetVelocity(), 0);
-
+            player.rb.linearVelocity = new Vector3(player.rb.linearVelocity.x, player.GravityManager.GetVelocity(), 0);
         }
     }
 

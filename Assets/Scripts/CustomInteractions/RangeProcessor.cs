@@ -1,7 +1,5 @@
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Editor;
 
 public class RangeProcessor : InputProcessor<Vector3>
 {

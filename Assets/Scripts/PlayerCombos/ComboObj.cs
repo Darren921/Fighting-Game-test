@@ -5,7 +5,7 @@ public class Combo
 {
    public InputReader.AttackInputResult[] Attacks;
    public InputReader.MovementInputResult[] Movement;
-   public InputReader.InputResults Results;
+  // public InputReader.InputResults Results;
    public float timeLeft = 0.5f;
     
    public Combo() {}
@@ -15,7 +15,7 @@ public class Combo
       this.Attacks = comboObj.data.Attacks;
       this.Movement = comboObj.data.Movement;
       this.timeLeft = comboObj.data.timeLeft;
-      this.Results = comboObj.data.Results;
+  //    this.Results = comboObj.data.Results;
    }
 }
 

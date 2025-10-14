@@ -1,19 +1,16 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using static PlayerStateManager;
 
 public class PlayerNeutralState : PlayerBaseState
 {
    
-    private Coroutine idleCoroutine;
+    private Coroutine _idleCoroutine;
 
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player )
     {
-        idleCoroutine = player.StartCoroutine(CheckIfIdle(player));
-        player.Rb.linearVelocity = Vector3.zero;
+        _idleCoroutine = player.StartCoroutine(CheckIfIdle(player));
+        player.rb.linearVelocity = Vector3.zero;
 //        Debug.Log("Entered PlayerNeutralState");
     }
 
@@ -37,17 +34,17 @@ public class PlayerNeutralState : PlayerBaseState
         {
             player.GravityManager.ApplyGravity(player);
             
-            player.Rb.linearVelocity  = new Vector3(player.Rb.linearVelocity.x,player.GravityManager.GetVelocity() * 0.25f,0);
+            player.rb.linearVelocity  = new Vector3(player.rb.linearVelocity.x,player.GravityManager.GetVelocity() * 0.25f,0);
         }
       
     }
 
     internal override void ExitState(PlayerStateManager playerStateManager,PlayerController player)
     {
-        if (idleCoroutine != null)
+        if (_idleCoroutine != null)
         {
-            player.StopCoroutine(idleCoroutine);
-            idleCoroutine = null;
+            player.StopCoroutine(_idleCoroutine);
+            _idleCoroutine = null;
             player.Animator.SetBool(player.Idle,false);
 
         }        

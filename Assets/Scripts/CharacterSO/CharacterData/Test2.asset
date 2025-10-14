@@ -14,10 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gravScale: 1.5
   health: 100
+  characterName: Test2
   walkSpeed: 7
   runSpeed: 15
   jumpHeight: 5
   airDashCharges: 1
+  jumpCharges: 0
   damage: 0
   lightKnockback: 1
   medKnockback: 10

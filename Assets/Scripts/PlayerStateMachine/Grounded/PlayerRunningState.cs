@@ -1,44 +1,33 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerRunningState : PlayerMovingState
 {
-    protected override float moveSpeed => _player.RunSpeed;
+    protected override float MoveSpeed => Player.RunSpeed;
     
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
+        player.IsRunning = true;
         //controls the decel curve to make slow down movement more accurate 
-        if (player.PlayerMove == Vector3.zero && !decelerating)
+        if (player.PlayerMove == Vector3.zero && !player.DashMarcoActive )
         {
-            player.StartCoroutine(DecelerationCurve(player));
-        }
-        if (player.PlayerMove == Vector3.zero && decelerating == false)
-        {
-                Debug.Log("HEH");
-                playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Neutral);
+            if (!player.Decelerating && !player.DecelActive)
+            {
+                player.DecelActive = true;
+                player.Decelerating = true;
+                player.StartCoroutine(player.DecelerationCurve(player));
+            }
         }
 
-        //switch states 
-        if(decelerating) return;
-        if (player.InputReader.currentMoveInput == InputReader.MovementInputResult.Backward && player.IsGrounded)
+        playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Attack);
+     
+        
+        if (player.InputReader.CurrentMoveInput == InputReader.MovementInputResult.Backward )
         {
-            player.IsRunning = false;
-            player.IsWalking = true;
-            playerStateManager.SwitchToLastState();
-        }
-        else if (player.InputReader.currentMoveInput == InputReader.MovementInputResult.Backward && !player.IsGrounded)
-        {
+//            Debug.Log("BACK");
             player.IsRunning = false;
             player.IsWalking = true;
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Walking);
         }
-
-        playerStateManager.CheckForTransition( PlayerStateManager.PlayerStateTypes.Attack | PlayerStateManager.PlayerStateTypes.CrouchMove);
-        if (player.PlayerMove.x != 0 && player.IsCrouching) playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.CrouchMove);
-        
-        if (player.IsWalking) playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Walking);
-
         switch (player.PlayerMove.y)
         {
             case > 0:
@@ -48,15 +37,35 @@ public class PlayerRunningState : PlayerMovingState
                 playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Crouching);
                 break;
         }
+        
+        //switch states 
+        if(player.Decelerating || !player.DecelActive ) return;
+        
+      
+        playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Neutral );
+        
+        if (player.IsWalking) playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Walking);
+
     }
 
-   
+    internal override void FixedUpdateState(PlayerStateManager playerStateManager, PlayerController player)
+    {
+        SetMoveDir(!player.DashMarcoActive ? new Vector2(player.PlayerMove.x, 0) : new Vector2(1, 0));
+        SmoothMovement();
+        ApplyVelocity(player);
+    }
 
- 
+    protected override void ApplyVelocity(PlayerController player)
+    {
+        var velocity =  new Vector3(SmoothedMoveDir.x * MoveSpeed, player.rb.linearVelocity.y) ;
+        player.rb.linearVelocity = velocity;    
+    }
 
     internal override void ExitState(PlayerStateManager playerStateManager, PlayerController player)
     {
 
-//        Debug.Log(player.rb.linearVelocity);
+        player.IsRunning = false;
+      Debug.Log(player.rb.linearVelocity);
+      player.DecelActive = false;
     }
 }
