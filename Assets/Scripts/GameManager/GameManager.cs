@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -49,9 +50,15 @@ public class GameManager : MonoBehaviour
                 case InputDeviceChange.Removed:
                     break;
                 case InputDeviceChange.Disconnected:
+                    OnDisconnect();
                     break;
             }
         };
+    }
+
+    private void OnDestroy()
+    {
+        HitDetection.OnDeath -= OnPlayerDeath;
     }
 
     private void OnPlayerDeath()
@@ -83,6 +90,14 @@ public class GameManager : MonoBehaviour
         
         //temp method to give a player controls depending on device connected first 
         ConnectPlayer();
+    }
+
+    private void OnDisconnect()
+    {
+        foreach (var player in players)
+        {
+    //        if(player)
+        }
     }
 
     private void ConnectPlayer()

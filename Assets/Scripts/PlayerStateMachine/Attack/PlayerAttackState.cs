@@ -36,6 +36,11 @@ public class PlayerAttackState : PlayerBaseState
             PerformAttack(player);
         }
 
+        if (player.HitStun)
+        {
+            playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.HitStun);
+        }
+
         // State swapping 
         if (!player.IsGrounded || player.IsAttacking) return;
         playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Neutral | PlayerStateManager.PlayerStateTypes.Walking | PlayerStateManager.PlayerStateTypes.Crouching);

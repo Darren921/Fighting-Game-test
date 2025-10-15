@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor.Rendering.LookDev;
 using UnityEngine;
@@ -163,6 +164,11 @@ public class InputReader : MonoBehaviour
         _bufferTime = 5f;
         _bufferCap = 10;
         _player.PlayerAttackAction += AddAttackInput;
+    }
+
+    private void OnDestroy()
+    {
+        _player.PlayerAttackAction -= AddAttackInput;
     }
 
     private void Update()

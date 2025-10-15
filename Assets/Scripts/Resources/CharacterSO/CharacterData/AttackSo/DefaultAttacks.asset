@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf439b2ac4ad1744185dc9fc1e52cbd5, type: 3}
+  m_Name: DefaultAttacks
+  m_EditorClassIdentifier: 
+  Attacks:
+  - _attackInputResult: 1
+    Tag: 0
+    Damage: 0
+    Knockback: 0
+    HitStun: 0
+    BlockStun: 0
+  - _attackInputResult: 2
+    Tag: 0
+    Damage: 0
+    Knockback: 0
+    HitStun: 0
+    BlockStun: 0
+  - _attackInputResult: 3
+    Tag: 0
+    Damage: 0
+    Knockback: 0
+    HitStun: 0
+    BlockStun: 0
+  - _attackInputResult: 4
+    Tag: 0
+    Damage: 0
+    Knockback: 0
+    HitStun: 0
+    BlockStun: 0
+  - _attackInputResult: 5
+    Tag: 0
+    Damage: 0
+    Knockback: 0
+    HitStun: 0
+    BlockStun: 0
+  - _attackInputResult: 6
+    Tag: 0
+    Damage: 0
+    Knockback: 0
+    HitStun: 0
+    BlockStun: 0
+  - _attackInputResult: 7
+    Tag: 0
+    Damage: 0
+    Knockback: 0
+    HitStun: 0
+    BlockStun: 0
+  - _attackInputResult: 8
+    Tag: 0
+    Damage: 0
+    Knockback: 0
+    HitStun: 0
+    BlockStun: 0
+  - _attackInputResult: 9
+    Tag: 0
+    Damage: 0
+    Knockback: 0
+    HitStun: 0
+    BlockStun: 0

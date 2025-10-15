@@ -6,6 +6,7 @@ using UnityEditor;
 using UnityEditor.Rendering;
 using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
@@ -14,37 +15,37 @@ using Object = UnityEngine.Object;
 public class PlayerSOEditor : Editor
 {
     public VisualTreeAsset mainVisualTree;
-    public VisualTreeAsset LVisualTree;
-    private ListView listView;
-    private SerializedProperty listProperty;
-    TemplateContainer List;
+    public VisualTreeAsset lVisualTree;
+    private ListView _listView;
+    private SerializedProperty _listProperty;
+    private TemplateContainer _list;
 
 
     public override VisualElement CreateInspectorGUI()
     {
         var root = new VisualElement();
         mainVisualTree.CloneTree(root);
-        listView = root.Q<ListView>("ListView");
-        listProperty = serializedObject.FindProperty("characterSoList");
-        if (listView == null) Debug.LogError("listview property is null");
-        if (listProperty == null) Debug.LogError("list property is null");
-        listView.bindingPath = listProperty.propertyPath;
+        _listView = root.Q<ListView>("ListView");
+        _listProperty = serializedObject.FindProperty("characterSoList");
+        if (_listView == null) Debug.LogError("listview property is null");
+        if (_listProperty == null) Debug.LogError("list property is null");
+        _listView.bindingPath = _listProperty.propertyPath;
 
 
-        listView.makeItem = () =>
+        _listView.makeItem = () =>
         {
-            List = LVisualTree.Instantiate();
-            return List;
+            _list = lVisualTree.Instantiate();
+            return _list;
         };
 
-        listView.bindItem = BindItem;
+        _listView.bindItem = BindItem;
         
         return root;
     }
 
     private void BindItem(VisualElement element, int index)
     {
-        var elementProperty = listProperty.GetArrayElementAtIndex(index);
+        var elementProperty = _listProperty.GetArrayElementAtIndex(index);
         var characterRef = element.Q<ObjectField>("CharacterSO");
         var propertiesContainer = element.Q<VisualElement>("CharacterProperties");
 
@@ -63,27 +64,25 @@ public class PlayerSOEditor : Editor
     private void UpdateListElements(VisualElement element, CharacterSO characterSo)
     {
         element.Clear();
-        var foldoutElement = List.Q<Foldout>("CharacterSheet");
+        var foldoutElement = _list.Q<Foldout>("CharacterSheet");
         if (characterSo == null)
         {
             foldoutElement.text = "No Character";
         }
         else
         {
-            var CharSO = new SerializedObject(characterSo);
-            var iterator = CharSO.GetIterator();
+            var charSo = new SerializedObject(characterSo);
+            var iterator = charSo.GetIterator();
             if (iterator.NextVisible(true))
             {
                 while (iterator.NextVisible(false))
                 {
                     if (iterator.propertyPath == "characterName") foldoutElement.text = iterator.stringValue == "" ? "empty":  foldoutElement.text = iterator.stringValue;
-                    
-                    
                     var field = new PropertyField(iterator.Copy());
                     element.Add(field);
                 }
 
-                element.Bind(CharSO);
+                element.Bind(charSo);
                 element.style.display = DisplayStyle.Flex;
             }
             else
@@ -95,7 +94,7 @@ public class PlayerSOEditor : Editor
 
     private void OnObjectChanged(ChangeEvent<Object> evt, VisualElement element)
     {
-        var ncharacterSO = evt.newValue as CharacterSO;
-        UpdateListElements(element, ncharacterSO);
+        var characterSo = evt.newValue as CharacterSO;
+        UpdateListElements(element, characterSo);
     }
 }

@@ -1,8 +1,11 @@
+using System;
+using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "CharacterSO", menuName = "Scriptable Objects/CharacterSO")]
 public class CharacterSO : ScriptableObject
 {
+    public CharacterAttacksSO characterAttacks;
     public float gravScale;
 
     // All character data is here, add and remove as needed 
@@ -21,6 +24,11 @@ public class CharacterSO : ScriptableObject
     public int damage;
     public float lightKnockback;
     public float medKnockback;
-    
 
+    private void OnValidate()
+    {
+        var search = Resources.FindObjectsOfTypeAll<CharacterAttacksSO>().ToList();
+        Debug.Log(search.Count);
+        characterAttacks = search.Find(so => so.name.Contains(characterName));
+    }
 }

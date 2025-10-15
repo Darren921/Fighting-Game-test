@@ -85,7 +85,7 @@ public class PlayerKnockBack : MonoBehaviour
                 break;
         }
 
-        print(hitForceTemp);
+//        print(hitForceTemp);
         return hitForceTemp;
     }
 }

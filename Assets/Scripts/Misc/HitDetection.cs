@@ -12,6 +12,7 @@ public class HitDetection : MonoBehaviour, IDamageable
     public static event Action OnDeath;
     public static event Action OnPlayerHit;
     internal bool _hit;
+    bool isWalkingBack;
 
     private void Awake()
     {
@@ -29,24 +30,28 @@ public class HitDetection : MonoBehaviour, IDamageable
 
         if (other.gameObject.CompareTag("HitBox") && otherPlayer.IsActiveFrame)
         {
+            if (_hit) return;
+            _hit = true;
             print("hit");
             var target = OnHit(_player, otherPlayer);
-            if (target is not null && !target.HitStun && !_hit  )
+            if (target is null || target.HitStun) return;
+            
+            isWalkingBack = (target._playerStateManager.CurrentStateName == "PlayerWalkingState" || target._playerStateManager.CurrentStateName == "PlayerCrouchMoveState") && target.InputReader.CurrentMoveInput == InputReader.MovementInputResult.Backward;
+      //      print(target._playerStateManager.CurrentStateName);
+       //     print(target.InputReader.CurrentMoveInput);
+            if (isWalkingBack)
             {
-                bool isWalkingBack =
-                    (target._playerStateManager.CurrentStateName == "PlayerWalkingState" ||
-                     target._playerStateManager.CurrentStateName == "PlayerCrouchMoveState") &&
-                    target.InputReader.CurrentMoveInput == InputReader.MovementInputResult.Backward;
-
-                if (isWalkingBack)
-                {
-                    target._playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Blocking);
-                    return;
-                }
-                _hit = true;
-                target.GetComponent<PlayerStateManager>().SwitchState(PlayerStateManager.PlayerStateTypes.HitStun);
-                target.PlayerHitDetection.TakeDamage(10);
+                print("walk");
+                target._playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Blocking);
             }
+            else
+            {
+                target._playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.HitStun);
+
+             
+            }
+            target.PlayerHitDetection.TakeDamage(10);
+
         }
         else if (other.gameObject.CompareTag("Wall"))
         {
@@ -61,20 +66,19 @@ public class HitDetection : MonoBehaviour, IDamageable
 
     private PlayerController OnHit(PlayerController sender, PlayerController receiver)
     {
+        
         //Check the players buffers for last attack frame  and decide the player hit
         var attackBufferSender = sender.GetComponentInParent<InputReader>();
         var attackBufferReceiver = receiver.GetComponentInParent<InputReader>();
 
-        Debug.Log(attackBufferSender.LastAttackInput);
-        Debug.Log(attackBufferReceiver.LastAttackInput);
+//        Debug.Log(attackBufferSender.LastAttackInput);
+//        Debug.Log(attackBufferReceiver.LastAttackInput);
 
 
         if (attackBufferSender.LastAttackInput != InputReader.AttackInputResult.None &&
             attackBufferReceiver.LastAttackInput != InputReader.AttackInputResult.None)
         {
-            var result = attackBufferSender.LastAttackInputFrame < attackBufferReceiver.LastAttackInputFrame
-                ? sender
-                : receiver;
+            var result = attackBufferSender.LastAttackInputFrame < attackBufferReceiver.LastAttackInputFrame ? sender : receiver;
             print(result);
             return result;
         }
@@ -82,6 +86,7 @@ public class HitDetection : MonoBehaviour, IDamageable
         if (attackBufferSender.LastAttackInput != InputReader.AttackInputResult.None &&
             attackBufferReceiver.LastAttackInput == InputReader.AttackInputResult.None)
         {
+            print("OtherPlayer NonContested ");
             return receiver;
         }
 
@@ -97,8 +102,8 @@ public class HitDetection : MonoBehaviour, IDamageable
     public void TakeDamage(float damage)
     {
         // deal damage and active death event to trigger end of game 
-
-        _player.Health -= damage;
+        
+        _player.Health -=  isWalkingBack ? damage * 0.25f : damage;
         OnPlayerHit?.Invoke();
         //print(otherPlayer.name);
         //print(_player.name);

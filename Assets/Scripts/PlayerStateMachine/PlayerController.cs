@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     #region PlayerActions
     public Action OnJump;
-    public Action<InputReader.AttackInputResult> PlayerAttackAction;
+    public  Action<InputReader.AttackInputResult> PlayerAttackAction;
     #endregion
     
     #region Attack Check Variables
@@ -132,17 +132,14 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         _playerActions.Run.canceled += OnRun;
         _playerActions.DashMacro.performed += OnDashMacro;
         _playerActions.DashMacro.canceled += OnDashMacro;
-
         _playerActions.Dash.performed += OnDash;
         _playerActions.Move.performed += OnMove;
         _playerActions.Move.canceled += OnMove;
         _playerActions.Light.performed += OnLight;
         _playerActions.Medium.performed += OnMedium;
         _playerActions.Heavy.performed += OnLight; // I don't need to explain this comment
-
         _playerActions.Jumping.performed += OnJumping;
         _playerActions.SuperJump.performed += OnSuperJump;
-
         OnEnablePlayer();
 //        print(gameObject.gameObject.name);
         SetUpCharacterVariables();
@@ -161,9 +158,15 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     private void OnPlayerDeath()
     {
         InputReader.enabled = false;
-        HitDetection.OnDeath -= OnPlayerDeath;
-        OnDisablePlayer();
+        _playerActions.RemoveCallbacks(this);
+        StopAllCoroutines();
         _playerStateManager.ResetStateMachine();
+    }
+
+    private void OnDestroy()
+    {
+        HitDetection.OnDeath -= OnPlayerDeath;
+        _playerActions.Disable();
     }
 
 
@@ -184,35 +187,36 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         //This may need to change to separate ones for each attack
         // This is used at the end of each animation 
         IsAttacking = false;
-        Animator.ResetTrigger(Attacking);
-        Animator.ResetTrigger(Light);
-        Animator.ResetTrigger(Medium);
-        Animator.SetBool(left, false);
-        Animator.SetBool(right, false);
+        Animator?.ResetTrigger(Attacking);
+        Animator?.ResetTrigger(Light);
+        Animator?.ResetTrigger(Medium);
+        Animator?.SetBool(left, false);
+        Animator?.SetBool(right, false);
+        Animator?.SetBool(Active,false);
     }
 
     public void SetUpStartupFrame()
     {
-        Animator.SetBool(StartUp,true);
+        Animator?.SetBool(StartUp,true);
     }
 
     public void SetUpActiveFrame()
     {
-        Animator.SetBool(Active,true);
-        Animator.SetBool(StartUp,false);
+        Animator?.SetBool(Active,true);
+        Animator?.SetBool(StartUp,false);
 
     }
 
     public void SetUpRecoveryFrame()
     {
-        Animator.SetBool(Recovery,true);
-        Animator.SetBool(Active,false);
+        Animator?.SetBool(Recovery,true);
+        Animator?.SetBool(Active,false);
 
     }
 
     public void ResetRecoveryFrame()
     {
-        Animator.SetBool(Recovery,false);
+        Animator?.SetBool(Recovery,false);
     }
     private void OnCollisionStay(Collision collision)
     {
@@ -260,23 +264,23 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     private void Update()
     {
         // sets animator booleans
-        Animator.SetBool(airborne, !IsGrounded);
+        Animator?.SetBool(airborne, !IsGrounded);
         switch (IsGrounded)
         {
             case true:
                 IsCrouching = PlayerMove.y < 0;
-                Animator.SetBool(Crouch, IsCrouching);
-                Animator.SetBool(Walking, IsWalking);
-                Animator.SetBool(Running, IsRunning);
+               Animator?.SetBool(Crouch, IsCrouching);
+               Animator?.SetBool(Walking, IsWalking);
+               Animator?.SetBool(Running, IsRunning);
                 break;
             case false:
-                Animator.SetBool(Crouch, false);
-                Animator.SetBool(Walking, false);
-                Animator.SetBool(Running, false);
+               Animator?.SetBool(Crouch, false);
+               Animator?.SetBool(Walking, false);
+               Animator?.SetBool(Running, false);
                 break;
         }
 
-        IsActiveFrame = Animator.GetBool(Active);
+        if (Animator is not null) IsActiveFrame = Animator.GetBool(Active);
         if (transform.localPosition.y > JumpHeight / 2)
         {
             AtDashHeight = true;
@@ -309,8 +313,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
      
         if (OnAttackCoolDown || IsAttacking || !context.performed) return;
         IsAttacking = true;
-        Animator.SetTrigger(Attacking);
-        Animator.SetTrigger(Light);
+       Animator?.SetTrigger(Attacking);
+       Animator?.SetTrigger(Light);
     }
 
     public void OnMedium(InputAction.CallbackContext context)
@@ -318,8 +322,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         PlayerAttackAction?.Invoke(InputReader.AttackInputResult.Medium);
         if (OnAttackCoolDown || IsAttacking || !context.performed) return;
         IsAttacking = true;
-        Animator.SetTrigger(Attacking);
-        Animator.SetTrigger(Medium);
+        Animator?.SetTrigger(Attacking);
+        Animator?.SetTrigger(Medium);
     }
 
     public void OnHeavy(InputAction.CallbackContext context)
@@ -327,7 +331,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         PlayerAttackAction?.Invoke(InputReader.AttackInputResult.Heavy);
         if (OnAttackCoolDown || IsAttacking || !context.performed) return;
         IsAttacking = true;
-        Animator.SetTrigger(Attacking);
+        Animator?.SetTrigger(Attacking);
     }
     
 
