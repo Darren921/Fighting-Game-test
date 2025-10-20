@@ -12,6 +12,7 @@ public class PlayerHitStunState : PlayerBaseState
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player)
     {
         //player.CharacterData.
+    
         player.StartCoroutine(WaitForHitStun(player));
     }
 
@@ -21,14 +22,15 @@ public class PlayerHitStunState : PlayerBaseState
 
     private IEnumerator WaitForHitStun(PlayerController player)
     {
+        var ogSpeed = player.Animator.speed;
         player.OnDisablePlayer();
         player.HitStun = true;
-        Time.timeScale = 0f;
-        Debug.Log("HitStun");
+        player.Animator.speed = 0;
+  //      Debug.Log("HitStun");
         yield return new WaitForSecondsRealtime(0.3f);
-        Debug.Log("HitStun complete");
+//        Debug.Log("HitStun complete");
         player.OnEnablePlayer();
-        Time.timeScale = 1f;
+        player.Animator.speed = ogSpeed;
         player.HitStun = false;
     }
 

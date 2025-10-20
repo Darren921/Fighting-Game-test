@@ -7,7 +7,6 @@ using UnityEngine;
 public class PlayerAttackState : PlayerBaseState
 {
     private Coroutine cooldownCoroutine;
-    private InputReader.AttackInputResult lastAttack;
     private InputReader.MovementInputResult lastMove;
 
 
@@ -32,7 +31,7 @@ public class PlayerAttackState : PlayerBaseState
 
         if (player.IsAttacking && !player.OnAttackCoolDown)
         {
-            Debug.Log("attacking");
+//            Debug.Log("attacking");
             PerformAttack(player);
         }
 
@@ -43,13 +42,12 @@ public class PlayerAttackState : PlayerBaseState
 
         // State swapping 
         if (!player.IsGrounded || player.IsAttacking) return;
-        playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Neutral | PlayerStateManager.PlayerStateTypes.Walking | PlayerStateManager.PlayerStateTypes.Crouching);
+        playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Neutral | PlayerStateManager.PlayerStateTypes.Walking | PlayerStateManager.PlayerStateTypes.Crouching | PlayerStateManager.PlayerStateTypes.Jumping);
 //        Debug.Log(player.gravityManager.GetVelocity());
     }
 
     private void PerformAttack(PlayerController player)
     {
-        lastAttack = player.InputReader.CurrentAttackInput;
         lastMove = player.InputReader.CurrentMoveInput;
 //        Debug.Log(lastMove);
         if (!player.IsAttacking || player.OnAttackCoolDown) return;

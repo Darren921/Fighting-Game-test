@@ -19,6 +19,7 @@ public class PlayerSOEditor : Editor
     private ListView _listView;
     private SerializedProperty _listProperty;
     private TemplateContainer _list;
+    private ObjectField characterRef;
 
 
     public override VisualElement CreateInspectorGUI()
@@ -46,26 +47,25 @@ public class PlayerSOEditor : Editor
     private void BindItem(VisualElement element, int index)
     {
         var elementProperty = _listProperty.GetArrayElementAtIndex(index);
-        var characterRef = element.Q<ObjectField>("CharacterSO");
+        characterRef = element.Q<ObjectField>("CharacterSO");
         var propertiesContainer = element.Q<VisualElement>("CharacterProperties");
-
+        var foldoutElement = element.Q<Foldout>("CharacterSheet");
         if (characterRef == null) Debug.LogError("character ref is null");
         if (propertiesContainer == null) Debug.LogError("propertiesContainer is null");
+        
 
         characterRef?.BindProperty(elementProperty);
 
-        characterRef?.UnregisterCallback<ChangeEvent<Object>, VisualElement>(OnObjectChanged);
-        characterRef?.RegisterCallback<ChangeEvent<Object>, VisualElement>(OnObjectChanged, propertiesContainer);
-
-        UpdateListElements(propertiesContainer, elementProperty.objectReferenceValue as CharacterSO);
+        characterRef?.UnregisterValueChangedCallback(evt => OnObjectChanged(evt, propertiesContainer, foldoutElement));
+        characterRef?.RegisterValueChangedCallback(evt => OnObjectChanged(evt , propertiesContainer,foldoutElement) );
+        UpdateListElements(propertiesContainer, elementProperty.objectReferenceValue as CharacterSO, foldoutElement);
     }
 
 
-    private void UpdateListElements(VisualElement element, CharacterSO characterSo)
+    private void UpdateListElements(VisualElement element, CharacterSO characterSo, Foldout foldoutElement)
     {
         element.Clear();
-        var foldoutElement = _list.Q<Foldout>("CharacterSheet");
-        if (characterSo == null)
+        if (characterSo == null || characterRef == null )
         {
             foldoutElement.text = "No Character";
         }
@@ -75,9 +75,11 @@ public class PlayerSOEditor : Editor
             var iterator = charSo.GetIterator();
             if (iterator.NextVisible(true))
             {
-                while (iterator.NextVisible(false))
-                {
-                    if (iterator.propertyPath == "characterName") foldoutElement.text = iterator.stringValue == "" ? "empty":  foldoutElement.text = iterator.stringValue;
+                while (iterator.NextVisible(false)){
+                    if (iterator.propertyPath == "characterName")
+                    {
+                        foldoutElement.text = iterator.stringValue == "" ? "empty":  foldoutElement.text = iterator.stringValue;
+                    }
                     var field = new PropertyField(iterator.Copy());
                     element.Add(field);
                 }
@@ -92,9 +94,9 @@ public class PlayerSOEditor : Editor
         }
     }
 
-    private void OnObjectChanged(ChangeEvent<Object> evt, VisualElement element)
+    private void OnObjectChanged(ChangeEvent<Object> evt, VisualElement element, Foldout foldout)
     {
         var characterSo = evt.newValue as CharacterSO;
-        UpdateListElements(element, characterSo);
+        UpdateListElements(element, characterSo,foldout);
     }
 }

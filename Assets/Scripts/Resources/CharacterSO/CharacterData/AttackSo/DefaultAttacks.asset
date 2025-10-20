@@ -13,55 +13,9 @@ MonoBehaviour:
   m_Name: DefaultAttacks
   m_EditorClassIdentifier: 
   Attacks:
-  - _attackInputResult: 1
-    Tag: 0
-    Damage: 0
-    Knockback: 0
-    HitStun: 0
-    BlockStun: 0
-  - _attackInputResult: 2
-    Tag: 0
-    Damage: 0
-    Knockback: 0
-    HitStun: 0
-    BlockStun: 0
-  - _attackInputResult: 3
-    Tag: 0
-    Damage: 0
-    Knockback: 0
-    HitStun: 0
-    BlockStun: 0
-  - _attackInputResult: 4
-    Tag: 0
-    Damage: 0
-    Knockback: 0
-    HitStun: 0
-    BlockStun: 0
-  - _attackInputResult: 5
-    Tag: 0
-    Damage: 0
-    Knockback: 0
-    HitStun: 0
-    BlockStun: 0
-  - _attackInputResult: 6
-    Tag: 0
-    Damage: 0
-    Knockback: 0
-    HitStun: 0
-    BlockStun: 0
-  - _attackInputResult: 7
-    Tag: 0
-    Damage: 0
-    Knockback: 0
-    HitStun: 0
-    BlockStun: 0
-  - _attackInputResult: 8
-    Tag: 0
-    Damage: 0
-    Knockback: 0
-    HitStun: 0
-    BlockStun: 0
-  - _attackInputResult: 9
+  - _attackInputResult:
+      Move: 0
+      Type: 0
     Tag: 0
     Damage: 0
     Knockback: 0

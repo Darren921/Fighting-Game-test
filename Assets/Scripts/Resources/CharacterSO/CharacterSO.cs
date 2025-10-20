@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "CharacterSO", menuName = "Scriptable Objects/CharacterSO")]
 public class CharacterSO : ScriptableObject
 {
-    public CharacterAttacksSO characterAttacks;
+    public CharacterAttacksSo characterAttacks;
     public float gravScale;
 
     // All character data is here, add and remove as needed 
@@ -27,8 +27,6 @@ public class CharacterSO : ScriptableObject
 
     private void OnValidate()
     {
-        var search = Resources.FindObjectsOfTypeAll<CharacterAttacksSO>().ToList();
-        Debug.Log(search.Count);
-        characterAttacks = search.Find(so => so.name.Contains(characterName));
+         characterAttacks = Resources.FindObjectsOfTypeAll<CharacterAttacksSo>().ToList().Find(so =>   so.name.Contains(characterName));
     }
 }

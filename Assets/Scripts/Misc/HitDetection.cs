@@ -9,6 +9,10 @@ public class HitDetection : MonoBehaviour, IDamageable
 {
     private PlayerController _player;
     [SerializeField] internal PlayerController otherPlayer;
+    
+    private PlayerController targetPlayer;
+    private InputReader player1Input;
+    private InputReader player2Input;
     public static event Action OnDeath;
     public static event Action OnPlayerHit;
     internal bool _hit;
@@ -17,6 +21,8 @@ public class HitDetection : MonoBehaviour, IDamageable
     private void Awake()
     {
         _player = gameObject.GetComponentInParent<PlayerController>();
+        player1Input = _player.GetComponent<InputReader>();
+        player2Input = otherPlayer.GetComponent<InputReader>();
     }
 
     private void Update()
@@ -28,32 +34,37 @@ public class HitDetection : MonoBehaviour, IDamageable
     {
 //        print(otherPlayer.IsActiveFrame);
 
-        if (other.gameObject.CompareTag("HitBox") && otherPlayer.IsActiveFrame)
+        if (other.gameObject.CompareTag("HitBox") && otherPlayer.IsActiveFrame && other.gameObject.activeInHierarchy)
         {
             if (_hit) return;
             _hit = true;
-            print("hit");
-            var target = OnHit(_player, otherPlayer);
-            if (target is null || target.HitStun) return;
+//            print("hit");
+
+            targetPlayer = OnHit(_player, otherPlayer);
+            if (targetPlayer is null || targetPlayer.HitStun || _player.HitStun) return;
             
-            isWalkingBack = (target._playerStateManager.CurrentStateName == "PlayerWalkingState" || target._playerStateManager.CurrentStateName == "PlayerCrouchMoveState") && target.InputReader.CurrentMoveInput == InputReader.MovementInputResult.Backward;
+            isWalkingBack = (targetPlayer._playerStateManager.CurrentStateName == "PlayerWalkingState" || targetPlayer._playerStateManager.CurrentStateName == "PlayerCrouchMoveState") && targetPlayer.InputReader.CurrentMoveInput == InputReader.MovementInputResult.Backward;
       //      print(target._playerStateManager.CurrentStateName);
        //     print(target.InputReader.CurrentMoveInput);
             if (isWalkingBack)
             {
                 print("walk");
-                target._playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Blocking);
+                targetPlayer._playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Blocking);
             }
             else
             {
-                target._playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.HitStun);
+                targetPlayer._playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.HitStun);
 
              
             }
-            target.PlayerHitDetection.TakeDamage(10);
+            targetPlayer.PlayerHitDetection.TakeDamage(10);
 
         }
-        else if (other.gameObject.CompareTag("Wall"))
+        else
+        {
+            _hit = false;
+        }
+        if (other.gameObject.CompareTag("Wall"))
         {
             _player.AtBorder = true;
         }
@@ -64,36 +75,46 @@ public class HitDetection : MonoBehaviour, IDamageable
         _player.AtBorder = false;
     }
 
-    private PlayerController OnHit(PlayerController sender, PlayerController receiver)
+    private PlayerController OnHit(PlayerController Player1, PlayerController Player2)
     {
         
         //Check the players buffers for last attack frame  and decide the player hit
-        var attackBufferSender = sender.GetComponentInParent<InputReader>();
-        var attackBufferReceiver = receiver.GetComponentInParent<InputReader>();
+     
 
 //        Debug.Log(attackBufferSender.LastAttackInput);
 //        Debug.Log(attackBufferReceiver.LastAttackInput);
 
 
-        if (attackBufferSender.LastAttackInput != InputReader.AttackInputResult.None &&
-            attackBufferReceiver.LastAttackInput != InputReader.AttackInputResult.None)
+        if (player1Input.LastAttackInput.Type!= InputReader.AttackType.None && player2Input.LastAttackInput.Type != InputReader.AttackType.None)
         {
-            var result = attackBufferSender.LastAttackInputFrame < attackBufferReceiver.LastAttackInputFrame ? sender : receiver;
-            print(result);
+            PlayerController result  = null;
+            if (player1Input.LastAttackInputFrame < player2Input.LastAttackInputFrame )
+            {
+                result = Player1;
+                Debug.Log($"Clash, {result} hit");
+                return result;
+            } 
+            if (player2Input.LastAttackInputFrame < player1Input.LastAttackInputFrame )
+            {
+                result = Player2;
+                Debug.Log($"Clash, {result} hit");
+                return result;
+
+            }
             return result;
         }
 
-        if (attackBufferSender.LastAttackInput != InputReader.AttackInputResult.None &&
-            attackBufferReceiver.LastAttackInput == InputReader.AttackInputResult.None)
+        if (player1Input.LastAttackInput.Type != InputReader.AttackType.None && player2Input.LastAttackInput.Type == InputReader.AttackType.None)
         {
             print("OtherPlayer NonContested ");
-            return receiver;
+            return Player2;
         }
 
-        if (attackBufferSender.LastAttackInput == InputReader.AttackInputResult.None &&
-            attackBufferReceiver.LastAttackInput != InputReader.AttackInputResult.None)
+        if (player1Input.LastAttackInput.Type == InputReader.AttackType.None && player2Input.LastAttackInput.Type != InputReader.AttackType.None)
         {
-            return sender;
+            print("Player  NonContested ");
+
+            return Player1;
         }
 
         return null;

@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     #region PlayerActions
     public Action OnJump;
-    public  Action<InputReader.AttackInputResult> PlayerAttackAction;
+    public  Action<InputReader.AttackType> PlayerAttackAction;
     #endregion
     
     #region Attack Check Variables
@@ -158,13 +158,13 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     private void OnPlayerDeath()
     {
         InputReader.enabled = false;
-        _playerActions.RemoveCallbacks(this);
         StopAllCoroutines();
         _playerStateManager.ResetStateMachine();
     }
 
     private void OnDestroy()
     {
+        _playerActions.RemoveCallbacks(this);
         HitDetection.OnDeath -= OnPlayerDeath;
         _playerActions.Disable();
     }
@@ -309,7 +309,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     public void OnLight(InputAction.CallbackContext context)
     {
-        PlayerAttackAction?.Invoke(InputReader.AttackInputResult.Light);
+        PlayerAttackAction?.Invoke(InputReader.AttackType.Light);
      
         if (OnAttackCoolDown || IsAttacking || !context.performed) return;
         IsAttacking = true;
@@ -319,7 +319,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     public void OnMedium(InputAction.CallbackContext context)
     {
-        PlayerAttackAction?.Invoke(InputReader.AttackInputResult.Medium);
+        PlayerAttackAction?.Invoke(InputReader.AttackType.Medium);
         if (OnAttackCoolDown || IsAttacking || !context.performed) return;
         IsAttacking = true;
         Animator?.SetTrigger(Attacking);
@@ -328,7 +328,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     public void OnHeavy(InputAction.CallbackContext context)
     {
-        PlayerAttackAction?.Invoke(InputReader.AttackInputResult.Heavy);
+        PlayerAttackAction?.Invoke(InputReader.AttackType.Heavy);
         if (OnAttackCoolDown || IsAttacking || !context.performed) return;
         IsAttacking = true;
         Animator?.SetTrigger(Attacking);

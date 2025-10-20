@@ -1,37 +1,11 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 
 public class InputReader : MonoBehaviour
 {
-    public enum InputResults
-    {
-        None,
-        Up,
-        Down,
-        Forward,
-        Backward,
-        UpLeft,
-        UpRight,
-        DownLeft,
-        DownRight,
-
-        Light,
-        LightLeft,
-        LightRight,
-        Medium,
-        MediumLeft,
-        MediumRight,
-        Heavy,
-        HeavyLeft,
-        HeavyRight,
-
-
-        AirDashLeft,
-        AirDashRight,
-    }
-
     public enum MovementInputResult
     {
         None,
@@ -44,65 +18,47 @@ public class InputReader : MonoBehaviour
         DownLeft,
         DownRight,
     }
-
-    public enum AttackInputResult
+    public enum AttackType
     {
         None,
         Light,
-        LightLeft,
-        LightRight,
         Medium,
-        MediumLeft,
-        MediumRight,
         Heavy,
-        HeavyLeft,
-        HeavyRight,
+        Special,
     }
-
-    private readonly Dictionary<( MovementInputResult, AttackInputResult), AttackInputResult>
-        _attackMoveActions = new()
+    
+    [Serializable]
+    public struct Attack
+    {
+        public MovementInputResult Move;
+        public AttackType Type;
+        public Attack(AttackType type = AttackType.None ,MovementInputResult move = MovementInputResult.None)
         {
-            {
-                (MovementInputResult.None, AttackInputResult.Light), AttackInputResult.Light
-            },
-            {
-                (MovementInputResult.Forward, AttackInputResult.Light), AttackInputResult.LightRight
-            },
-            {
-                (MovementInputResult.Backward, AttackInputResult.Light), AttackInputResult.LightLeft
-            },
+            Type = type;
+            Move = move;
+        }
 
-            {
-                (MovementInputResult.None, AttackInputResult.Medium),
-                AttackInputResult.Medium
-            },
-            {
-                (MovementInputResult.Forward, AttackInputResult.Medium),
-                AttackInputResult.MediumRight
-            },
-            {
-                (MovementInputResult.Backward, AttackInputResult.Medium),
-                AttackInputResult.MediumLeft
-            },
-
-            {
-                (MovementInputResult.None, AttackInputResult.Heavy),
-                AttackInputResult.Heavy
-            },
-        };
-
+        public override string ToString()
+        {
+            var move = Move != MovementInputResult.None ? $"{Move.ToString()} " : ""; 
+            var fullMove = string.Concat(move, Type);
+            return fullMove;
+        }
+    }
+    
     private PlayerController _player;
     public MovementInputResult CurrentMoveInput { get; private set; }
-    public AttackInputResult CurrentAttackInput { get; private set; }
+    public Attack CurrentAttackInput { get; private set; }
+    public int CurrentAttackFrame { get; private set; }
 
-    public AttackInputResult LastAttackInput { get; private set; }
+    public Attack LastAttackInput { get; private set; }
     public int LastAttackInputFrame { get; private set; }
 
 
     private readonly List<BufferedInput<MovementInputResult>> _movementBuffer = new();
-    private readonly List<BufferedInput<AttackInputResult>> _attackBuffer = new();
+    private readonly List<BufferedInput<Attack>> _attackBuffer = new();
 
-    private float _bufferTime;
+    private int _bufferTime;
 
     [SerializeField] internal List<string> movementInputsVisual = new();
     [SerializeField] internal List<string> attackInputsVisual = new();
@@ -143,25 +99,26 @@ public class InputReader : MonoBehaviour
         _movementBuffer.Add(new BufferedInput<MovementInputResult>(result, Time.frameCount));
     }
 
-    private void AddAttackInput(AttackInputResult result)
+    private void AddAttackInput(AttackType type)
     {
-        result = CheckForNormals(result, CurrentMoveInput);
+        var Input = new Attack();
+        Input = ReturnAttack(type, CurrentMoveInput);
         if (_attackBuffer.Count >= _bufferCap)
             _attackBuffer.RemoveAt(0);
-        if (result != AttackInputResult.None)
+        if (type != AttackType.None) 
         {
-            LastAttackInput = result;
+            LastAttackInput = Input;
             LastAttackInputFrame = Time.frameCount;
         }
 
-        _attackBuffer.Add(new BufferedInput<AttackInputResult>(result, Time.frameCount));
+        _attackBuffer.Add(new BufferedInput<Attack>(Input, Time.frameCount));
     }
 
 
     private void Awake()
     {
         _player = GetComponent<PlayerController>();
-        _bufferTime = 5f;
+        _bufferTime = 5;
         _bufferCap = 10;
         _player.PlayerAttackAction += AddAttackInput;
     }
@@ -184,7 +141,14 @@ public class InputReader : MonoBehaviour
         _attackBuffer.RemoveAll(i => curFrame - i.CurFrame > _bufferTime);
 
         CurrentMoveInput = _movementBuffer.Count > 0 ? _movementBuffer[^1].Input : MovementInputResult.None;
-        CurrentAttackInput = _attackBuffer.Count > 0 ? _attackBuffer[^1].Input : AttackInputResult.None;
+        CurrentAttackInput = _attackBuffer.Count > 0 ? _attackBuffer[^1].Input : new Attack();
+        CurrentAttackFrame = _attackBuffer.Count > 0 ? _attackBuffer[^1].CurFrame : 0;
+
+        if (curFrame - LastAttackInputFrame > _bufferTime && !_player.IsAttacking)
+        {
+            LastAttackInput = new Attack();
+            LastAttackInputFrame = 0;
+        }
 
         movementInputsVisual.Clear();
         foreach (var input in _movementBuffer)
@@ -195,9 +159,10 @@ public class InputReader : MonoBehaviour
         attackInputsVisual.Clear();
         foreach (var input in _attackBuffer)
         {
-            attackInputsVisual.Add($"{input.Input} (F{input.CurFrame})");
+            attackInputsVisual.Add($"{input.Input.ToString()} (F{input.CurFrame})");
         }
     }
+
 
 
     private void CheckMovementInput()
@@ -219,9 +184,10 @@ public class InputReader : MonoBehaviour
         AddMovementInput(lookup[(_player.PlayerMove.x, _player.PlayerMove.y)]);
     }
 
-    private AttackInputResult CheckForNormals(AttackInputResult attackInputResult, MovementInputResult movementInput)
+    private Attack ReturnAttack(AttackType attackType, MovementInputResult movementInput)
     {
-        return _attackMoveActions.GetValueOrDefault((movementInput, attackInputResult), attackInputResult);
+        return new Attack(attackType, movementInput);
+
     }
 
     public MovementInputResult GetValidMoveInput()

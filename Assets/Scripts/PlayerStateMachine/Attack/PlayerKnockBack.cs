@@ -57,32 +57,16 @@ public class PlayerKnockBack : MonoBehaviour
         //Depending on the attack type return a knockback force value  (note mod this to add directional values later)
         var hitForceTemp = 0f;
 
-        switch (player.InputReader.LastAttackInput)
+        switch (player.InputReader.LastAttackInput.Type)
         {
-            case InputReader.AttackInputResult.Light:
+            case InputReader.AttackType.Light:
                 hitForceTemp = player.CharacterData.lightKnockback;
                 break;
-            case InputReader.AttackInputResult.LightLeft:
-                hitForceTemp = player.CharacterData.lightKnockback;
-                break;
-            case InputReader.AttackInputResult.LightRight:
-                hitForceTemp = player.CharacterData.lightKnockback;
-                break;
-            case InputReader.AttackInputResult.Medium:
+         
+            case InputReader.AttackType.Medium:
                 hitForceTemp = player.CharacterData.medKnockback;
                 break;
-            case InputReader.AttackInputResult.MediumLeft:
-                hitForceTemp = player.CharacterData.medKnockback;
-                break;
-            case InputReader.AttackInputResult.MediumRight:
-                hitForceTemp = player.CharacterData.medKnockback;
-                break;
-            case InputReader.AttackInputResult.Heavy:
-                break;
-            case InputReader.AttackInputResult.HeavyLeft:
-                break;
-            case InputReader.AttackInputResult.HeavyRight:
-                break;
+          
         }
 
 //        print(hitForceTemp);
