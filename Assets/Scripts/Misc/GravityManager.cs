@@ -1,9 +1,10 @@
+using System;
 using UnityEngine;
 
 public class GravityManager : MonoBehaviour
 {
     private float Velocity { get; set; }
-    internal RaycastHit RaycastHit;
+    internal RaycastHit Hit;
     private LayerMask _groundLayerMask;
     private LayerMask _playerLayerMask;
 
@@ -17,8 +18,8 @@ public class GravityManager : MonoBehaviour
     public bool CheckGrounded(PlayerController player)
     {
         //checks if the player is grounded and updates the related bool 
-        var grounded = Physics.Raycast(player.raycastPos.position, -player.transform.up, out RaycastHit,
-            player.RaycastDistance, _groundLayerMask);
+        var grounded = Physics.Raycast(player.raycastPos.position, -player.transform.up, out Hit,player.RaycastDistance, _groundLayerMask); 
+        Debug.Log(Hit.distance);
         Debug.DrawRay(player.raycastPos.position, -player.transform.up * player.RaycastDistance, Color.red);
         return grounded;
     }

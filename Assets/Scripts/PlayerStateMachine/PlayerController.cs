@@ -104,11 +104,13 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     [SerializeField]  internal float Health;
     [SerializeField]  internal bool AtBorder;
     [SerializeField]  internal bool DashMarcoActive;
+    [SerializeField] private float MinDashHeight;
 
     #endregion
 
     private void Awake()
     {
+        MinDashHeight = 1.487012f;
         PlayerKnockBack = GetComponent<PlayerKnockBack>();
         PlayerHitDetection = GetComponentInChildren<HitDetection>();
         _playerStateManager = GetComponent<PlayerStateManager>();
@@ -117,7 +119,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         InputReader = GetComponent<InputReader>();
         Animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
-        RaycastDistance = 2.0231f;
+        RaycastDistance = 2.005f;
         HitDetection.OnDeath += OnPlayerDeath;
     }
 
@@ -279,11 +281,18 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
                Animator?.SetBool(Running, false);
                 break;
         }
-
         if (Animator is not null) IsActiveFrame = Animator.GetBool(Active);
-        if (transform.localPosition.y > JumpHeight / 2)
+//        print(GravityManager.RaycastHit.distance);
+//        print(JumpHeight / 2);
+        if (!IsGrounded && transform.localPosition.y > MinDashHeight)
         {
+            Debug.Log(transform.transform.localPosition.y  );
+//            Debug.Log(JumpHeight / 2);
             AtDashHeight = true;
+        }
+        else
+        {
+            AtDashHeight = false;
         }
     }
 
@@ -382,7 +391,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         {
             case false:
             {
-                if (IsDashing || IsGrounded || JumpCharges <= 0) return;
+                if (IsDashing || IsGrounded || JumpCharges <= 0 || !AtDashHeight) return;
                 print("entered dash");
                 PerformDash();
                 break;
