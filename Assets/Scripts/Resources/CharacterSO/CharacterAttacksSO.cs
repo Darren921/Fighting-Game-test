@@ -7,22 +7,11 @@ using UnityEngine;
     [CreateAssetMenu(fileName = "CharacterAttacksSO", menuName = "Scriptable Objects/CharacterAttacksSO")]
     public class CharacterAttacksSo : ScriptableObject
     {
+        public AttackData DefaultStandingAttack; 
+        public AttackData DefaultCrouchingAttack; 
+        public AttackData DefaultJunpingAttack; 
+
         public List<AttackData> Attacks;
-        
-        private void OnValidate()
-        {
-            // var resultsList = Enum.GetValues(typeof(InputReader.Attack)).Cast<InputReader.Attack>()
-            //     .ToList();
-            // foreach (var result in resultsList.Where(result =>
-            //              !Attacks.Contains(new AttackData { _attackInputResult = result })))
-            // {
-            //     if (result.Type != InputReader.AttackType.None)
-            //         Attacks.Add(new AttackData
-            //         {
-            //             _attackInputResult = result
-            //         });
-            // }
-        }
     }
     [Serializable]
     public struct AttackData : IEquatable<AttackData>
@@ -30,7 +19,7 @@ using UnityEngine;
         public bool Equals(AttackData other)
         {
             return _attackInputResult.Equals(other._attackInputResult) && Tag == other.Tag && Damage.Equals(other.Damage) &&
-                   Knockback.Equals(other.Knockback) && HitStun.Equals(other.HitStun) && BlockStun.Equals(other.BlockStun);
+                   Knockback.Equals(other.Knockback) && HitStun.Equals(other.HitStun) && BlockStun.Equals(other.BlockStun) && State.Equals(other.State);
         }
 
         public override bool Equals(object obj)
@@ -40,7 +29,7 @@ using UnityEngine;
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(_attackInputResult, (int)Tag, Damage, Knockback, HitStun, BlockStun);
+            return HashCode.Combine(_attackInputResult, (int)Tag, Damage, Knockback, HitStun, BlockStun,State);
         }
 
         public enum Tags
@@ -58,6 +47,7 @@ using UnityEngine;
 
         public InputReader.Attack _attackInputResult;
         public Tags Tag;
+        public States State;
         public float Damage;
         public float Knockback;
         public float HitStun;

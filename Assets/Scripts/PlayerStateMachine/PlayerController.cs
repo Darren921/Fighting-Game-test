@@ -223,10 +223,10 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         IsGrounded = GravityManager.CheckGrounded(this);
 
         //this needs to be rework (current anti head landing )
-        PreventHeadLanding(collision);
+      //  PreventHeadLanding(collision);
     }
 
-    private void PreventHeadLanding(Collision collision)
+    /*private void PreventHeadLanding(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player") && collision.gameObject != gameObject && !IsGrounded)
         {
@@ -235,11 +235,11 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
             {
                 if (gameObject.transform.position.x < collision.gameObject.GetComponent<Collider>().bounds.center.x)
                 {
-                    rb.AddForce(-13, 1.5f, 0);
+                    rb.AddForce(-5, 1.5f, 0);
                 }
                 else
                 {
-                    rb.AddForce(13, 1.5f, 0);
+                    rb.AddForce(5, 1.5f, 0);
                 }
             }
             else
@@ -254,7 +254,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
                 }
             }
         }
-    }
+    }*/
 
     private void OnCollisionExit(Collision other)
     {

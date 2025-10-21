@@ -28,7 +28,7 @@ public class InputReader : MonoBehaviour
     }
     
     [Serializable]
-    public struct Attack
+    public struct Attack : IEquatable<Attack>
     {
         public MovementInputResult Move;
         public AttackType Type;
@@ -43,6 +43,21 @@ public class InputReader : MonoBehaviour
             var move = Move != MovementInputResult.None ? $"{Move.ToString()} " : ""; 
             var fullMove = string.Concat(move, Type);
             return fullMove;
+        }
+
+        public bool Equals(Attack other)
+        {
+            return Move == other.Move && Type == other.Type;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Attack other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine((int)Move, (int)Type);
         }
     }
     

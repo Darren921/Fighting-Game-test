@@ -12,12 +12,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf439b2ac4ad1744185dc9fc1e52cbd5, type: 3}
   m_Name: DefaultAttacks
   m_EditorClassIdentifier: 
-  Attacks:
-  - _attackInputResult:
+  DefaultStandingAttack:
+    _attackInputResult:
       Move: 0
       Type: 0
     Tag: 0
+    State: 0
     Damage: 0
     Knockback: 0
     HitStun: 0
     BlockStun: 0
+  DefaultCrouchingAttack:
+    _attackInputResult:
+      Move: 0
+      Type: 0
+    Tag: 0
+    State: 0
+    Damage: 0
+    Knockback: 0
+    HitStun: 0
+    BlockStun: 0
+  DefaultJunpingAttack:
+    _attackInputResult:
+      Move: 0
+      Type: 0
+    Tag: 0
+    State: 0
+    Damage: 0
+    Knockback: 0
+    HitStun: 0
+    BlockStun: 0
+  Attacks: []
