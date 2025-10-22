@@ -145,6 +145,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         OnEnablePlayer();
 //        print(gameObject.gameObject.name);
         SetUpCharacterVariables();
+        PauseManager.Instance?.RegisterPlayer(this);
     }
  
     public void OnEnablePlayer()
@@ -169,6 +170,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         _playerActions.RemoveCallbacks(this);
         HitDetection.OnDeath -= OnPlayerDeath;
         _playerActions.Disable();
+        PauseManager.Instance?.UnregisterPlayer(this);
+
     }
 
 

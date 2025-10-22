@@ -145,9 +145,13 @@ public class InputReader : MonoBehaviour
 
     private void Update()
     {
+        if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
+            return;
+
         CheckMovementInput();
         UpdateInputBuffers();
     }
+
 
     private void UpdateInputBuffers()
     {
@@ -213,5 +217,16 @@ public class InputReader : MonoBehaviour
 //      print(currentMoveInput);
         return validInput.Input;
 
+    }
+    public void ClearAllInputs()
+    {
+        _movementBuffer.Clear();
+        _attackBuffer.Clear();
+
+        CurrentMoveInput = MovementInputResult.None;
+        CurrentAttackInput = new Attack();
+        LastAttackInput = new Attack();
+        CurrentAttackFrame = 0;
+        LastAttackInputFrame = 0;
     }
 }
