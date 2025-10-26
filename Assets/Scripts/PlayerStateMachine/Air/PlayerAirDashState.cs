@@ -1,9 +1,10 @@
 using System.Collections;
 using UnityEngine;
-
+[System.Serializable]
+[CreateAssetMenu (menuName = "Crafting/Player/Air Dash State")]
 public class PlayerAirDashState : PlayerDashState
 {
-    private int _airDashCharges;
+    [field: SerializeField] private int _airDashCharges;
 
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player)
     {

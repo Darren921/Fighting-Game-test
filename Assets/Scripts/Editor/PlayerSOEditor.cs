@@ -14,9 +14,8 @@ using Object = UnityEngine.Object;
 [CustomEditor(typeof(CharacterSODataBase), true), CanEditMultipleObjects]
 public class PlayerSOEditor : Editor
 {
-    public VisualTreeAsset mainVisualTree;
-    public VisualTreeAsset lVisualTree;
-    private ListView _listView;
+    [SerializeField] private VisualTreeAsset mainVisualTree;
+    [SerializeField] private VisualTreeAsset listVisualTree;
     private SerializedProperty _listProperty;
     private TemplateContainer _list;
     private ObjectField characterRef;
@@ -26,20 +25,20 @@ public class PlayerSOEditor : Editor
     {
         var root = new VisualElement();
         mainVisualTree.CloneTree(root);
-        _listView = root.Q<ListView>("ListView");
+        var listView = root.Q<ListView>("ListView");
         _listProperty = serializedObject.FindProperty("characterSoList");
-        if (_listView == null) Debug.LogError("listview property is null");
+        if (listView == null) Debug.LogError("listview property is null");
         if (_listProperty == null) Debug.LogError("list property is null");
-        _listView.bindingPath = _listProperty.propertyPath;
+        listView.bindingPath = _listProperty.propertyPath;
 
 
-        _listView.makeItem = () =>
+        listView.makeItem = () =>
         {
-            _list = lVisualTree.Instantiate();
+            _list = listVisualTree.Instantiate();
             return _list;
         };
 
-        _listView.bindItem = BindItem;
+        listView.bindItem = BindItem;
         
         return root;
     }

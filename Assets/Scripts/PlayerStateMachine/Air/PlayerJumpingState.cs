@@ -3,6 +3,7 @@ using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
+[Serializable]
 public class PlayerJumpingState : PlayerBaseState
 {
     #region Standard Jump Variables
@@ -11,7 +12,7 @@ public class PlayerJumpingState : PlayerBaseState
 
     #endregion
 
-    private float xJumpVal; // check Try jump method for changes 
+    private float xJumpVal; // check Try  jump method for changes 
     private Collider collider;
     private bool jumpTriggered;
     private bool atJumpHeight;

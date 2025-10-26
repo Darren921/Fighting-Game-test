@@ -1,16 +1,16 @@
 using System.Collections;
 using UnityEngine;
-
+[System.Serializable]
 public class PlayerDashState : PlayerMovingState
 {
-    protected InputReader.MovementInputResult Dir;
-    protected Vector3 DashDir;
-    protected Vector3 NewDashVelo;
-    protected const float DashTime = 0.3f;
-    protected const float DashDistance = 1.5f;
-    protected bool IsDashing;
-    private float _jumpVelocity;
-    private Coroutine _dashCoroutine;
+    [field: SerializeField] protected InputReader.MovementInputResult Dir;
+    [field: SerializeField] protected  Vector3 DashDir;
+    [field: SerializeField] protected Vector3 NewDashVelo;
+    [field: SerializeField]  protected  float DashTime = 0.3f;
+    [field: SerializeField] protected  float DashDistance = 1.5f;
+    [field: SerializeField]  protected bool IsDashing;
+   private float _jumpVelocity;
+     private Coroutine _dashCoroutine;
 
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player)
     {

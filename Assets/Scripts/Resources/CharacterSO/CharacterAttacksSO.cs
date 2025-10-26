@@ -3,22 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-    [CreateAssetMenu(fileName = "CharacterAttacksSO", menuName = "Scriptable Objects/CharacterAttacksSO")]
+[CreateAssetMenu(fileName = "CharacterAttacksSO", menuName = "Scriptable Objects/CharacterAttacksSO")]
     public class CharacterAttacksSo : ScriptableObject
     {
-        public AttackData DefaultStandingAttack; 
-        public AttackData DefaultCrouchingAttack; 
-        public AttackData DefaultJunpingAttack; 
+        public AttackData DefaultStandingAttack = new AttackData(new InputReader.Attack(InputReader.AttackType.None, InputReader.MovementInputResult.None), AttackData.Tags.Mid , AttackData.States.Standing , 0f,0f,0f,0f );
+        public AttackData DefaultCrouchingAttack = new AttackData(new InputReader.Attack(InputReader.AttackType.None, InputReader.MovementInputResult.None), AttackData.Tags.Low , AttackData.States.Crouching , 0f,0f,0f,0f ); 
+        public AttackData DefaultJunpingAttack = new AttackData(new InputReader.Attack(InputReader.AttackType.None, InputReader.MovementInputResult.None), AttackData.Tags.High , AttackData.States.Jumping , 0f,0f,0f,0f );
 
         public List<AttackData> Attacks;
+
+        // public AttackData ReturnAttackData()
+        // {
+        //     
+        // }
+        //
     }
     [Serializable]
     public struct AttackData : IEquatable<AttackData>
     {
         public bool Equals(AttackData other)
         {
-            return _attackInputResult.Equals(other._attackInputResult) && Tag == other.Tag && Damage.Equals(other.Damage) &&
+            return Attack.Equals(other.Attack) && Tag == other.Tag && Damage.Equals(other.Damage) &&
                    Knockback.Equals(other.Knockback) && HitStun.Equals(other.HitStun) && BlockStun.Equals(other.BlockStun) && State.Equals(other.State);
         }
 
@@ -29,7 +36,18 @@ using UnityEngine;
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(_attackInputResult, (int)Tag, Damage, Knockback, HitStun, BlockStun,State);
+            return HashCode.Combine(Attack, (int)Tag, Damage, Knockback, HitStun, BlockStun,State);
+        }
+
+        public AttackData( InputReader.Attack attack, Tags tag, States state, float damage, float knockback, float hitStun, float blockStun)
+        {
+            Attack = attack;
+            Tag = tag;
+            State = state;
+            Damage = damage;
+            Knockback = knockback;
+            HitStun = hitStun;
+            BlockStun = blockStun;
         }
 
         public enum Tags
@@ -40,12 +58,12 @@ using UnityEngine;
         }
         public enum States
         {
-            Jumping, 
             Standing,
+            Jumping, 
             Crouching,
         }
 
-        public InputReader.Attack _attackInputResult;
+        public InputReader.Attack Attack;
         public Tags Tag;
         public States State;
         public float Damage;

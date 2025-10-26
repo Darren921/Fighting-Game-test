@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using static PlayerStateManager;
 
+[System.Serializable]
 public class PlayerNeutralState : PlayerBaseState
 {
    

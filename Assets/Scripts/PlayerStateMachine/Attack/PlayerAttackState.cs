@@ -48,8 +48,7 @@ public class PlayerAttackState : PlayerBaseState
 
     private void PerformAttack(PlayerController player)
     {
-        lastMove = player.InputReader.CurrentMoveInput;
-//        Debug.Log(lastMove);
+        lastMove = player.InputReader.LastAttackInput.Move;
         if (!player.IsAttacking || player.OnAttackCoolDown) return;
         ChosenAttack( player,lastMove);
         cooldownCoroutine = player.StartCoroutine(EnforceCooldown(player));
@@ -57,6 +56,7 @@ public class PlayerAttackState : PlayerBaseState
 
     private void ChosenAttack(PlayerController player, InputReader.MovementInputResult movement)
     {
+        
         switch (movement)
         {
             case InputReader.MovementInputResult.Backward or InputReader.MovementInputResult.UpRight

@@ -1,5 +1,7 @@
 using UnityEngine;
 
+[System.Serializable]
+
 public class PlayerRunningState : PlayerMovingState
 {
     protected override float MoveSpeed => Player.RunSpeed;

@@ -119,7 +119,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         InputReader = GetComponent<InputReader>();
         Animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
-        RaycastDistance = 2.005f;
+        RaycastDistance = 2.006f;
         HitDetection.OnDeath += OnPlayerDeath;
     }
 
@@ -289,7 +289,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 //        print(JumpHeight / 2);
         if (!IsGrounded && transform.localPosition.y > MinDashHeight)
         {
-            Debug.Log(transform.transform.localPosition.y  );
+//            Debug.Log(transform.transform.localPosition.y  );
 //            Debug.Log(JumpHeight / 2);
             AtDashHeight = true;
         }

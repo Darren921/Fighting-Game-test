@@ -19,8 +19,8 @@ public class GravityManager : MonoBehaviour
     {
         //checks if the player is grounded and updates the related bool 
         var grounded = Physics.Raycast(player.raycastPos.position, -player.transform.up, out Hit,player.RaycastDistance, _groundLayerMask); 
-        Debug.Log(Hit.distance);
-        Debug.DrawRay(player.raycastPos.position, -player.transform.up * player.RaycastDistance, Color.red);
+//        Debug.Log(Hit.distance);
+  //      Debug.DrawRay(player.raycastPos.position, -player.transform.up * player.RaycastDistance, Color.red);
         return grounded;
     }
 
