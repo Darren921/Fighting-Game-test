@@ -163,6 +163,10 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         InputReader.enabled = false;
         StopAllCoroutines();
         _playerStateManager.ResetStateMachine();
+        _playerActions.RemoveCallbacks(this);
+        HitDetection.OnDeath -= OnPlayerDeath;
+        _playerActions.Disable();
+        PauseManager.Instance?.UnregisterPlayer(this);
     }
 
     private void OnDestroy()
@@ -302,7 +306,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        //Turns off running and walking when player releases context or player stops 
+        //Turns off running and walking when player releases context or player stops F
         //default till running begins
         PlayerMove = context.ReadValue<Vector3>();
         if (!IsRunning &&

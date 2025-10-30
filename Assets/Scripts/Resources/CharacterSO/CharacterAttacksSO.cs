@@ -14,11 +14,16 @@ using UnityEngine.Serialization;
 
         public List<AttackData> Attacks;
 
-        // public AttackData ReturnAttackData()
-        // {
-        //     
-        // }
-        //
+        public AttackData ReturnAttackData(InputReader.Attack attack)
+        {
+            var attackUsed = Attacks.Find( data => data.Attack.Move == attack.Move && data.Attack.Type == attack.Type) ;
+            if (attackUsed.Equals(new AttackData()))
+            {
+                attackUsed = DefaultStandingAttack;
+            }
+            return attackUsed;
+        }
+        
     }
     [Serializable]
     public struct AttackData : IEquatable<AttackData>

@@ -13,33 +13,42 @@ MonoBehaviour:
   m_Name: DefaultAttacks
   m_EditorClassIdentifier: 
   DefaultStandingAttack:
-    _attackInputResult:
+    Attack:
       Move: 0
-      Type: 0
-    Tag: 0
+      Type: 1
+    Tag: 1
     State: 0
     Damage: 0
-    Knockback: 0
+    Knockback: 100
     HitStun: 0
     BlockStun: 0
   DefaultCrouchingAttack:
-    _attackInputResult:
+    Attack:
       Move: 0
       Type: 0
     Tag: 0
-    State: 0
+    State: 2
     Damage: 0
     Knockback: 0
     HitStun: 0
     BlockStun: 0
   DefaultJunpingAttack:
-    _attackInputResult:
+    Attack:
       Move: 0
       Type: 0
-    Tag: 0
-    State: 0
+    Tag: 2
+    State: 1
     Damage: 0
     Knockback: 0
     HitStun: 0
     BlockStun: 0
-  Attacks: []
+  Attacks:
+  - Attack:
+      Move: 3
+      Type: 1
+    Tag: 1
+    State: 0
+    Damage: 0
+    Knockback: 10
+    HitStun: 0
+    BlockStun: 0

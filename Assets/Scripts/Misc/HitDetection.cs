@@ -10,9 +10,8 @@ public class HitDetection : MonoBehaviour, IDamageable
     private PlayerController _player;
     [SerializeField] internal PlayerController otherPlayer;
     
-    private PlayerController targetPlayer;
+//    private PlayerController targetPlayer;
     private InputReader player1Input;
-    private InputReader player2Input;
     public static event Action OnDeath;
     public static event Action OnPlayerHit;
     internal bool _hit;
@@ -22,7 +21,6 @@ public class HitDetection : MonoBehaviour, IDamageable
     {
         _player = gameObject.GetComponentInParent<PlayerController>();
         player1Input = _player.GetComponent<InputReader>();
-        player2Input = otherPlayer.GetComponent<InputReader>();
     }
 
     private void Update()
@@ -34,36 +32,25 @@ public class HitDetection : MonoBehaviour, IDamageable
     {
 //        print(otherPlayer.IsActiveFrame);
 
-        if (other.gameObject.CompareTag("HitBox") && otherPlayer.IsActiveFrame && other.gameObject.activeInHierarchy)
+        if (other.gameObject.CompareTag("HitBox") && otherPlayer.IsActiveFrame && other.gameObject.activeInHierarchy && !otherPlayer.HitStun)
         {
             if (_hit) return;
             _hit = true;
-//            print("hit");
-
-            targetPlayer = OnHit(_player, otherPlayer);
-            if (targetPlayer is null || targetPlayer.HitStun || _player.HitStun) return;
-            
-            isWalkingBack = (targetPlayer._playerStateManager.CurrentStateName == "PlayerWalkingState" || targetPlayer._playerStateManager.CurrentStateName == "PlayerCrouchMoveState") && targetPlayer.InputReader.CurrentMoveInput == InputReader.MovementInputResult.Backward;
-      //      print(target._playerStateManager.CurrentStateName);
-       //     print(target.InputReader.CurrentMoveInput);
+            isWalkingBack = (_player._playerStateManager.CurrentStateName == "PlayerWalkingState" || _player._playerStateManager.CurrentStateName == "PlayerCrouchMoveState") && _player.InputReader.CurrentMoveInput == InputReader.MovementInputResult.Backward;
             if (isWalkingBack)
             {
                 print("walk");
-                targetPlayer._playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Blocking);
+                _player._playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Blocking);
             }
             else
             {
-                targetPlayer._playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.HitStun);
-
-             
+                _player._playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.HitStun);
             }
-            targetPlayer.PlayerHitDetection.TakeDamage(10);
+            
+            _player.PlayerHitDetection.TakeDamage(10);
 
         }
-        else
-        {
-            _hit = false;
-        }
+    
         if (other.gameObject.CompareTag("Wall"))
         {
             _player.AtBorder = true;
@@ -75,7 +62,7 @@ public class HitDetection : MonoBehaviour, IDamageable
         _player.AtBorder = false;
     }
 
-    private PlayerController OnHit(PlayerController Player1, PlayerController Player2)
+    /*private PlayerController OnHit(PlayerController Player1, PlayerController Player2)
     {
         
         //Check the players buffers for last attack frame  and decide the player hit
@@ -118,7 +105,7 @@ public class HitDetection : MonoBehaviour, IDamageable
         }
 
         return null;
-    }
+    }*/
 
     public void TakeDamage(float damage)
     {
