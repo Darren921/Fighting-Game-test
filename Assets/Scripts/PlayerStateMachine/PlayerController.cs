@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     private readonly int Running = Animator.StringToHash("Running");
     internal readonly int Jump = Animator.StringToHash("Jumping");
     private readonly int Crouch = Animator.StringToHash("Crouching");
-    private int Attacking => Animator.StringToHash("Attacking");
+    internal int Attacking => Animator.StringToHash("Attacking");
     private int Light => Animator.StringToHash("Light");
     private int Medium => Animator.StringToHash("Medium");
     internal int left = Animator.StringToHash("Left");
@@ -196,6 +196,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         //This may need to change to separate ones for each attack
         // This is used at the end of each animation 
         IsAttacking = false;
+        Animator?.ResetTrigger(StartUp);
         Animator?.ResetTrigger(Attacking);
         Animator?.ResetTrigger(Light);
         Animator?.ResetTrigger(Medium);

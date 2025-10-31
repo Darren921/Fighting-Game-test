@@ -40,6 +40,17 @@ public class PlayerAttackState : PlayerBaseState
             playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.HitStun);
         }
 
+        if (player.IsAttacking && !player.AtDashHeight && player.InputReader.curState == AttackData.States.Jumping)
+        {
+            
+            player.Animator.speed = 0;
+            player.ResetAttackingTrigger();
+            player.Animator.Play("Neutral", 0, 0f); 
+            player.Animator.speed = 1;
+
+        }
+
+        
         // State swapping 
         if (!player.IsGrounded || player.IsAttacking) return;
         playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Neutral | PlayerStateManager.PlayerStateTypes.Walking | PlayerStateManager.PlayerStateTypes.Crouching | PlayerStateManager.PlayerStateTypes.Jumping);

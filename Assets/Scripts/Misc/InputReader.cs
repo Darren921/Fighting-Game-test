@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEditor.Rendering.LookDev;
 using UnityEngine;
@@ -69,7 +70,7 @@ public class InputReader : MonoBehaviour
     public Attack LastAttackInput { get; private set; }
     public int LastAttackInputFrame { get; private set; }
 
-
+    public AttackData.States curState; 
     private readonly List<BufferedInput<MovementInputResult>> _movementBuffer = new();
     private readonly List<BufferedInput<Attack>> _attackBuffer = new();
 
@@ -77,7 +78,6 @@ public class InputReader : MonoBehaviour
 
     [SerializeField] internal List<string> movementInputsVisual = new();
     [SerializeField] internal List<string> attackInputsVisual = new();
-
 
     private int _bufferCap;
 
@@ -110,7 +110,6 @@ public class InputReader : MonoBehaviour
     {
         if (_movementBuffer.Count >= _bufferCap)
             _movementBuffer.RemoveAt(0);
-
         _movementBuffer.Add(new BufferedInput<MovementInputResult>(result, Time.frameCount));
     }
 
@@ -125,8 +124,20 @@ public class InputReader : MonoBehaviour
             LastAttackInput = Input;
             LastAttackInputFrame = Time.frameCount;
         }
-
         _attackBuffer.Add(new BufferedInput<Attack>(Input, Time.frameCount));
+
+        
+    }
+
+    private AttackData.States CheckState(PlayerBaseState lastState)
+    {
+       // Debug.Log(lastState);
+        var state = _player._playerStateManager.AirborneStates.Contains(lastState) ? AttackData.States.Jumping :
+            _player._playerStateManager.StandingStates.Contains(lastState) ? AttackData.States.Standing :
+            _player._playerStateManager.CrouchingStates.Contains(lastState) ? AttackData.States.Crouching : curState;
+      //  Debug.Log(state.ToString());
+        return state;
+
     }
 
 
@@ -147,7 +158,7 @@ public class InputReader : MonoBehaviour
     {
         if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
             return;
-
+        curState = CheckState(_player._playerStateManager.currentState);
         CheckMovementInput();
         UpdateInputBuffers();
     }

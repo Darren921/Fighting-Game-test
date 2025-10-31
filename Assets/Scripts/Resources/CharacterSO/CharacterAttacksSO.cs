@@ -8,20 +8,28 @@ using UnityEngine.Serialization;
 [CreateAssetMenu(fileName = "CharacterAttacksSO", menuName = "Scriptable Objects/CharacterAttacksSO")]
     public class CharacterAttacksSo : ScriptableObject
     {
-        public AttackData DefaultStandingAttack = new AttackData(new InputReader.Attack(InputReader.AttackType.None, InputReader.MovementInputResult.None), AttackData.Tags.Mid , AttackData.States.Standing , 0f,0f,0f,0f );
-        public AttackData DefaultCrouchingAttack = new AttackData(new InputReader.Attack(InputReader.AttackType.None, InputReader.MovementInputResult.None), AttackData.Tags.Low , AttackData.States.Crouching , 0f,0f,0f,0f ); 
-        public AttackData DefaultJunpingAttack = new AttackData(new InputReader.Attack(InputReader.AttackType.None, InputReader.MovementInputResult.None), AttackData.Tags.High , AttackData.States.Jumping , 0f,0f,0f,0f );
+        public AttackData DefaultStandingAttack = new AttackData(new InputReader.Attack(InputReader.AttackType.None), AttackData.Tags.Mid , AttackData.States.Standing , 0f,0f,0f,0f );
+        public AttackData DefaultCrouchingAttack = new AttackData(new InputReader.Attack(InputReader.AttackType.None), AttackData.Tags.Low , AttackData.States.Crouching , 0f,0f,0f,0f ); 
+        public AttackData DefaultJunpingAttack = new AttackData(new InputReader.Attack(InputReader.AttackType.None), AttackData.Tags.High , AttackData.States.Jumping , 0f,0f,0f,0f );
 
         public List<AttackData> Attacks;
 
-        public AttackData ReturnAttackData(InputReader.Attack attack)
+        public AttackData ReturnAttackData(InputReader.Attack attack,PlayerController player)
         {
             var attackUsed = Attacks.Find( data => data.Attack.Move == attack.Move && data.Attack.Type == attack.Type) ;
             if (attackUsed.Equals(new AttackData()))
             {
-                attackUsed = DefaultStandingAttack;
+                Debug.Log("entered defaults");
+                return player.InputReader.curState switch
+                {
+                    AttackData.States.Jumping => DefaultJunpingAttack,
+                    AttackData.States.Crouching => DefaultCrouchingAttack,
+                    AttackData.States.Standing => DefaultStandingAttack,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
             }
-            return attackUsed;
+
+            return attackUsed; 
         }
         
     }

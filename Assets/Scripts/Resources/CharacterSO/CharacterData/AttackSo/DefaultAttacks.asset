@@ -19,27 +19,27 @@ MonoBehaviour:
     Tag: 1
     State: 0
     Damage: 0
-    Knockback: 100
+    Knockback: 10
     HitStun: 0
     BlockStun: 0
   DefaultCrouchingAttack:
     Attack:
       Move: 0
-      Type: 0
+      Type: 1
     Tag: 0
     State: 2
     Damage: 0
-    Knockback: 0
+    Knockback: 1
     HitStun: 0
     BlockStun: 0
   DefaultJunpingAttack:
     Attack:
       Move: 0
-      Type: 0
+      Type: 1
     Tag: 2
     State: 1
     Damage: 0
-    Knockback: 0
+    Knockback: 3
     HitStun: 0
     BlockStun: 0
   Attacks:
@@ -49,6 +49,6 @@ MonoBehaviour:
     Tag: 1
     State: 0
     Damage: 0
-    Knockback: 10
+    Knockback: 5
     HitStun: 0
     BlockStun: 0
