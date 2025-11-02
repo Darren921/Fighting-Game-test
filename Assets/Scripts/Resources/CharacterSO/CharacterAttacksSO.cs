@@ -8,31 +8,57 @@ using UnityEngine.Serialization;
 [CreateAssetMenu(fileName = "CharacterAttacksSO", menuName = "Scriptable Objects/CharacterAttacksSO")]
     public class CharacterAttacksSo : ScriptableObject
     {
-        public AttackData DefaultStandingAttack = new AttackData(new InputReader.Attack(InputReader.AttackType.None), AttackData.Tags.Mid , AttackData.States.Standing , 0f,0f,0f,0f );
-        public AttackData DefaultCrouchingAttack = new AttackData(new InputReader.Attack(InputReader.AttackType.None), AttackData.Tags.Low , AttackData.States.Crouching , 0f,0f,0f,0f ); 
-        public AttackData DefaultJunpingAttack = new AttackData(new InputReader.Attack(InputReader.AttackType.None), AttackData.Tags.High , AttackData.States.Jumping , 0f,0f,0f,0f );
-
+        public AttackData[] DefaultLightAttacks = new[]
+        {
+            new AttackData(new InputReader.Attack(InputReader.AttackType.Light)),
+            new  AttackData(new InputReader.Attack(InputReader.AttackType.Light), AttackData.Tags.Low , AttackData.States.Crouching ),
+            new AttackData(new InputReader.Attack(InputReader.AttackType.Light), AttackData.Tags.High , AttackData.States.Jumping)
+        };
+        public AttackData[] DefaultMedAttacks = new[]
+        {
+            new AttackData(new InputReader.Attack(InputReader.AttackType.Medium)),
+            new  AttackData(new InputReader.Attack(InputReader.AttackType.Medium), AttackData.Tags.Low , AttackData.States.Crouching ),
+            new AttackData(new InputReader.Attack(InputReader.AttackType.Medium), AttackData.Tags.High , AttackData.States.Jumping)
+        };
+        public AttackData[] DefaultHeavyAttacks = new[]
+        {
+            new AttackData(new InputReader.Attack(InputReader.AttackType.Heavy)),
+            new  AttackData(new InputReader.Attack(InputReader.AttackType.Heavy), AttackData.Tags.Low , AttackData.States.Crouching ),
+            new AttackData(new InputReader.Attack(InputReader.AttackType.Heavy), AttackData.Tags.High , AttackData.States.Jumping)
+        };
+        
+    
         public List<AttackData> Attacks;
 
-        public AttackData ReturnAttackData(InputReader.Attack attack,PlayerController player)
+        public AttackData ReturnAttackData(InputReader.Attack attack, AttackData.States state)
         {
-            var attackUsed = Attacks.Find( data => data.Attack.Move == attack.Move && data.Attack.Type == attack.Type) ;
+            var attackUsed = Attacks.Find( data => data.Attack.Move == attack.Move && data.Attack.Type == attack.Type && data.State == state) ;
             if (attackUsed.Equals(new AttackData()))
             {
-                Debug.Log("entered defaults");
-                return player.InputReader.curState switch
+                switch (attack.Type)
                 {
-                    AttackData.States.Jumping => DefaultJunpingAttack,
-                    AttackData.States.Crouching => DefaultCrouchingAttack,
-                    AttackData.States.Standing => DefaultStandingAttack,
-                    _ => throw new ArgumentOutOfRangeException()
-                };
+                    case InputReader.AttackType.Light:
+                        attackUsed = DefaultLightAttacks.FirstOrDefault((data => data.State == state));
+                        break;
+                    case InputReader.AttackType.Medium:
+                        attackUsed = DefaultMedAttacks.FirstOrDefault((data => data.State == state));
+                        break;
+                    case InputReader.AttackType.Heavy:
+                        attackUsed = DefaultHeavyAttacks.FirstOrDefault((data => data.State == state));
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
 
             return attackUsed; 
         }
+
+       
         
     }
+
+
     [Serializable]
     public struct AttackData : IEquatable<AttackData>
     {
@@ -52,7 +78,7 @@ using UnityEngine.Serialization;
             return HashCode.Combine(Attack, (int)Tag, Damage, Knockback, HitStun, BlockStun,State);
         }
 
-        public AttackData( InputReader.Attack attack, Tags tag, States state, float damage, float knockback, float hitStun, float blockStun)
+        public AttackData( InputReader.Attack attack  , Tags tag = Tags.Mid, States state = States.Standing, float damage = 0, float knockback = 0, float hitStun = 0, float blockStun = 0 )
         {
             Attack = attack;
             Tag = tag;

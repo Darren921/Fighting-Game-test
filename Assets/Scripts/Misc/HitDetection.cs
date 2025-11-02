@@ -15,7 +15,7 @@ public class HitDetection : MonoBehaviour, IDamageable
     public static event Action OnDeath;
     public static event Action OnPlayerHit;
     internal bool _hit;
-    bool isWalkingBack;
+    bool Blocking;
 
     private void Awake()
     {
@@ -36,9 +36,11 @@ public class HitDetection : MonoBehaviour, IDamageable
         {
             if (_hit) return;
             _hit = true;
-            isWalkingBack = (_player._playerStateManager.CurrentStateName == "PlayerWalkingState" || _player._playerStateManager.CurrentStateName == "PlayerCrouchMoveState") && _player.InputReader.CurrentMoveInput == InputReader.MovementInputResult.Backward;
-            if (isWalkingBack)
+            Blocking = CheckBlocking();
+            print(Blocking);
+            if (Blocking)
             {
+                
                 print("walk");
                 _player._playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Blocking);
             }
@@ -47,7 +49,7 @@ public class HitDetection : MonoBehaviour, IDamageable
                 _player._playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.HitStun);
             }
             
-            _player.PlayerHitDetection.TakeDamage(10);
+            _player.PlayerHitDetection.TakeDamage(otherPlayer.CharacterData.characterAttacks.ReturnAttackData(otherPlayer.InputReader.LastAttackInput,otherPlayer.InputReader.curState).Damage);
 
         }
     
@@ -55,6 +57,35 @@ public class HitDetection : MonoBehaviour, IDamageable
         {
             _player.AtBorder = true;
         }
+    }
+
+    private bool CheckBlocking()
+    {
+        print(_player._playerStateManager.CurrentStateName );
+        print(_player.InputReader.CurrentMoveInput);
+        
+        if (_player._playerStateManager.currentState == _player._playerStateManager.States[PlayerStateManager.PlayerStateTypes.Walking] ||  _player._playerStateManager.currentState == _player._playerStateManager.States[PlayerStateManager.PlayerStateTypes.Crouching] 
+            && _player.InputReader.CurrentMoveInput is InputReader.MovementInputResult.Backward or InputReader.MovementInputResult.DownLeft)
+        {
+            switch (_player.InputReader.curState)
+            {
+                case AttackData.States.Standing:
+                    print("standing");
+                    print(otherPlayer.InputReader.curState );
+                    if (otherPlayer.InputReader.curState != AttackData.States.Crouching) return true;
+                    break;
+                case AttackData.States.Crouching:
+                    print("Crouching");
+                    print(otherPlayer.InputReader.curState );
+                    if(otherPlayer.InputReader.curState != AttackData.States.Jumping) return true;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            
+        }
+        print("Skippped");
+        return false;
     }
 
     private void OnTriggerExit(Collider other)
@@ -111,7 +142,7 @@ public class HitDetection : MonoBehaviour, IDamageable
     {
         // deal damage and active death event to trigger end of game 
         
-        _player.Health -=  isWalkingBack ? damage * 0.25f : damage;
+        _player.Health -=  Blocking ? damage * 0.25f : damage;
         OnPlayerHit?.Invoke();
         //print(otherPlayer.name);
         //print(_player.name);

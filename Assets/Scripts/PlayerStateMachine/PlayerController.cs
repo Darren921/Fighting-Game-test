@@ -415,7 +415,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     }
     public void OnRun(InputAction.CallbackContext context)
     {
-        if (context.performed && InputReader.GetValidMoveInput() is not (InputReader.MovementInputResult.Backward or InputReader.MovementInputResult.None or InputReader.MovementInputResult.Down) && IsGrounded)
+        if (context.performed && InputReader.GetValidMoveInput() is not (InputReader.MovementInputResult.Backward or InputReader.MovementInputResult.None or InputReader.MovementInputResult.Down) && IsGrounded && !IsRunning)
         {
 //            print(InputReader.CurrentMoveInput);
             IsRunning = true;

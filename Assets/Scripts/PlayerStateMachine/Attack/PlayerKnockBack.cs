@@ -55,7 +55,7 @@ public class PlayerKnockBack : MonoBehaviour
     private float ReturnHitForce(PlayerController player)
     {
         //Depending on the attack type return a knockback force value  
-        var hitForceTemp = player.CharacterData.characterAttacks.ReturnAttackData(player.InputReader.LastAttackInput,player).Knockback;
+        var hitForceTemp = player.CharacterData.characterAttacks.ReturnAttackData(player.InputReader.LastAttackInput,player.InputReader.curState).Knockback;
         print(hitForceTemp);
         return hitForceTemp;
     }
