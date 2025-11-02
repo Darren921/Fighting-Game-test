@@ -309,6 +309,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     {
         //Turns off running and walking when player releases context or player stops F
         //default till running begins
+        if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
+            return;
         PlayerMove = context.ReadValue<Vector3>();
         if (!IsRunning &&
             _playerStateManager.currentState !=
@@ -326,6 +328,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     public void OnLight(InputAction.CallbackContext context)
     {
+        if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
+            return;
         PlayerAttackAction?.Invoke(InputReader.AttackType.Light);
      
         if (OnAttackCoolDown || IsAttacking || !context.performed) return;
@@ -336,6 +340,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     public void OnMedium(InputAction.CallbackContext context)
     {
+        if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
+            return;
         PlayerAttackAction?.Invoke(InputReader.AttackType.Medium);
         if (OnAttackCoolDown || IsAttacking || !context.performed) return;
         IsAttacking = true;
@@ -345,6 +351,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     public void OnHeavy(InputAction.CallbackContext context)
     {
+        if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
+            return;
         PlayerAttackAction?.Invoke(InputReader.AttackType.Heavy);
         if (OnAttackCoolDown || IsAttacking || !context.performed) return;
         IsAttacking = true;
@@ -354,6 +362,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     public void OnDashMacro(InputAction.CallbackContext context)
     {
+        if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
+            return;
         //shortcut for dash 
         print("entered dash Marco");
         DashMarcoActive = true;
@@ -395,6 +405,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     public void OnDash(InputAction.CallbackContext context)
     {
+        if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
+            return;
         switch (IsGrounded)
         {
             case false:
@@ -415,6 +427,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     }
     public void OnRun(InputAction.CallbackContext context)
     {
+        if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
+            return;
         if (context.performed && InputReader.GetValidMoveInput() is not (InputReader.MovementInputResult.Backward or InputReader.MovementInputResult.None or InputReader.MovementInputResult.Down) && IsGrounded && !IsRunning)
         {
 //            print(InputReader.CurrentMoveInput);
@@ -429,6 +443,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     public void OnJumping(InputAction.CallbackContext context)
     {
+        if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
+            return;
         if (context.performed)
         {
             OnJump?.Invoke();
@@ -437,6 +453,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     public void OnSuperJump(InputAction.CallbackContext context)
     {
+        if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
+            return;
         SuperJumpActive = true;
     }
     

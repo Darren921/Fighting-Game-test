@@ -229,15 +229,4 @@ public class InputReader : MonoBehaviour
         return validInput.Input;
 
     }
-    public void ClearAllInputs()
-    {
-        _movementBuffer.Clear();
-        _attackBuffer.Clear();
-
-        CurrentMoveInput = MovementInputResult.None;
-        CurrentAttackInput = new Attack();
-        LastAttackInput = new Attack();
-        CurrentAttackFrame = 0;
-        LastAttackInputFrame = 0;
-    }
 }
