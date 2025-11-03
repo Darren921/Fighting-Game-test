@@ -20,12 +20,7 @@ public class CharacterSO : ScriptableObject
     public float jumpHeight;
     public int airDashCharges;
     public int jumpCharges;
-    [Header("Combat")]
-    public int damage;
-    public float lightKnockback;
-    public float medKnockback;
-    public float heavyKnockback;
-
+    
     private void OnValidate()
     {
          characterAttacks = Resources.FindObjectsOfTypeAll<CharacterAttacksSo>().ToList().Find(so =>   so.name.Contains(characterName));

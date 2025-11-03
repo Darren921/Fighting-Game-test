@@ -61,11 +61,11 @@ public class PlayerStateManager : MonoBehaviour
             States[PlayerStateTypes.Walking],
             States[PlayerStateTypes.Running],
             States[PlayerStateTypes.Neutral],
+            States[PlayerStateTypes.Dash],
         };
         CrouchingStates = new[]
         {
             States[PlayerStateTypes.Crouching],
-            States[PlayerStateTypes.Dash],
         };
     }
 
