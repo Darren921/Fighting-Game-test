@@ -20,7 +20,7 @@ MonoBehaviour:
     State: 0
     Damage: 10
     Knockback: 10
-    HitStun: 0
+    HitStun: 1
     BlockStun: 0
   - Attack:
       Move: 0
@@ -29,7 +29,7 @@ MonoBehaviour:
     State: 2
     Damage: 10
     Knockback: 10
-    HitStun: 0
+    HitStun: 1
     BlockStun: 0
   - Attack:
       Move: 0
@@ -38,7 +38,7 @@ MonoBehaviour:
     State: 1
     Damage: 10
     Knockback: 10
-    HitStun: 0
+    HitStun: 1
     BlockStun: 0
   DefaultMedAttacks:
   - Attack:
@@ -48,7 +48,7 @@ MonoBehaviour:
     State: 0
     Damage: 20
     Knockback: 20
-    HitStun: 0
+    HitStun: 2
     BlockStun: 0
   - Attack:
       Move: 0
@@ -57,7 +57,7 @@ MonoBehaviour:
     State: 2
     Damage: 20
     Knockback: 20
-    HitStun: 0
+    HitStun: 2
     BlockStun: 0
   - Attack:
       Move: 0
@@ -66,7 +66,7 @@ MonoBehaviour:
     State: 1
     Damage: 20
     Knockback: 20
-    HitStun: 0
+    HitStun: 2
     BlockStun: 0
   DefaultHeavyAttacks:
   - Attack:
@@ -76,7 +76,7 @@ MonoBehaviour:
     State: 0
     Damage: 30
     Knockback: 30
-    HitStun: 0
+    HitStun: 2.5
     BlockStun: 0
   - Attack:
       Move: 0
@@ -85,7 +85,7 @@ MonoBehaviour:
     State: 2
     Damage: 30
     Knockback: 30
-    HitStun: 0
+    HitStun: 2.5
     BlockStun: 0
   - Attack:
       Move: 0
@@ -94,7 +94,7 @@ MonoBehaviour:
     State: 1
     Damage: 30
     Knockback: 30
-    HitStun: 0
+    HitStun: 2.5
     BlockStun: 0
   Attacks:
   - Attack:
@@ -104,5 +104,5 @@ MonoBehaviour:
     State: 0
     Damage: 10
     Knockback: 5
-    HitStun: 0
+    HitStun: 5
     BlockStun: 0

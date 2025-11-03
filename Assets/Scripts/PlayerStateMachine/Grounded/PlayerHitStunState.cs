@@ -8,11 +8,9 @@ public class PlayerHitStunState : PlayerBaseState
 {
     private static readonly int Hit = Animator.StringToHash("Hit");
 
-
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player)
     {
         //player.CharacterData.
-    
         player.StartCoroutine(WaitForHitStun(player));
     }
 
@@ -27,7 +25,7 @@ public class PlayerHitStunState : PlayerBaseState
         player.HitStun = true;
         player.Animator.speed = 0;
   //      Debug.Log("HitStun");
-        yield return new WaitForSecondsRealtime(0.3f);
+        yield return new WaitForSecondsRealtime(player.PlayerHitDetection.otherPlayer.CharacterData.characterAttacks.ReturnAttackData(player.PlayerHitDetection.otherPlayer.InputReader.LastAttackInput,player.PlayerHitDetection.otherPlayer.InputReader.curState).HitStun);
 //        Debug.Log("HitStun complete");
         player.OnEnablePlayer();
         player.Animator.speed = ogSpeed;
