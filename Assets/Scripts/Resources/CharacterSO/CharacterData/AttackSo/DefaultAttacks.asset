@@ -19,8 +19,8 @@ MonoBehaviour:
     Tag: 1
     State: 0
     Damage: 10
-    Knockback: 10
-    HitStun: 1
+    Knockback: 5
+    HitStun: 0.1
     BlockStun: 0
   - Attack:
       Move: 0
@@ -28,8 +28,8 @@ MonoBehaviour:
     Tag: 0
     State: 2
     Damage: 10
-    Knockback: 10
-    HitStun: 1
+    Knockback: 5
+    HitStun: 0.1
     BlockStun: 0
   - Attack:
       Move: 0
@@ -37,8 +37,8 @@ MonoBehaviour:
     Tag: 2
     State: 1
     Damage: 10
-    Knockback: 10
-    HitStun: 1
+    Knockback: 5
+    HitStun: 0.1
     BlockStun: 0
   DefaultMedAttacks:
   - Attack:
@@ -75,8 +75,8 @@ MonoBehaviour:
     Tag: 1
     State: 0
     Damage: 30
-    Knockback: 30
-    HitStun: 2.5
+    Knockback: 20
+    HitStun: 0.7
     BlockStun: 0
   - Attack:
       Move: 0
@@ -104,5 +104,5 @@ MonoBehaviour:
     State: 0
     Damage: 10
     Knockback: 5
-    HitStun: 5
+    HitStun: 0.1
     BlockStun: 0

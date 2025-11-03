@@ -16,9 +16,9 @@ MonoBehaviour:
   gravScale: 1.5
   health: 100
   characterName: Test2
-  walkSpeed: 7
-  runSpeed: 15
-  jumpHeight: 5
+  walkSpeed: 5
+  runSpeed: 12
+  jumpHeight: 3.75
   airDashCharges: 1
   jumpCharges: 0
   damage: 0

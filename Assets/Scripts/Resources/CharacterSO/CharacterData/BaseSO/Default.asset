@@ -16,10 +16,10 @@ MonoBehaviour:
   gravScale: 1.5
   health: 100
   characterName: Default
-  walkSpeed: 7
-  runSpeed: 15
-  jumpHeight: 3.75
-  airDashCharges: 1
+  walkSpeed: 5
+  runSpeed: 12
+  jumpHeight: 3.5
+  airDashCharges: 2
   jumpCharges: 2
   damage: 0
   lightKnockback: 7
