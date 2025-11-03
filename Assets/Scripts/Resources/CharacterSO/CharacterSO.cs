@@ -24,6 +24,7 @@ public class CharacterSO : ScriptableObject
     public int damage;
     public float lightKnockback;
     public float medKnockback;
+    public float heavyKnockback;
 
     private void OnValidate()
     {

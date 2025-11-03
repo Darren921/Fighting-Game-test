@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     private readonly int Crouch = Animator.StringToHash("Crouching");
     internal int Attacking => Animator.StringToHash("Attacking");
     private int Light => Animator.StringToHash("Light");
+    private int Heavy => Animator.StringToHash("Heavy");
     private int Medium => Animator.StringToHash("Medium");
     internal int left = Animator.StringToHash("Left");
     internal int right = Animator.StringToHash("Right");
@@ -139,7 +140,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         _playerActions.Move.canceled += OnMove;
         _playerActions.Light.performed += OnLight;
         _playerActions.Medium.performed += OnMedium;
-        _playerActions.Heavy.performed += OnLight; // I don't need to explain this comment
+        _playerActions.Heavy.performed += OnHeavy; // I don't need to explain this comment
         _playerActions.Jumping.performed += OnJumping;
         _playerActions.SuperJump.performed += OnSuperJump;
         OnEnablePlayer();
@@ -357,6 +358,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         if (OnAttackCoolDown || IsAttacking || !context.performed) return;
         IsAttacking = true;
         Animator?.SetTrigger(Attacking);
+        Animator?.SetTrigger(Heavy);
     }
     
 
