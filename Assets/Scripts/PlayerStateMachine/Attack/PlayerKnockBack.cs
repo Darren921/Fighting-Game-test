@@ -66,6 +66,10 @@ public class PlayerKnockBack : MonoBehaviour
             case InputReader.AttackType.Medium:
                 hitForceTemp = player.CharacterData.medKnockback;
                 break;
+            
+            case InputReader.AttackType.Heavy:
+                hitForceTemp = player.CharacterData.heavyKnockback;
+                break;
           
         }
 

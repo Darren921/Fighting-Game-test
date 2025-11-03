@@ -24,3 +24,4 @@ MonoBehaviour:
   damage: 0
   lightKnockback: 7
   medKnockback: 14
+  heavyKnockback: 17
