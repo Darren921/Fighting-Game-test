@@ -460,11 +460,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f1743014679bc0499174aa45e187372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  left: -631945130
-  right: 1963678224
-  airborne: -910879650
+  CharacterData: {fileID: 0}
+  _playerStateManager: {fileID: 0}
+  IsCrouching: 0
+  IsDashing: 0
+  AtDashHeight: 0
+  <IsAttacking>k__BackingField: 0
+  <OnAttackCoolDown>k__BackingField: 0
+  <IsActiveFrame>k__BackingField: 0
+  IsBeingAttacked: 0
+  <PlayerMove>k__BackingField: {x: 0, y: 0, z: 0}
+  WalkSpeed: 0
+  RunSpeed: 0
+  IsWalking: 0
+  IsRunning: 0
   raycastPos: {fileID: 744356548}
+  JumpCharges: 0
+  JumpHeight: 0
+  Velocity: 0
+  DashDir: 0
+  IsGrounded: 0
+  SuperJumpActive: 0
   hitBox: {fileID: 0}
+  JumpPressed: 0
+  DecelerationDuration: 0.7
+  Decelerating: 0
+  _elapsedTime: 0
+  DecelActive: 0
+  Reversed: 0
+  HitStun: 0
+  Health: 0
+  AtBorder: 0
+  DashMarcoActive: 0
+  MinDashHeight: 0
 --- !u!1 &240122862
 GameObject:
   m_ObjectHideFlags: 0
@@ -670,11 +698,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f1743014679bc0499174aa45e187372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  left: -631945130
-  right: 1963678224
-  airborne: -910879650
+  CharacterData: {fileID: 0}
+  _playerStateManager: {fileID: 0}
+  IsCrouching: 0
+  IsDashing: 0
+  AtDashHeight: 0
+  <IsAttacking>k__BackingField: 0
+  <OnAttackCoolDown>k__BackingField: 0
+  <IsActiveFrame>k__BackingField: 0
+  IsBeingAttacked: 0
+  <PlayerMove>k__BackingField: {x: 0, y: 0, z: 0}
+  WalkSpeed: 0
+  RunSpeed: 0
+  IsWalking: 0
+  IsRunning: 0
   raycastPos: {fileID: 2016436064}
+  JumpCharges: 0
+  JumpHeight: 0
+  Velocity: 0
+  DashDir: 0
+  IsGrounded: 0
+  SuperJumpActive: 0
   hitBox: {fileID: 0}
+  JumpPressed: 0
+  DecelerationDuration: 0.7
+  Decelerating: 0
+  _elapsedTime: 0
+  DecelActive: 0
+  Reversed: 0
+  HitStun: 0
+  Health: 0
+  AtBorder: 0
+  DashMarcoActive: 0
+  MinDashHeight: 0
 --- !u!1 &310999853
 GameObject:
   m_ObjectHideFlags: 0
@@ -1226,7 +1282,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -7813590141776298306, guid: 579fe6229c2fa75489044c10c86b1b1b, type: 3}
       propertyPath: m_Materials.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -7813590141776298306, guid: 579fe6229c2fa75489044c10c86b1b1b, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -1246,7 +1302,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5822821947120931875, guid: 579fe6229c2fa75489044c10c86b1b1b, type: 3}
       propertyPath: m_Materials.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5822821947120931875, guid: 579fe6229c2fa75489044c10c86b1b1b, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -2454,7 +2510,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 679713dd768e96c4e968cc20d49b0078, type: 2}
     - target: {fileID: 6148737315974723067, guid: bfe7e7501b8591249a61abbfe47a8bfb, type: 3}
       propertyPath: m_Materials.Array.size
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6148737315974723067, guid: bfe7e7501b8591249a61abbfe47a8bfb, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
