@@ -21,11 +21,11 @@ public class PlayerAirDashState : PlayerDashState
         //    Debug.Log("PlayerDashState EnterState");
         switch (Dir)
         {
-            case InputReader.MovementInputResult.None or InputReader.MovementInputResult.Forward:
+            case InputReader.MovementInputResult.None or InputReader.MovementInputResult.Forward or InputReader.MovementInputResult.Up or InputReader.MovementInputResult.UpRight :
                 DashDir = !player.Reversed ? new Vector3(2f, 0, 0) : new Vector3(-2f, 0, 0);
                 //          Debug.Log(dashDir);
                 break;
-            case InputReader.MovementInputResult.Backward:
+            case InputReader.MovementInputResult.Backward or InputReader.MovementInputResult.UpLeft:
                 DashDir = !player.Reversed ? new Vector3(-2f, 0f, 0) : new Vector3(2f, 0f, 0);
                 //          Debug.Log(dashDir);
                 break;

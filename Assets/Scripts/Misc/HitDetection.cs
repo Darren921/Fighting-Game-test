@@ -40,16 +40,17 @@ public class HitDetection : MonoBehaviour, IDamageable
             print(Blocking);
             if (Blocking)
             {
-                
                 print("walk");
                 _player._playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Blocking);
+                _player.PlayerHitDetection.TakeDamage(otherPlayer.CharacterData.characterAttacks.ReturnAttackData(otherPlayer.InputReader.LastAttackInput,otherPlayer.InputReader.curState).Damage);
             }
             else
             {
                 _player._playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.HitStun);
+                _player.PlayerHitDetection.TakeDamage(otherPlayer.CharacterData.characterAttacks.ReturnAttackData(otherPlayer.InputReader.LastAttackInput,otherPlayer.InputReader.curState).Damage);
+
             }
             
-            _player.PlayerHitDetection.TakeDamage(otherPlayer.CharacterData.characterAttacks.ReturnAttackData(otherPlayer.InputReader.LastAttackInput,otherPlayer.InputReader.curState).Damage);
 
         }
     
@@ -143,6 +144,7 @@ public class HitDetection : MonoBehaviour, IDamageable
         // deal damage and active death event to trigger end of game 
         
         _player.Health -=  Blocking ? damage * 0.25f : damage;
+        print(_player.Health );
         OnPlayerHit?.Invoke();
         //print(otherPlayer.name);
         //print(_player.name);

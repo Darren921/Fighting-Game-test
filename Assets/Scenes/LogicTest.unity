@@ -2662,8 +2662,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: 68f6a82dce335c44186144005672cd1e, type: 2}
     - target: {fileID: 919132149155446097, guid: 9991a1062282fba4cb27621ce5b4dacb, type: 3}
+      propertyPath: m_Icon
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9991a1062282fba4cb27621ce5b4dacb, type: 3}
       propertyPath: m_Name
       value: character model (fuego)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9991a1062282fba4cb27621ce5b4dacb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

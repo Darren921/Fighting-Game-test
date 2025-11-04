@@ -371,13 +371,13 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         DashMarcoActive = true;
         switch (context.performed)
         {
-            case true when InputReader.CurrentMoveInput is not (InputReader.MovementInputResult.Forward
-                or InputReader.MovementInputResult.None) && IsGrounded:
+            case true when InputReader.CurrentMoveInput is not (InputReader.MovementInputResult.Forward or InputReader.MovementInputResult.None) && IsGrounded:
                 print("dash back");
                 PerformDash();
                 break;
             case true when !IsGrounded:
                 print("air dash");
+                if (IsDashing || IsGrounded || JumpCharges == 0 || !AtDashHeight) break;
                 PerformDash();
                 break;
             case true:
@@ -398,7 +398,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     private void PerformDash()
     {
-        if(!IsDashing)
+
         IsDashing = true;
         DashDir = InputReader.CurrentMoveInput;
         IsRunning = false;
@@ -413,7 +413,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         {
             case false:
             {
-                if (IsDashing || IsGrounded || JumpCharges <= 0 || !AtDashHeight) return;
+                if (IsDashing || IsGrounded || JumpCharges == 0 || !AtDashHeight) break;
                 print("entered dash");
                 PerformDash();
                 break;
