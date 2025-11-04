@@ -42,7 +42,7 @@ Material:
     - _Boolean: 0
     - _Colour_Threshold: 0.19
     - _Float: 1.15
-    - _Normal_Threshold: 0.46
+    - _Normal_Threshold: 0.18
     - _OVERLAY: 1
     - _saturation: 1
     m_Colors:
