@@ -1473,7 +1473,7 @@ GameObject:
   - component: {fileID: 341504902}
   m_Layer: 0
   m_Name: HItbox
-  m_TagString: Untagged
+  m_TagString: HitBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1508,7 +1508,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -2436,9 +2436,9 @@ GameObject:
   - component: {fileID: 685541187}
   - component: {fileID: 685541186}
   - component: {fileID: 685541185}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player1
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3215,7 +3215,7 @@ GameObject:
   - component: {fileID: 833347424}
   m_Layer: 0
   m_Name: HItbox
-  m_TagString: Untagged
+  m_TagString: HitBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3250,7 +3250,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -4007,7 +4007,7 @@ GameObject:
   - component: {fileID: 983489559}
   m_Layer: 3
   m_Name: HurtBox
-  m_TagString: Untagged
+  m_TagString: HurtBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4047,7 +4047,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85670b18b8191bb4abf132c10b9b4522, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  otherPlayer: {fileID: 0}
+  otherPlayer: {fileID: 2239886189421363312}
 --- !u!4 &983489561
 Transform:
   m_ObjectHideFlags: 0
@@ -6198,7 +6198,7 @@ GameObject:
   - component: {fileID: 1561997793}
   m_Layer: 3
   m_Name: HurtBox
-  m_TagString: Untagged
+  m_TagString: HurtBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6253,7 +6253,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85670b18b8191bb4abf132c10b9b4522, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  otherPlayer: {fileID: 0}
+  otherPlayer: {fileID: 685541192}
 --- !u!1 &1567957939
 GameObject:
   m_ObjectHideFlags: 0
@@ -7254,7 +7254,7 @@ Transform:
   m_GameObject: {fileID: 1959417838}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.58099985, z: 0}
+  m_LocalPosition: {x: 0, y: 0.518, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8146,9 +8146,9 @@ GameObject:
   - component: {fileID: 2239886189421363307}
   - component: {fileID: 2239886189421363306}
   - component: {fileID: 2239886189421363305}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player2
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8173,9 +8173,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.2996382
-  m_Height: 1.651381
+  m_Height: 1.6540854
   m_Direction: 1
-  m_Center: {x: 0, y: 0.8264091, z: 0.09489083}
+  m_Center: {x: 0, y: 0.8250569, z: 0.09489083}
 --- !u!54 &2239886189421363306
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -8302,7 +8302,7 @@ MonoBehaviour:
   RunSpeed: 0
   IsWalking: 0
   IsRunning: 0
-  raycastPos: {fileID: 814887841}
+  raycastPos: {fileID: 1959417839}
   JumpCharges: 0
   JumpHeight: 0
   Velocity: 0
