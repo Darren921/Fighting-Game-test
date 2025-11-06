@@ -13,7 +13,7 @@ public class CameraDistance : MonoBehaviour
         public float scale;
 
         private Camera cam;
-        [SerializeField ]Vector3 playerView;
+        [SerializeField] Vector3 playerView;
     
     
 
