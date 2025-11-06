@@ -1406,7 +1406,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0.0000000074277224, y: 0.000000024579872, z: -1.8257247e-16, w: 1}
-  m_LocalPosition: {x: -18.615, y: 8.098, z: -9}
+  m_LocalPosition: {x: -13.4425, y: 8.098, z: -9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2136,7 +2136,7 @@ MonoBehaviour:
   - Object: {fileID: 617662704}
     Weight: 1
     Radius: 0.5
-  - Object: {fileID: 0}
+  - Object: {fileID: 814887841}
     Weight: 1
     Radius: 0.5
   m_LegacyTargets: []
@@ -2149,7 +2149,7 @@ Transform:
   m_GameObject: {fileID: 450182428}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -18.615, y: 8.098, z: 0}
+  m_LocalPosition: {x: -13.680973, y: 8.098, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3321,7 +3321,7 @@ GameObject:
   m_Component:
   - component: {fileID: 814887841}
   m_Layer: 3
-  m_Name: 'tracker1 '
+  m_Name: tracker2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4431,7 +4431,7 @@ Transform:
   m_GameObject: {fileID: 1053772600}
   serializedVersion: 2
   m_LocalRotation: {x: -0.000000014806448, y: -0.0000000019524313, z: -7.316658e-11, w: 1}
-  m_LocalPosition: {x: -18.615, y: 8.098, z: -10}
+  m_LocalPosition: {x: -13.680973, y: 8.098, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
