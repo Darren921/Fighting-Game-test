@@ -18,7 +18,7 @@ MonoBehaviour:
       Type: 1
     Tag: 1
     State: 0
-    Damage: 10
+    Damage: 5
     Knockback: 5
     HitStun: 0.1
     BlockStun: 0
@@ -27,7 +27,7 @@ MonoBehaviour:
       Type: 1
     Tag: 0
     State: 2
-    Damage: 10
+    Damage: 5
     Knockback: 5
     HitStun: 0.1
     BlockStun: 0
@@ -36,7 +36,7 @@ MonoBehaviour:
       Type: 1
     Tag: 2
     State: 1
-    Damage: 10
+    Damage: 5
     Knockback: 5
     HitStun: 0.1
     BlockStun: 0
@@ -46,27 +46,27 @@ MonoBehaviour:
       Type: 2
     Tag: 1
     State: 0
-    Damage: 20
-    Knockback: 20
-    HitStun: 2
+    Damage: 10
+    Knockback: 7
+    HitStun: 0.5
     BlockStun: 0
   - Attack:
       Move: 0
       Type: 2
     Tag: 0
     State: 2
-    Damage: 20
-    Knockback: 20
-    HitStun: 2
+    Damage: 10
+    Knockback: 7
+    HitStun: 0.5
     BlockStun: 0
   - Attack:
       Move: 0
       Type: 2
     Tag: 2
     State: 1
-    Damage: 20
-    Knockback: 20
-    HitStun: 2
+    Damage: 10
+    Knockback: 7
+    HitStun: 0.5
     BlockStun: 0
   DefaultHeavyAttacks:
   - Attack:
@@ -74,27 +74,27 @@ MonoBehaviour:
       Type: 3
     Tag: 1
     State: 0
-    Damage: 30
-    Knockback: 20
-    HitStun: 0.7
+    Damage: 20
+    Knockback: 10
+    HitStun: 1
     BlockStun: 0
   - Attack:
       Move: 0
       Type: 3
     Tag: 0
     State: 2
-    Damage: 30
-    Knockback: 30
-    HitStun: 2.5
+    Damage: 20
+    Knockback: 10
+    HitStun: 1
     BlockStun: 0
   - Attack:
       Move: 0
       Type: 3
     Tag: 2
     State: 1
-    Damage: 30
-    Knockback: 30
-    HitStun: 2.5
+    Damage: 20
+    Knockback: 10
+    HitStun: 1
     BlockStun: 0
   Attacks:
   - Attack:
@@ -102,7 +102,7 @@ MonoBehaviour:
       Type: 1
     Tag: 1
     State: 0
-    Damage: 10
+    Damage: 5
     Knockback: 5
     HitStun: 0.1
     BlockStun: 0
