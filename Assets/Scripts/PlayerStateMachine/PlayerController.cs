@@ -120,7 +120,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         InputReader = GetComponent<InputReader>();
         Animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
-        RaycastDistance = 2.006f;
+        RaycastDistance = 1.807687f;
         HitDetection.OnDeath += OnPlayerDeath;
     }
 

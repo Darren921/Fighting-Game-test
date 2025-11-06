@@ -19,6 +19,7 @@ public class PlayerWalkingState : PlayerMovingState
             {
                 > 0 => 1,
                 < 0 => 0,
+                _ => player.rb.linearVelocity.x
             }
         };
         player.Animator.SetFloat("WalkDir", temp);
