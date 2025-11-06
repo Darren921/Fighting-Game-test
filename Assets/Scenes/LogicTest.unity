@@ -691,6 +691,7 @@ GameObject:
   - component: {fileID: 91029775}
   - component: {fileID: 91029774}
   - component: {fileID: 91029773}
+  - component: {fileID: 91029782}
   m_Layer: 0
   m_Name: Player2
   m_TagString: Untagged
@@ -887,6 +888,29 @@ Transform:
   - {fileID: 814887841}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &91029782
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 91029772}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.29326063
+  m_Height: 1.69
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.83, z: 0}
 --- !u!1 &102771842
 GameObject:
   m_ObjectHideFlags: 0
@@ -1406,7 +1430,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0.0000000074277224, y: 0.000000024579872, z: -1.8257247e-16, w: 1}
-  m_LocalPosition: {x: -13.4425, y: 8.098, z: -9}
+  m_LocalPosition: {x: -18.615, y: 8.098, z: -9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1715,7 +1739,6 @@ GameObject:
   m_Component:
   - component: {fileID: 416342683}
   - component: {fileID: 416342685}
-  - component: {fileID: 416342684}
   m_Layer: 0
   m_Name: Alpha_Surface
   m_TagString: Untagged
@@ -1738,29 +1761,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 91029781}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &416342684
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 416342682}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 58.483425
-  m_Height: 173.85393
-  m_Direction: 1
-  m_Center: {x: 1.0593891, y: 78.68483, z: -2.3812273}
 --- !u!137 &416342685
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
@@ -2136,7 +2136,7 @@ MonoBehaviour:
   - Object: {fileID: 617662704}
     Weight: 1
     Radius: 0.5
-  - Object: {fileID: 814887841}
+  - Object: {fileID: 0}
     Weight: 1
     Radius: 0.5
   m_LegacyTargets: []
@@ -2149,7 +2149,7 @@ Transform:
   m_GameObject: {fileID: 450182428}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -13.680973, y: 8.098, z: 0}
+  m_LocalPosition: {x: -18.615, y: 8.098, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2899,7 +2899,7 @@ Transform:
   m_GameObject: {fileID: 659549202}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0.035, y: 0.5499916, z: 0.076}
+  m_LocalPosition: {x: -0.016, y: 0.5499916, z: 0.036}
   m_LocalScale: {x: 1, y: 1.8283, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2940,7 +2940,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85670b18b8191bb4abf132c10b9b4522, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  otherPlayer: {fileID: 0}
+  otherPlayer: {fileID: 91029779}
 --- !u!1 &678255817
 GameObject:
   m_ObjectHideFlags: 0
@@ -3321,7 +3321,7 @@ GameObject:
   m_Component:
   - component: {fileID: 814887841}
   m_Layer: 3
-  m_Name: tracker2
+  m_Name: 'tracker1 '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4431,7 +4431,7 @@ Transform:
   m_GameObject: {fileID: 1053772600}
   serializedVersion: 2
   m_LocalRotation: {x: -0.000000014806448, y: -0.0000000019524313, z: -7.316658e-11, w: 1}
-  m_LocalPosition: {x: -13.680973, y: 8.098, z: -10}
+  m_LocalPosition: {x: -18.615, y: 8.098, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8765,6 +8765,7 @@ GameObject:
   - component: {fileID: 4184408388660890814}
   - component: {fileID: 4184408388660890813}
   - component: {fileID: 4184408388660890812}
+  - component: {fileID: 4184408388660890819}
   m_Layer: 0
   m_Name: Player1
   m_TagString: Untagged
@@ -9168,6 +9169,29 @@ MonoBehaviour:
   AtBorder: 0
   DashMarcoActive: 0
   MinDashHeight: 0
+--- !u!136 &4184408388660890819
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3556104204877321728}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.29326063
+  m_Height: 1.69
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.83, z: 0}
 --- !u!1 &4229181500222970365
 GameObject:
   m_ObjectHideFlags: 0
@@ -10247,7 +10271,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2297360833585024917}
   - component: {fileID: 7878600643241099122}
-  - component: {fileID: 7878600643241099123}
   m_Layer: 0
   m_Name: Alpha_Surface
   m_TagString: Untagged
@@ -10457,29 +10480,6 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.20558167, y: -10.389099, z: -2.5981045}
     m_Extent: {x: 38.48991, y: 86.92359, z: 45.63881}
   m_DirtyAABB: 0
---- !u!136 &7878600643241099123
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7531041326597600403}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 58.483425
-  m_Height: 173.85393
-  m_Direction: 1
-  m_Center: {x: 1.0593891, y: 78.68483, z: -2.3812273}
 --- !u!4 &7951081512402747461
 Transform:
   m_ObjectHideFlags: 0
