@@ -3,43 +3,58 @@ using UnityEngine;
 
 public class CameraDistance : MonoBehaviour
 {
-    
-        public Transform fighter1;
-        public Transform fighter2;
-        public float zoomSpeed = 2f;
-        public float minZoom = 5f;
-        public float maxZoom = 15f;
-        public float margin = 2f;
-        public float scale;
 
-        private Camera cam;
-        [SerializeField] Vector3 playerView;
+    [SerializeField] GameObject Player1;
+    [SerializeField] GameObject Player2;
+    private Camera cam;
+    [SerializeField] Vector3 playerView1;
+    [SerializeField] GameObject wall;
+    [SerializeField] GameObject wall2;
+    [SerializeField] GameObject wall3;
+    [SerializeField] GameObject wall4;
     
-    
+    [SerializeField] Vector3 playerView2;
+    [SerializeField] Transform P1wallR;
+    [SerializeField] Transform P1wallL;
+    [SerializeField] Transform P2wallR;
+    [SerializeField] Transform P2wallL;
 
+    [SerializeField] Transform WallStartPos;
+
+
+    [SerializeField] GameObject Tracker1;
+    [SerializeField] GameObject Tracker2;
     void Start()
-        {
-            cam = GetComponent<Camera>();
-        }
+    {
+        cam = GetComponent<Camera>();
+    }
 
         void Update()
         {
-            float dis = Vector3.Distance(fighter1.position, fighter2.position) * scale;
-            if (dis < minZoom)
-            {
-                cam.fieldOfView = minZoom;
-            }
-            else if (dis > maxZoom)
-
-            {
-                cam.fieldOfView = maxZoom;
-            }
-            else if (dis < maxZoom && dis > minZoom)
-            {
-                cam.fieldOfView = dis;
-            }
-            playerView = cam.WorldToViewportPoint(fighter1.position);
+            Tracker1.transform.position = Player1.transform.position + new Vector3(0,2,0);
+            Tracker2.transform.position = Player2.transform.position + new Vector3(0,2,0);
             
-        }
+            playerView1 = cam.WorldToViewportPoint(Player1.transform.position);
+            playerView2 = cam.WorldToViewportPoint(Player2.transform.position);
+            float dis = Vector3.Distance(Player1.transform.position, Player2.transform.position);
+            if (playerView1.x <= 0.08 && dis > 20)
+            {
+                wall.transform.position = P1wallL.transform.position;
+            }
+            else if (playerView1.x >= 0.1 && dis < 20) 
+            {
+                wall.transform.position = WallStartPos.transform.position;
+            }
+            if (playerView1.x >0.9f && dis > 20)
+            {
+                wall2.transform.position = P1wallR.transform.position;
+            }
+            else if (playerView1.x <= 0.9 && dis < 20)
+            {
+                wall2.transform.position = WallStartPos.transform.position;
+            }   
+
+    }
+        
     
 }
