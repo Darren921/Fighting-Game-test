@@ -37,8 +37,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Float: 0
+    - _Float: 19.95
     m_Colors:
-    - _Vector3: {r: -1.77, g: -1.91, b: 1.68, a: 0}
+    - _Vector3: {r: -9.56, g: -5.02, b: 1.68, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

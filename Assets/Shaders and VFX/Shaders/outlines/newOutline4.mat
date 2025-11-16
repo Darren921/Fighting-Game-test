@@ -12,6 +12,7 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
+  - _BOOLEAN
   - _OVERLAY
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -38,11 +39,11 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BOOLEAN: 0
+    - _BOOLEAN: 1
     - _Boolean: 0
-    - _Colour_Threshold: 0.13
+    - _Colour_Threshold: -0.42
     - _Float: 1.15
-    - _Normal_Threshold: 1.53
+    - _Normal_Threshold: -0.38
     - _OVERLAY: 1
     - _saturation: 1
     m_Colors:

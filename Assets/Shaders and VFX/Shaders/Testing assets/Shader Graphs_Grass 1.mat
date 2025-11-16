@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Shader Graphs_white gb 4
-  m_Shader: {fileID: -6465566751694194690, guid: 87a7512031ffa8f46873b13a4ddd96ff, type: 3}
+  m_Name: Shader Graphs_Grass 1
+  m_Shader: {fileID: -6465566751694194690, guid: ef8aa444f073a1b4397dd76c0d9d4e47, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -42,16 +42,16 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Float: 0.002
+    - _Float: 0
     - _Float_1: 0
     - _QueueControl: 0
     - _QueueOffset: 0
-    m_Colors:
-    - _Color: {r: 0, g: 0, b: 0, a: 0}
-    - _Vector3: {r: 0, g: 0, b: 0, a: 0}
+    - _max: 0
+    - _min: 0
+    m_Colors: []
   m_BuildTextureStacks: []
   m_AllowLocking: 1
---- !u!114 &3829593963027345786
+--- !u!114 &2373023975468021743
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}

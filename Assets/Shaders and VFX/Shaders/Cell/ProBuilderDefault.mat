@@ -52,33 +52,40 @@ Material:
   m_Name: ProBuilderDefault
   m_Shader: {fileID: -6465566751694194690, guid: 9160d11c4f7316443b5ce78648eef806, type: 3}
   m_Parent: {fileID: 2100000, guid: 0f9196e3d255b61489d0e88b2a5a0db0, type: 2}
-  m_ModifiedSerializedProperties: 0
+  m_ModifiedSerializedProperties: 16
   m_ValidKeywords:
-  - _ALPHAPREMULTIPLY_ON
   - _SPECULAR_SETUP
-  - _SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 2000
   stringTagMap:
     MotionVector: User
-    RenderType: Transparent
+    RenderType: Opaque
   disabledShaderPasses:
   - MOTIONVECTORS
   - TransparentDepthPrepass
   - TransparentDepthPostpass
   - TransparentBackface
   - RayTracingPrepass
-  - DepthOnly
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _Shades: 0.72
+    - _AlphaClip: 0
+    - _CastShadows: 1
+    - _Cull: 0
+    - _DstBlend: 0
+    - _Float: -2.46
+    - _MaxBright: 1.54
+    - _Shades: -0.6
+    - _Surface: 0
+    - _ZWrite: 1
+    - _offset: -1.71
+    - _smoothness: 3.3
     m_Colors:
     - _Color: {r: 0, g: 0.9329295, b: 1, a: 1}
   m_BuildTextureStacks: []
