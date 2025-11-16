@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
             {
                 player.gameObject.SetActive(false);
             }
-            SceneManager.LoadScene("LogicTest");
+            SceneManager.LoadScene(1);
         }
     }
 
