@@ -4,17 +4,23 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+
 public class GameManager : MonoBehaviour
 {
     public class ReadOnlyAttribute : PropertyAttribute { }
-    [SerializeField] private PlayerController[] players;
+    [SerializeField] internal List<PlayerController> players;
    [SerializeField] private CharacterSODataBase characterDatabase;
 
     private readonly List<InputDevice> _availableDevices = new ();
 
     private const int MinDistance = 1;
 
-
+    [SerializeField] private GameObject GameOverScreen;
+   [SerializeField] private Sprite _p1WinSprite, _p2WinSprite; 
+   [SerializeField] private Image WinSplashScreen;
+    
+    
     private void Awake()
     {
         // CHANGE THIS TO ACCEPT INPUT FROM CHARACTER SELECTION, THIS HURTS TO LEAVE
@@ -27,6 +33,8 @@ public class GameManager : MonoBehaviour
         
         HitDetection.OnDeath += OnPlayerDeath;
         Application.targetFrameRate = 60;
+        
+        
     //    Time.timeScale = 0.1f;
     
         // temp method to add devices to a pool in order to connect them to a player 
@@ -60,7 +68,7 @@ public class GameManager : MonoBehaviour
     {
         HitDetection.OnDeath -= OnPlayerDeath;
     }
-
+    
     private void OnPlayerDeath()
     {
         foreach (var player in players)
@@ -71,8 +79,20 @@ public class GameManager : MonoBehaviour
             {
                 player.gameObject.SetActive(false);
             }
-            SceneManager.LoadScene(1);
         }
+        DisplayWinScreen();
+
+    }
+
+    private void DisplayWinScreen()
+    {
+        var winner = players.Find(controller => controller.Health > 0);
+        GameOverScreen.gameObject.SetActive(true);
+        Debug.Log(winner.name);
+        Debug.Log( winner == players[0] );
+        Debug.Log( players[0].name);
+        WinSplashScreen.sprite = winner == players[0] ? _p1WinSprite : _p2WinSprite;
+        Time.timeScale = 0;
     }
 
 
@@ -102,7 +122,7 @@ public class GameManager : MonoBehaviour
 
     private void ConnectPlayer()
     {
-        for (var i = 0; i < players.Length; i++)
+        for (var i = 0; i < players.Count; i++)
         {
             if (i < _availableDevices.Count)
             {

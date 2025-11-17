@@ -62,11 +62,11 @@ public class HitDetection : MonoBehaviour, IDamageable
 
     private bool CheckBlocking()
     {
-        print(_player._playerStateManager.CurrentStateName );
-        print(_player.InputReader.CurrentMoveInput);
+    //    print(_player._playerStateManager.CurrentStateName );
+    //    print(_player.InputReader.CurrentMoveInput);
         
-        if (_player._playerStateManager.currentState == _player._playerStateManager.States[PlayerStateManager.PlayerStateTypes.Walking] ||  _player._playerStateManager.currentState == _player._playerStateManager.States[PlayerStateManager.PlayerStateTypes.Crouching] 
-            && _player.InputReader.CurrentMoveInput is InputReader.MovementInputResult.Backward or InputReader.MovementInputResult.DownLeft)
+        if (_player._playerStateManager.currentState == _player._playerStateManager.States[PlayerStateManager.PlayerStateTypes.Walking] ||  _player._playerStateManager.currentState == _player._playerStateManager.States[PlayerStateManager.PlayerStateTypes.Crouching] || _player._playerStateManager.currentState ==  _player._playerStateManager.States[PlayerStateManager.PlayerStateTypes.Jumping] 
+            && _player.InputReader.CurrentMoveInput is InputReader.MovementInputResult.Backward or InputReader.MovementInputResult.DownLeft or InputReader.MovementInputResult.UpLeft)
         {
             switch (_player.InputReader.curState)
             {
@@ -80,6 +80,8 @@ public class HitDetection : MonoBehaviour, IDamageable
                     print(otherPlayer.InputReader.curState );
                     if(otherPlayer.InputReader.curState != AttackData.States.Jumping) return true;
                     break;
+                case AttackData.States.Jumping:
+                    return true;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -144,7 +146,7 @@ public class HitDetection : MonoBehaviour, IDamageable
         // deal damage and active death event to trigger end of game 
         
         _player.Health -=  Blocking ? damage * 0.25f : damage;
-        print(_player.Health );
+//        print(_player.Health );
         OnPlayerHit?.Invoke();
         //print(otherPlayer.name);
         //print(_player.name);
