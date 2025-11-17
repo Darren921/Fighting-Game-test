@@ -78,7 +78,6 @@ public class PlayerStateManager : MonoBehaviour
     public void ResetStateMachine()
     {
         currentState = States[PlayerStateTypes.Neutral];
-        currentState.EnterState(this, _player);
     }
 
     void Update()

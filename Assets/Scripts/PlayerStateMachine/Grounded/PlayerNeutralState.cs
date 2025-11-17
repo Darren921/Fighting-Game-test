@@ -10,7 +10,8 @@ public class PlayerNeutralState : PlayerBaseState
 
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player )
     {
-        _idleCoroutine = player.StartCoroutine(CheckIfIdle(player));
+        if(player is  null) return;
+        _idleCoroutine = player?.StartCoroutine(CheckIfIdle(player));
         player.rb.linearVelocity = Vector3.zero;
 //        Debug.Log("Entered PlayerNeutralState");
     }

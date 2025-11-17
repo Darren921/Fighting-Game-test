@@ -162,8 +162,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     private void OnPlayerDeath()
     {
         InputReader.enabled = false;
-        StopAllCoroutines();
         _playerStateManager.ResetStateMachine();
+        StopAllCoroutines();
         _playerActions.RemoveCallbacks(this);
         HitDetection.OnDeath -= OnPlayerDeath;
         _playerActions.Disable();

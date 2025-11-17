@@ -23,7 +23,7 @@ public class PlayerBlockingState : PlayerBaseState
 
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
-        if (player.InputReader.CurrentMoveInput != InputReader.MovementInputResult.Backward )
+        if (player.InputReader.CurrentMoveInput != InputReader.MovementInputResult.Backward && player.InputReader.CurrentMoveInput != InputReader.MovementInputResult.DownLeft)
         {
             playerStateManager.SwitchToLastState();
         }
