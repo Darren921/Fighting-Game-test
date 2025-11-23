@@ -28,7 +28,7 @@ AnimationClip:
         inWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
       - serializedVersion: 3
-        time: 0.18333334
+        time: 0.28333333
         value: {x: -0.16, y: 1.17, z: 1.5599}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
@@ -54,7 +54,7 @@ AnimationClip:
         inWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
       - serializedVersion: 3
-        time: 0.18333334
+        time: 0.28333333
         value: {x: 1.7, y: 0.66, z: 1}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
@@ -81,7 +81,7 @@ AnimationClip:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.18333334
+        time: 0.28333333
         value: 1
         inSlope: Infinity
         outSlope: Infinity
@@ -120,7 +120,7 @@ AnimationClip:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.18333334
+        time: 0.28333333
         value: 1
         inSlope: Infinity
         outSlope: Infinity
@@ -150,7 +150,7 @@ AnimationClip:
     curve:
     - time: 0
       value: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
-    - time: 0.36666667
+    - time: 0.28333333
       value: {fileID: 2100000, guid: d39712bc2e34c1247b9cd2c2995f5432, type: 2}
     - time: 0.71666664
       value: {fileID: 2100000, guid: 68f6a82dce335c44186144005672cd1e, type: 2}
@@ -250,7 +250,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.18333334
+        time: 0.28333333
         value: -0.16
         inSlope: 0
         outSlope: 0
@@ -280,7 +280,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.18333334
+        time: 0.28333333
         value: 1.17
         inSlope: 0
         outSlope: 0
@@ -310,7 +310,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.18333334
+        time: 0.28333333
         value: 1.5599
         inSlope: 0
         outSlope: 0
@@ -340,7 +340,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.18333334
+        time: 0.28333333
         value: 1.7
         inSlope: 0
         outSlope: 0
@@ -370,7 +370,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.18333334
+        time: 0.28333333
         value: 0.66
         inSlope: 0
         outSlope: 0
@@ -400,7 +400,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.18333334
+        time: 0.28333333
         value: 1
         inSlope: 0
         outSlope: 0
@@ -430,7 +430,7 @@ AnimationClip:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.18333334
+        time: 0.28333333
         value: 1
         inSlope: Infinity
         outSlope: Infinity
@@ -469,7 +469,7 @@ AnimationClip:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.18333334
+        time: 0.28333333
         value: 1
         inSlope: Infinity
         outSlope: Infinity
@@ -505,7 +505,7 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.36666667
+  - time: 0.28333333
     functionName: SetUpActiveFrame
     data: 
     objectReferenceParameter: {fileID: 0}
@@ -520,14 +520,14 @@ AnimationClip:
     intParameter: 0
     messageOptions: 0
   - time: 0.71666664
-    functionName: SetAttacking
+    functionName: ResetRecoveryFrame
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 0.71666664
-    functionName: ResetRecoveryFrame
+    functionName: SetAttacking
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

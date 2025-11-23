@@ -19,22 +19,43 @@ public class PlayerAirDashState : PlayerDashState
         Dir = player.DashDir;
         //   Debug.Log(dir);
         //    Debug.Log("PlayerDashState EnterState");
+
         switch (Dir)
         {
-            case InputReader.MovementInputResult.None or InputReader.MovementInputResult.Forward or InputReader.MovementInputResult.Up or InputReader.MovementInputResult.UpRight :
-                DashDir = !player.Reversed ? new Vector3(2f, 0, 0) : new Vector3(-2f, 0, 0);
-                //          Debug.Log(dashDir);
+            case InputReader.MovementInputResult.None or InputReader.MovementInputResult.Up:
+                DashDir = !player.Reversed ? Vector3.right : Vector3.left;
+                break;
+            case InputReader.MovementInputResult.Forward  or InputReader.MovementInputResult.UpRight:
+                DashDir = Vector3.right;
                 break;
             case InputReader.MovementInputResult.Backward or InputReader.MovementInputResult.UpLeft:
-                DashDir = !player.Reversed ? new Vector3(-2f, 0f, 0) : new Vector3(2f, 0f, 0);
-                //          Debug.Log(dashDir);
+                DashDir = Vector3.left;
                 break;
         }
-
-        NewDashVelo = DashDir * (DashDistance / DashTime);
+        if(player.Reversed && !player.DashMarcoActive) DashDir *= -1;
+        NewDashVelo = DashDir * (2 * (DashDistance / DashTime));
     }
 
+    /*switch (Dir)
+           {
+               case InputReader.MovementInputResult.None or InputReader.MovementInputResult.Forward or InputReader.MovementInputResult.Up :
+                   DashDir = !player.Reversed ? new Vector3(2f, 0, 0) : new Vector3(-2f, 0, 0);
+                   //          Debug.Log(dashDir);
+                   break;
+               case InputReader.MovementInputResult.Backward :
+                   DashDir = !player.Reversed ? new Vector3(-2f, 0f, 0) : new Vector3(2f, 0f, 0);
+                   //          Debug.Log(dashDir);
+                   break;
+               case InputReader.MovementInputResult.UpLeft:
+                   if(player.DashMarcoActive)   DashDir =  new Vector3(-2f, 0, 0);
+                   else DashDir = !player.Reversed ? new Vector3(2f, 0, 0) : new Vector3(-2f, 0, 0);
+                   break;
+               case InputReader.MovementInputResult.UpRight:
+                   if(player.DashMarcoActive)   DashDir = new Vector3(2f, 0, 0);
+                   else DashDir = !player.Reversed ? new Vector3(-2f, 0, 0) : new Vector3(2f, 0, 0);
+                   break;
 
+           }*/
     private IEnumerator AirDash(PlayerController player)
     {
         //    Debug.Log("PlayerDashState Dash");

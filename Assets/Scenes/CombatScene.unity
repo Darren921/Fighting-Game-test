@@ -17789,7 +17789,7 @@ MonoBehaviour:
   DashDir: 0
   IsGrounded: 0
   SuperJumpActive: 0
-  hitBox: {fileID: 983489558}
+  hitBox: {fileID: 341504900}
   JumpPressed: 0
   DecelerationDuration: 0.7
   Decelerating: 0

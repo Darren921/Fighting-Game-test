@@ -15,7 +15,7 @@ public class HitDetection : MonoBehaviour, IDamageable
     public static event Action OnDeath;
     public static event Action OnPlayerHit;
     internal bool _hit;
-    bool Blocking;
+    internal bool Blocking;
 
     private void Awake()
     {
@@ -83,7 +83,7 @@ public class HitDetection : MonoBehaviour, IDamageable
                 case AttackData.States.Jumping:
                     return true;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    return false;
             }
             
         }

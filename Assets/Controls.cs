@@ -374,6 +374,17 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""b95ab69a-91ed-4714-9748-a9da8bf85942"",
+                    ""path"": ""<Gamepad>/select"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""DashMacro"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""986feb2e-b1db-4b97-b5d3-283233b68f2b"",
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
@@ -494,20 +505,9 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": """",
-                    ""id"": ""24697049-9df2-4465-8b93-f45f625502f8"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""SuperJump"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
                     ""name"": ""One Modifier"",
                     ""id"": ""3d69c99f-98a4-4c43-85b3-161eb26d8aa5"",
-                    ""path"": ""OneModifier"",
+                    ""path"": ""OneModifier(modifiersOrder=1)"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -521,7 +521,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/dpad/down"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Gamepad"",
                     ""action"": ""SuperJump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -532,7 +532,40 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/dpad/up"",
                     ""interactions"": """",
                     ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""SuperJump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""One Modifier"",
+                    ""id"": ""ade57997-a884-4386-8b17-d1292865f1ab"",
+                    ""path"": ""OneModifier"",
+                    ""interactions"": """",
+                    ""processors"": """",
                     ""groups"": """",
+                    ""action"": ""SuperJump"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""modifier"",
+                    ""id"": ""a8ad7305-cf8f-404e-9003-2a47c3d452e2"",
+                    ""path"": ""<Gamepad>/leftStick/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""SuperJump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""binding"",
+                    ""id"": ""255f7c3a-3273-4d9e-ad98-7d72da5831e2"",
+                    ""path"": ""<Gamepad>/leftStick/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
                     ""action"": ""SuperJump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
