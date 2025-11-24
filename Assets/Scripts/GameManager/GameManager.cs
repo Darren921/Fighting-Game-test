@@ -1,37 +1,49 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
-
 public class GameManager : MonoBehaviour
 {
-    public class ReadOnlyAttribute : PropertyAttribute { }
+    public class ReadOnlyAttribute : PropertyAttribute { } 
     [SerializeField] internal List<PlayerController> players;
    [SerializeField] private CharacterSODataBase characterDatabase;
+   private readonly List<InputDevice> _availableDevices = new (); 
+   private const int MinDistance = 1;
 
-    private readonly List<InputDevice> _availableDevices = new ();
-
-    private const int MinDistance = 1;
-
-    [SerializeField] private GameObject GameOverScreen;
+   [Header ("Win Screen Settings")]
+   [SerializeField] private GameObject GameOverScreen;
    [SerializeField] private Sprite _p1WinSprite, _p2WinSprite; 
    [SerializeField] private Image WinSplashScreen;
     
     
+   [Header("Round Timer")]
+   private float _roundTimer = 90;
+
+   private int _roundTimerInt; 
+   
+   [SerializeField] private TextMeshProUGUI timerText;
+   [SerializeField] private TMP_SpriteAsset normalTimerSprite, lowTimerSprite;
     private void Awake()
     {
+        _roundTimer = 90;
+        StartCoroutine(StartTimer());
         // CHANGE THIS TO ACCEPT INPUT FROM CHARACTER SELECTION, THIS HURTS TO LEAVE
         foreach (var player in players)
         {
             player.CharacterData = characterDatabase.defaultCharacterSo;
         }
 
+        UpdateRoundTimer();
         Time.timeScale = 1;
         
-        HitDetection.OnDeath += OnPlayerDeath;
+        HitDetection.OnDeath += OnRoundEnd;
         Application.targetFrameRate = 60;
         
         
@@ -64,33 +76,49 @@ public class GameManager : MonoBehaviour
         };
     }
 
+    private IEnumerator StartTimer()
+    {
+        while (_roundTimer > 0)
+        {
+            _roundTimer -= Time.deltaTime;
+            _roundTimerInt = Mathf.RoundToInt(_roundTimer);
+            UpdateRoundTimer();
+            yield return null;
+        }
+    }
+
+    private void UpdateRoundTimer()
+    {
+        var digits = _roundTimerInt.ToString(CultureInfo.InvariantCulture).Length;
+        
+        
+    }
+
+
     private void OnDestroy()
     {
-        HitDetection.OnDeath -= OnPlayerDeath;
+        HitDetection.OnDeath -= OnRoundEnd;
     }
     
-    private void OnPlayerDeath()
+    private void OnRoundEnd()
     {
         foreach (var player in players)
         {
             if(player.Animator is not null)  player.Animator.enabled = false;
             player.hitBox.SetActive(false);
-            if (player.Health <= 0)
+            if (player.isDead)
             {
                 player.gameObject.SetActive(false);
             }
         }
-        DisplayWinScreen();
+        DisplayEndScreen();
 
     }
 
-    private void DisplayWinScreen()
+    private void DisplayEndScreen()
     {
         var winner = players.Find(controller => controller.Health > 0);
         GameOverScreen.gameObject.SetActive(true);
-        Debug.Log(winner.name);
-        Debug.Log( winner == players[0] );
-        Debug.Log( players[0].name);
         WinSplashScreen.sprite = winner == players[0] ? _p1WinSprite : _p2WinSprite;
         Time.timeScale = 0;
     }

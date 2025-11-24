@@ -106,8 +106,10 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     [SerializeField]  internal bool AtBorder;
     [SerializeField]  internal bool DashMarcoActive;
     [SerializeField] private float MinDashHeight;
-
+     
     #endregion
+
+    internal bool isDead; 
 
     private void Awake()
     {
@@ -165,6 +167,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     private void OnPlayerDeath()
     {
+        
         InputReader.enabled = false;
         _playerStateManager.ResetStateMachine();
         StopAllCoroutines();

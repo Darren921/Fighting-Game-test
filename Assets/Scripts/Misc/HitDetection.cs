@@ -156,6 +156,7 @@ public class HitDetection : MonoBehaviour, IDamageable
 
         if (_player.Health <= 0)
         {
+            _player.isDead = true;
             OnDeath?.Invoke();
         }
     }
