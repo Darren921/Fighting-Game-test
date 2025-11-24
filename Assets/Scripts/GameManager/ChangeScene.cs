@@ -4,8 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class ChangeScene : MonoBehaviour
 {
-    [SerializeField] Animator UIAnim;
-    [SerializeField] Animator WorldUIanim;
+    
     public void LoadGame()
     {
         SceneManager.LoadScene(0);
@@ -17,24 +16,10 @@ public class ChangeScene : MonoBehaviour
     }
     public void StartGame()
     {
-        StartCoroutine(StartChar());
+        SceneManager.LoadScene(1);
     }
-    public void Back()
-    {
-        StartCoroutine(back2Menu());
-    }
-    IEnumerator StartChar()
-    {
-        UIAnim.Play("ToChar");
-        yield return new WaitForSeconds(0.5f);
-        WorldUIanim.Play("CharSelect");
-    }
-    IEnumerator back2Menu()
-    {
-        WorldUIanim.Play("BackToMain");
-        yield return new WaitForSeconds(0.5f);
-        UIAnim.Play("MenuStart");
-    }
+   
+    
 
     public void ExitGame()
     {

@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Shader Graphs_white gb 4
-  m_Shader: {fileID: -6465566751694194690, guid: 87a7512031ffa8f46873b13a4ddd96ff, type: 3}
+  m_Name: fres
+  m_Shader: {fileID: -6465566751694194690, guid: 064a357230c0cca4883ec43de44630da, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -24,10 +24,6 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _Texture2D:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -42,16 +38,16 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Float: 0.003
-    - _Float_1: 0
+    - _Float: 0
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _edge: 0.07
+    - _strength: 5.33
     m_Colors:
-    - _Color: {r: 0, g: 0, b: 0, a: 0}
-    - _Vector3: {r: 0, g: 0, b: 0, a: 0}
+    - _Color: {r: 0, g: 0.99086285, b: 1, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
---- !u!114 &3829593963027345786
+--- !u!114 &3299298777161145116
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
