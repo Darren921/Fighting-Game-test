@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 1bece099825cbdc499f8b0c68d371d32
+guid: 5cfa4b939b56dbb45915d4a34017660b
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - Untitled2
+  - FightingGameFont
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0
