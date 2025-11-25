@@ -386,6 +386,17 @@
                     "isPartOfComposite": false
                 },
                 {
+                    "name": "",
+                    "id": "4337da98-7763-4502-8b13-6e80185cddaa",
+                    "path": "<Gamepad>/leftStick/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Jumping",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
                     "name": "One Modifier",
                     "id": "ce6c2240-179e-4861-a10f-9acc1a01b68d",
                     "path": "OneModifier(modifiersOrder=2)",

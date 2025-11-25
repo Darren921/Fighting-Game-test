@@ -22,17 +22,20 @@ public class GameManager : MonoBehaviour
    [SerializeField] private Sprite _p1WinSprite, _p2WinSprite; 
    [SerializeField] private Image WinSplashScreen;
     
-    
    [Header("Round Timer")]
-   private float _roundTimer = 90;
-
-   private int _roundTimerInt; 
-   
    [SerializeField] private TextMeshProUGUI timerText;
-   [SerializeField] private TMP_SpriteAsset normalTimerSprite, lowTimerSprite;
+   [SerializeField] private bool isLowTime;
+   private float _roundTimer = 90;
+   private float _currentRoundTimer;
+   private int _roundTimerInt; 
+   private Action LowTimeAction;
+   private bool activated;
+   [SerializeField] private TMP_ColorGradient normal, lowTime;
+
+
     private void Awake()
     {
-        _roundTimer = 90;
+        _currentRoundTimer = _roundTimer;
         StartCoroutine(StartTimer());
         // CHANGE THIS TO ACCEPT INPUT FROM CHARACTER SELECTION, THIS HURTS TO LEAVE
         foreach (var player in players)
@@ -45,7 +48,7 @@ public class GameManager : MonoBehaviour
         
         HitDetection.OnDeath += OnRoundEnd;
         Application.targetFrameRate = 60;
-        
+        LowTimeAction += SwapColor;
         
     //    Time.timeScale = 0.1f;
     
@@ -76,28 +79,43 @@ public class GameManager : MonoBehaviour
         };
     }
 
+
+    private void SwapColor()
+    {
+        timerText.colorGradientPreset = lowTime;
+        LowTimeAction -= SwapColor;
+    }
+
     private IEnumerator StartTimer()
     {
-        while (_roundTimer > 0)
+        while (_currentRoundTimer > 0)
         {
-            _roundTimer -= Time.deltaTime;
-            _roundTimerInt = Mathf.RoundToInt(_roundTimer);
+            _currentRoundTimer -= Time.deltaTime;
             UpdateRoundTimer();
             yield return null;
+
         }
+        OnRoundEnd();
+     
+
     }
 
     private void UpdateRoundTimer()
     {
-        var digits = _roundTimerInt.ToString(CultureInfo.InvariantCulture).Length;
-        
-        
+        timerText.text =  Mathf.RoundToInt( _currentRoundTimer).ToString();
+        if (_currentRoundTimer <= 10 && !activated)
+        {
+            activated = true;
+            print("nice");
+            LowTimeAction?.Invoke();
+        }
     }
 
 
     private void OnDestroy()
     {
         HitDetection.OnDeath -= OnRoundEnd;
+        
     }
     
     private void OnRoundEnd()
@@ -117,7 +135,7 @@ public class GameManager : MonoBehaviour
 
     private void DisplayEndScreen()
     {
-        var winner = players.Find(controller => controller.Health > 0);
+        var winner = players.Where(player => player.Health > 0 ).OrderByDescending(player => player.Health).FirstOrDefault();
         GameOverScreen.gameObject.SetActive(true);
         WinSplashScreen.sprite = winner == players[0] ? _p1WinSprite : _p2WinSprite;
         Time.timeScale = 0;

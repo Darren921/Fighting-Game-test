@@ -20,20 +20,18 @@ public class PlayerAirDashState : PlayerDashState
         //   Debug.Log(dir);
         //    Debug.Log("PlayerDashState EnterState");
 
-        switch (Dir)
+        DashDir = Dir switch
         {
-            case InputReader.MovementInputResult.None or InputReader.MovementInputResult.Up:
-                DashDir = !player.Reversed ? Vector3.right : Vector3.left;
-                break;
-            case InputReader.MovementInputResult.Forward  or InputReader.MovementInputResult.UpRight:
-                DashDir = Vector3.right;
-                break;
-            case InputReader.MovementInputResult.Backward or InputReader.MovementInputResult.UpLeft:
-                DashDir = Vector3.left;
-                break;
-        }
-        if(player.Reversed && !player.DashMarcoActive) DashDir *= -1;
-        NewDashVelo = DashDir * (2 * (DashDistance / DashTime));
+            InputReader.MovementInputResult.Forward or InputReader.MovementInputResult.None or InputReader.MovementInputResult.Up => !player.Reversed ? Vector3.right : Vector3.left,
+            InputReader.MovementInputResult.Backward => !player.Reversed ? Vector3.left : Vector3.right,
+            InputReader.MovementInputResult.UpLeft => Vector3.left,
+            InputReader.MovementInputResult.UpRight => Vector3.right,
+            _ => DashDir
+        };
+        Debug.Log(DashDir);
+            NewDashVelo = DashDir * (2 * (DashDistance / DashTime));
+       
+     
     }
 
     /*switch (Dir)

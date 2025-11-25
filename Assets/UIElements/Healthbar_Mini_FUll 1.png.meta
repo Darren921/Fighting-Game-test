@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 4c6d7fcd1080c794dbbf7a128b79719a
+guid: 5f188eb2fc39d1840ad19240e65c07d2
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -43,7 +43,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -72,7 +72,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -100,12 +100,12 @@ TextureImporter:
       name: Healthbar_Mini_FUll_0
       rect:
         serializedVersion: 2
-        x: 172
-        y: 218
+        x: 171
+        y: 222
         width: 419
         height: 619
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -119,37 +119,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Healthbar_Mini_FUll_1
-      rect:
-        serializedVersion: 2
-        x: 1346
-        y: 211
-        width: 425
-        height: 646
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: adfb8ffaf34317941ae46fee6c4e122c
-      internalID: -300131954
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: Healthbar_Mini_FUll_2
       rect:
         serializedVersion: 2
-        x: 587
-        y: 300
-        width: 758
-        height: 474
+        x: 590
+        y: 287
+        width: 753
+        height: 506
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -158,6 +136,28 @@ TextureImporter:
       bones: []
       spriteID: c6a56a2c572fa1949b6e6c93c0103c46
       internalID: 1724212944
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Healthbar_Mini_FUll 1_0
+      rect:
+        serializedVersion: 2
+        x: 1342
+        y: 221
+        width: 419
+        height: 619
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ecb8a21fd837e4744a69d4f5f80932a2
+      internalID: 1858848976
       vertices: []
       indices: 
       edges: []
@@ -176,6 +176,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
+      Healthbar_Mini_FUll 1_0: 1858848976
       Healthbar_Mini_FUll_0: -2110240883
       Healthbar_Mini_FUll_1: -300131954
       Healthbar_Mini_FUll_2: 1724212944
