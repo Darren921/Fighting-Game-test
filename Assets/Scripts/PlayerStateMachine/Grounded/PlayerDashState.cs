@@ -80,7 +80,7 @@ public class PlayerDashState : PlayerMovingState
             _dashCoroutine = null;
         }
         player.IsDashing = false;
-        
+        player.Animator.ResetTrigger(player.Dashing);
         Debug.Log("PlayerDashState ExitState");
     }
 }

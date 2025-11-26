@@ -110,5 +110,6 @@ public class PlayerAirDashState : PlayerDashState
     internal override void ExitState(PlayerStateManager playerStateManager, PlayerController player)
     {
         player.IsDashing = false;
+        player.Animator.ResetTrigger(player.Dashing);
     }
 }
