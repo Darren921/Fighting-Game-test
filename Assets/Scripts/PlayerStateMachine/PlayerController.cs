@@ -14,6 +14,9 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     private readonly int Running = Animator.StringToHash("Running");
     internal readonly int Jump = Animator.StringToHash("Jumping");
     private readonly int Crouch = Animator.StringToHash("Crouching");
+    internal readonly int Dashing = Animator.StringToHash("Dashing");
+    internal readonly int AirDashing = Animator.StringToHash("Dashing");
+
     internal int Attacking => Animator.StringToHash("Attacking");
     private int Light => Animator.StringToHash("Light");
     private int Heavy => Animator.StringToHash("Heavy");
@@ -385,7 +388,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
             case true when !IsGrounded:
                 print("air dash");
                 if (IsDashing || IsGrounded || JumpCharges == 0 || !AtDashHeight) break;
-                PerformDash();
+                PerformDash(true);
                 break;
             case true:
             {
@@ -403,9 +406,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         DashMarcoActive = false;
     }
 
-    private void PerformDash()
+    private void PerformDash(bool isAirDashing = false)
     {
-
         IsDashing = true;
         DashDir = InputReader.CurrentMoveInput;
         IsRunning = false;
@@ -422,7 +424,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
             {
                 if (IsDashing || IsGrounded || JumpCharges == 0 || !AtDashHeight) break;
                 print("entered dash");
-                PerformDash();
+                PerformDash(true);
                 break;
             }
             case true:

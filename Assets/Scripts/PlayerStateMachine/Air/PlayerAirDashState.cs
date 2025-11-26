@@ -3,6 +3,7 @@ using UnityEngine;
 [System.Serializable]
 public class PlayerAirDashState : PlayerDashState
 {
+    private  readonly int DashingDir1 = Animator.StringToHash("DashDir");
     [field: SerializeField] private int _airDashCharges;
 
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player)
@@ -28,6 +29,10 @@ public class PlayerAirDashState : PlayerDashState
             InputReader.MovementInputResult.UpRight => Vector3.right,
             _ => DashDir
         };
+        player.Animator.SetFloat(DashingDir1, DashDir == Vector3.left ? 0 : 1);
+        player. Animator?.SetTrigger(player.AirDashing);
+
+        
         Debug.Log(DashDir);
             NewDashVelo = DashDir * (2 * (DashDistance / DashTime));
        

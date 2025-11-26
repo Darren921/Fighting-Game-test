@@ -15,6 +15,7 @@ public class PlayerDashState : PlayerMovingState
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player)
     {
         Debug.Log("Entering Dash State");
+        player. Animator?.SetTrigger(player.Dashing);
         SetUpDash(player);
         player.StartCoroutine(Dash(player));
     }
