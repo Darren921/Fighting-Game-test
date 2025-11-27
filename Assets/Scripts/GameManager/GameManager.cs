@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -31,12 +32,17 @@ public class GameManager : MonoBehaviour
    private Action LowTimeAction;
    private bool activated;
    [SerializeField] private TMP_ColorGradient normal, lowTime;
-
-
+   [SerializeField] private bool RoundTimer;
+   [SerializeField] private Animator CameraAnims;
+    [SerializeField] private GameObject player1;
+    [SerializeField] private GameObject Player2;
+    [SerializeField] private Animator UIAnim;
     private void Awake()
     {
+        
         _currentRoundTimer = _roundTimer;
-        StartCoroutine(StartTimer());
+        
+        StartCoroutine(IntroAnim());
         // CHANGE THIS TO ACCEPT INPUT FROM CHARACTER SELECTION, THIS HURTS TO LEAVE
         foreach (var player in players)
         {
@@ -229,4 +235,18 @@ public class GameManager : MonoBehaviour
             player.transform.eulerAngles = rotation;
 
         }
+    private IEnumerator IntroAnim()
+    {
+        players[0].GetComponent<Rigidbody>().isKinematic = true;
+        players[1].GetComponent<Rigidbody>().isKinematic = true;
+        yield return new WaitForSeconds(18);
+        UIAnim.Play("slide in");
+        yield return new WaitForSeconds(1);
+        UIAnim.Play("Countdown");
+        yield return new WaitForSeconds(1.5f);
+        players[0].GetComponent<Rigidbody>().isKinematic = false;
+        players[1].GetComponent<Rigidbody>().isKinematic = false;
+        StartCoroutine(StartTimer());
+    }
+   
 }
