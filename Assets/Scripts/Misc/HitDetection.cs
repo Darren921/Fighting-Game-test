@@ -150,9 +150,7 @@ public class HitDetection : MonoBehaviour, IDamageable
         OnPlayerHit?.Invoke();
         //print(otherPlayer.name);
         //print(_player.name);
-        otherPlayer.StartCoroutine(!_player.AtBorder
-            ? otherPlayer.PlayerKnockBack.KnockBackOtherPlayer(_player)
-            : otherPlayer.PlayerKnockBack.KnockBackThisPlayer(otherPlayer));
+        otherPlayer.StartCoroutine(!_player.AtBorder ? otherPlayer.PlayerKnockBack.KnockBackOtherPlayer(_player) : otherPlayer.PlayerKnockBack.KnockBackThisPlayer(otherPlayer));
 
         if (_player.Health <= 0)
         {

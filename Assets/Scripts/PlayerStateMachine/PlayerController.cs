@@ -219,6 +219,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     public void SetUpStartupFrame()
     {
         Animator?.SetBool(StartUp,true);
+        
     }
 
     public void SetUpActiveFrame()
@@ -230,6 +231,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     public void SetUpRecoveryFrame()
     {
+        
         Animator?.SetBool(Recovery,true);
         Animator?.SetBool(Active,false);
 
