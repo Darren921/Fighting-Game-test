@@ -1,20 +1,21 @@
 using System.Collections;
 using UnityEngine;
-
+[System.Serializable]
 public class PlayerDashState : PlayerMovingState
 {
-    protected InputReader.MovementInputResult Dir;
-    protected Vector3 DashDir;
-    protected Vector3 NewDashVelo;
-    protected const float DashTime = 0.3f;
-    protected const float DashDistance = 1.5f;
-    protected bool IsDashing;
-    private float _jumpVelocity;
-    private Coroutine _dashCoroutine;
+    [field: SerializeField] protected InputReader.MovementInputResult Dir;
+    [field: SerializeField] protected  Vector3 DashDir;
+    [field: SerializeField] protected Vector3 NewDashVelo;
+    [field: SerializeField]  protected  float DashTime = 0.3f;
+    [field: SerializeField] protected  float DashDistance = 1.5f;
+    [field: SerializeField]  protected bool IsDashing;
+   private float _jumpVelocity;
+     private Coroutine _dashCoroutine;
 
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player)
     {
         Debug.Log("Entering Dash State");
+        player. Animator?.SetTrigger(player.Dashing);
         SetUpDash(player);
         player.StartCoroutine(Dash(player));
     }
@@ -26,11 +27,11 @@ public class PlayerDashState : PlayerMovingState
         Debug.Log("PlayerDashState EnterState");
         switch (Dir)
         {
-            case InputReader.MovementInputResult.None or  InputReader.MovementInputResult.Forward:
+            case InputReader.MovementInputResult.None or  InputReader.MovementInputResult.Forward  :
                 DashDir =  !player.Reversed ? new Vector3(2, 0, 0 ) : new Vector3(-2, 0, 0);
                 _jumpVelocity = 0;
                 break;
-            case InputReader.MovementInputResult.Backward:
+            case InputReader.MovementInputResult.Backward :
                 DashDir =  !player.Reversed ? new Vector3(-1, 0f, 0 ) : new Vector3(1, 0f, 0);
                 _jumpVelocity = 5 ;
                 break;
@@ -79,7 +80,7 @@ public class PlayerDashState : PlayerMovingState
             _dashCoroutine = null;
         }
         player.IsDashing = false;
-        
+        player.Animator.ResetTrigger(player.Dashing);
         Debug.Log("PlayerDashState ExitState");
     }
 }

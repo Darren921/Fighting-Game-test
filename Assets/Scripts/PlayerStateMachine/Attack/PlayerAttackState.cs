@@ -7,7 +7,6 @@ using UnityEngine;
 public class PlayerAttackState : PlayerBaseState
 {
     private Coroutine cooldownCoroutine;
-    private InputReader.AttackInputResult lastAttack;
     private InputReader.MovementInputResult lastMove;
 
 
@@ -32,21 +31,35 @@ public class PlayerAttackState : PlayerBaseState
 
         if (player.IsAttacking && !player.OnAttackCoolDown)
         {
-            Debug.Log("attacking");
+//            Debug.Log("attacking");
             PerformAttack(player);
         }
 
+        if (player.HitStun)
+        {
+            playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.HitStun);
+        }
+
+        if (player.IsAttacking && !player.AtDashHeight && player.InputReader.curState == AttackData.States.Jumping)
+        {
+            
+            player.Animator.speed = 0;
+            player.ResetAttackingTrigger();
+            player.Animator.Play("Neutral", 0, 0f); 
+            player.Animator.speed = 1;
+
+        }
+
+        
         // State swapping 
         if (!player.IsGrounded || player.IsAttacking) return;
-        playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Neutral | PlayerStateManager.PlayerStateTypes.Walking | PlayerStateManager.PlayerStateTypes.Crouching);
+        playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Neutral | PlayerStateManager.PlayerStateTypes.Walking | PlayerStateManager.PlayerStateTypes.Crouching | PlayerStateManager.PlayerStateTypes.Jumping);
 //        Debug.Log(player.gravityManager.GetVelocity());
     }
 
     private void PerformAttack(PlayerController player)
     {
-        lastAttack = player.InputReader.CurrentAttackInput;
-        lastMove = player.InputReader.CurrentMoveInput;
-//        Debug.Log(lastMove);
+        lastMove = player.InputReader.LastAttackInput.Move;
         if (!player.IsAttacking || player.OnAttackCoolDown) return;
         ChosenAttack( player,lastMove);
         cooldownCoroutine = player.StartCoroutine(EnforceCooldown(player));
@@ -54,6 +67,7 @@ public class PlayerAttackState : PlayerBaseState
 
     private void ChosenAttack(PlayerController player, InputReader.MovementInputResult movement)
     {
+        
         switch (movement)
         {
             case InputReader.MovementInputResult.Backward or InputReader.MovementInputResult.UpRight

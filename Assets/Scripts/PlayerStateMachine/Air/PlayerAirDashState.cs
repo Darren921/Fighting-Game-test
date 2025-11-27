@@ -1,9 +1,10 @@
 using System.Collections;
 using UnityEngine;
-
+[System.Serializable]
 public class PlayerAirDashState : PlayerDashState
 {
-    private int _airDashCharges;
+    private  readonly int DashingDir1 = Animator.StringToHash("DashDir");
+    [field: SerializeField] private int _airDashCharges;
 
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player)
     {
@@ -19,22 +20,56 @@ public class PlayerAirDashState : PlayerDashState
         Dir = player.DashDir;
         //   Debug.Log(dir);
         //    Debug.Log("PlayerDashState EnterState");
-        switch (Dir)
-        {
-            case InputReader.MovementInputResult.None or InputReader.MovementInputResult.Forward:
-                DashDir = !player.Reversed ? new Vector3(2f, 0, 0) : new Vector3(-2f, 0, 0);
-                //          Debug.Log(dashDir);
-                break;
-            case InputReader.MovementInputResult.Backward:
-                DashDir = !player.Reversed ? new Vector3(-2f, 0f, 0) : new Vector3(2f, 0f, 0);
-                //          Debug.Log(dashDir);
-                break;
-        }
 
-        NewDashVelo = DashDir * (DashDistance / DashTime);
+        DashDir = Dir switch
+        {
+            InputReader.MovementInputResult.Forward or InputReader.MovementInputResult.None or InputReader.MovementInputResult.Up => !player.Reversed ? Vector3.right : Vector3.left,
+            InputReader.MovementInputResult.Backward => !player.Reversed ? Vector3.left : Vector3.right,
+            InputReader.MovementInputResult.UpLeft => Vector3.left,
+            InputReader.MovementInputResult.UpRight => Vector3.right,
+            _ => DashDir
+        };
+
+        if (!player.Reversed)
+        {
+            player.Animator.SetFloat(DashingDir1,DashDir == Vector3.left  ? 0 : 1 );  
+        }
+        else
+        {
+            player.Animator.SetFloat(DashingDir1,DashDir == Vector3.left  ? 1 : 0);
+        }
+     
+        
+        
+        player. Animator?.SetTrigger(player.AirDashing);
+
+        
+        Debug.Log(DashDir);
+            NewDashVelo = DashDir * (2 * (DashDistance / DashTime));
+       
+     
     }
 
+    /*switch (Dir)
+           {
+               case InputReader.MovementInputResult.None or InputReader.MovementInputResult.Forward or InputReader.MovementInputResult.Up :
+                   DashDir = !player.Reversed ? new Vector3(2f, 0, 0) : new Vector3(-2f, 0, 0);
+                   //          Debug.Log(dashDir);
+                   break;
+               case InputReader.MovementInputResult.Backward :
+                   DashDir = !player.Reversed ? new Vector3(-2f, 0f, 0) : new Vector3(2f, 0f, 0);
+                   //          Debug.Log(dashDir);
+                   break;
+               case InputReader.MovementInputResult.UpLeft:
+                   if(player.DashMarcoActive)   DashDir =  new Vector3(-2f, 0, 0);
+                   else DashDir = !player.Reversed ? new Vector3(2f, 0, 0) : new Vector3(-2f, 0, 0);
+                   break;
+               case InputReader.MovementInputResult.UpRight:
+                   if(player.DashMarcoActive)   DashDir = new Vector3(2f, 0, 0);
+                   else DashDir = !player.Reversed ? new Vector3(-2f, 0, 0) : new Vector3(2f, 0, 0);
+                   break;
 
+           }*/
     private IEnumerator AirDash(PlayerController player)
     {
         //    Debug.Log("PlayerDashState Dash");
@@ -86,5 +121,6 @@ public class PlayerAirDashState : PlayerDashState
     internal override void ExitState(PlayerStateManager playerStateManager, PlayerController player)
     {
         player.IsDashing = false;
+        player.Animator.ResetTrigger(player.Dashing);
     }
 }

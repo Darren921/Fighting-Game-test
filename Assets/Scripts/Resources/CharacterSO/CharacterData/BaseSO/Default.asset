@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eed73eb88df98634596fd1f5bc2439b7, type: 3}
+  m_Name: Default
+  m_EditorClassIdentifier: 
+  characterAttacks: {fileID: 11400000, guid: f6df2f7e50b9e754d8eb994d9bc76b76, type: 2}
+  gravScale: 1.5
+  health: 100
+  characterName: Default
+  walkSpeed: 5
+  runSpeed: 12
+  jumpHeight: 3.5
+  airDashCharges: 2
+  jumpCharges: 2
+  damage: 0
+  lightKnockback: 7
+  medKnockback: 14
+  heavyKnockback: 17

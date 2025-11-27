@@ -1,5 +1,7 @@
 using UnityEngine;
 
+[System.Serializable]
+
 public class PlayerRunningState : PlayerMovingState
 {
     protected override float MoveSpeed => Player.RunSpeed;
@@ -50,7 +52,7 @@ public class PlayerRunningState : PlayerMovingState
 
     internal override void FixedUpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
-        SetMoveDir(!player.DashMarcoActive ? new Vector2(player.PlayerMove.x, 0) : new Vector2(1, 0));
+        SetMoveDir(!player.DashMarcoActive ? new Vector2(player.PlayerMove.x, 0) :  !player.Reversed ? new Vector2(1, 0) : new Vector2(-1, 0));
         SmoothMovement();
         ApplyVelocity(player);
     }

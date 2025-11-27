@@ -9,13 +9,18 @@ public class HitDetection : MonoBehaviour, IDamageable
 {
     private PlayerController _player;
     [SerializeField] internal PlayerController otherPlayer;
+    
+//    private PlayerController targetPlayer;
+    private InputReader player1Input;
     public static event Action OnDeath;
     public static event Action OnPlayerHit;
     internal bool _hit;
+    internal bool Blocking;
 
     private void Awake()
     {
         _player = gameObject.GetComponentInParent<PlayerController>();
+        player1Input = _player.GetComponent<InputReader>();
     }
 
     private void Update()
@@ -27,31 +32,63 @@ public class HitDetection : MonoBehaviour, IDamageable
     {
 //        print(otherPlayer.IsActiveFrame);
 
-        if (other.gameObject.CompareTag("HitBox") && otherPlayer.IsActiveFrame)
+        if (other.gameObject.CompareTag("HitBox") && otherPlayer.IsActiveFrame && other.gameObject.activeInHierarchy && !otherPlayer.HitStun)
         {
-            print("hit");
-            var target = OnHit(_player, otherPlayer);
-            if (target is not null && !target.HitStun && !_hit  )
+            if (_hit) return;
+            _hit = true;
+            Blocking = CheckBlocking();
+            print(Blocking);
+            if (Blocking)
             {
-                bool isWalkingBack =
-                    (target._playerStateManager.CurrentStateName == "PlayerWalkingState" ||
-                     target._playerStateManager.CurrentStateName == "PlayerCrouchMoveState") &&
-                    target.InputReader.CurrentMoveInput == InputReader.MovementInputResult.Backward;
-
-                if (isWalkingBack)
-                {
-                    target._playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Blocking);
-                    return;
-                }
-                _hit = true;
-                target.GetComponent<PlayerStateManager>().SwitchState(PlayerStateManager.PlayerStateTypes.HitStun);
-                target.PlayerHitDetection.TakeDamage(10);
+                print("walk");
+                _player._playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Blocking);
+                _player.PlayerHitDetection.TakeDamage(otherPlayer.CharacterData.characterAttacks.ReturnAttackData(otherPlayer.InputReader.LastAttackInput,otherPlayer.InputReader.curState).Damage);
             }
+            else
+            {
+                _player._playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.HitStun);
+                _player.PlayerHitDetection.TakeDamage(otherPlayer.CharacterData.characterAttacks.ReturnAttackData(otherPlayer.InputReader.LastAttackInput,otherPlayer.InputReader.curState).Damage);
+
+            }
+            
+
         }
-        else if (other.gameObject.CompareTag("Wall"))
+    
+        if (other.gameObject.CompareTag("Wall"))
         {
             _player.AtBorder = true;
         }
+    }
+
+    private bool CheckBlocking()
+    {
+    //    print(_player._playerStateManager.CurrentStateName );
+    //    print(_player.InputReader.CurrentMoveInput);
+        
+        if (_player._playerStateManager.currentState == _player._playerStateManager.States[PlayerStateManager.PlayerStateTypes.Walking] ||  _player._playerStateManager.currentState == _player._playerStateManager.States[PlayerStateManager.PlayerStateTypes.Crouching] || _player._playerStateManager.currentState ==  _player._playerStateManager.States[PlayerStateManager.PlayerStateTypes.Jumping] 
+            && _player.InputReader.CurrentMoveInput is InputReader.MovementInputResult.Backward or InputReader.MovementInputResult.DownLeft or InputReader.MovementInputResult.UpLeft)
+        {
+            switch (_player.InputReader.curState)
+            {
+                case AttackData.States.Standing:
+                    print("standing");
+                    print(otherPlayer.InputReader.curState );
+                    if (otherPlayer.InputReader.curState != AttackData.States.Crouching) return true;
+                    break;
+                case AttackData.States.Crouching:
+                    print("Crouching");
+                    print(otherPlayer.InputReader.curState );
+                    if(otherPlayer.InputReader.curState != AttackData.States.Jumping) return true;
+                    break;
+                case AttackData.States.Jumping:
+                    return true;
+                default:
+                    return false;
+            }
+            
+        }
+        print("Skippped");
+        return false;
     }
 
     private void OnTriggerExit(Collider other)
@@ -59,46 +96,57 @@ public class HitDetection : MonoBehaviour, IDamageable
         _player.AtBorder = false;
     }
 
-    private PlayerController OnHit(PlayerController sender, PlayerController receiver)
+    /*private PlayerController OnHit(PlayerController Player1, PlayerController Player2)
     {
+        
         //Check the players buffers for last attack frame  and decide the player hit
-        var attackBufferSender = sender.GetComponentInParent<InputReader>();
-        var attackBufferReceiver = receiver.GetComponentInParent<InputReader>();
+     
 
-        Debug.Log(attackBufferSender.LastAttackInput);
-        Debug.Log(attackBufferReceiver.LastAttackInput);
+//        Debug.Log(attackBufferSender.LastAttackInput);
+//        Debug.Log(attackBufferReceiver.LastAttackInput);
 
 
-        if (attackBufferSender.LastAttackInput != InputReader.AttackInputResult.None &&
-            attackBufferReceiver.LastAttackInput != InputReader.AttackInputResult.None)
+        if (player1Input.LastAttackInput.Type!= InputReader.AttackType.None && player2Input.LastAttackInput.Type != InputReader.AttackType.None)
         {
-            var result = attackBufferSender.LastAttackInputFrame < attackBufferReceiver.LastAttackInputFrame
-                ? sender
-                : receiver;
-            print(result);
+            PlayerController result  = null;
+            if (player1Input.LastAttackInputFrame < player2Input.LastAttackInputFrame )
+            {
+                result = Player1;
+                Debug.Log($"Clash, {result} hit");
+                return result;
+            } 
+            if (player2Input.LastAttackInputFrame < player1Input.LastAttackInputFrame )
+            {
+                result = Player2;
+                Debug.Log($"Clash, {result} hit");
+                return result;
+
+            }
             return result;
         }
 
-        if (attackBufferSender.LastAttackInput != InputReader.AttackInputResult.None &&
-            attackBufferReceiver.LastAttackInput == InputReader.AttackInputResult.None)
+        if (player1Input.LastAttackInput.Type != InputReader.AttackType.None && player2Input.LastAttackInput.Type == InputReader.AttackType.None)
         {
-            return receiver;
+            print("OtherPlayer NonContested ");
+            return Player2;
         }
 
-        if (attackBufferSender.LastAttackInput == InputReader.AttackInputResult.None &&
-            attackBufferReceiver.LastAttackInput != InputReader.AttackInputResult.None)
+        if (player1Input.LastAttackInput.Type == InputReader.AttackType.None && player2Input.LastAttackInput.Type != InputReader.AttackType.None)
         {
-            return sender;
+            print("Player  NonContested ");
+
+            return Player1;
         }
 
         return null;
-    }
+    }*/
 
     public void TakeDamage(float damage)
     {
         // deal damage and active death event to trigger end of game 
-
-        _player.Health -= damage;
+        
+        _player.Health -=  Blocking ? damage * 0.25f : damage;
+//        print(_player.Health );
         OnPlayerHit?.Invoke();
         //print(otherPlayer.name);
         //print(_player.name);
@@ -108,6 +156,7 @@ public class HitDetection : MonoBehaviour, IDamageable
 
         if (_player.Health <= 0)
         {
+            _player.isDead = true;
             OnDeath?.Invoke();
         }
     }

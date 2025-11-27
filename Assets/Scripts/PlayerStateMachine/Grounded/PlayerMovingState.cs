@@ -4,9 +4,9 @@ using UnityEngine;
 public abstract class PlayerMovingState : PlayerBaseState
 {
     protected PlayerController Player; 
-    protected Vector3 MoveDir;
-    protected Vector3 SmoothedMoveDir;
-    protected Vector3 SmoothedMoveVelocity;
+    [field: SerializeField] protected Vector3 MoveDir;
+    [field: SerializeField] protected Vector3 SmoothedMoveDir;
+    [field: SerializeField] protected Vector3 SmoothedMoveVelocity;
 
     protected virtual float MoveSpeed => 1;
     

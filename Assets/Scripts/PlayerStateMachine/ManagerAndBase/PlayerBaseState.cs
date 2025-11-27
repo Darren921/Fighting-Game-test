@@ -1,5 +1,7 @@
-[System.Serializable]
-public abstract class PlayerBaseState
+using System;
+using UnityEngine;
+[Serializable]
+public abstract class PlayerBaseState 
 {
  internal  abstract void EnterState(PlayerStateManager playerStateManager,PlayerController player);
  internal abstract void UpdateState(PlayerStateManager playerStateManager,PlayerController player);

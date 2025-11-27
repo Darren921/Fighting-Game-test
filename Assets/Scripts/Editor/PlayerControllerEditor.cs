@@ -10,7 +10,7 @@ using Toggle = UnityEngine.UIElements.Toggle;
 [CustomEditor(typeof(PlayerController))]
 public class PlayerControllerEditor : Editor
 {
-    public VisualTreeAsset visualTree;
+    [SerializeField] private VisualTreeAsset visualTree;
 
     private Toggle dToggle;
     private Toggle vToggle;

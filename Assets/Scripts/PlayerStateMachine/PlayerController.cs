@@ -14,8 +14,12 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     private readonly int Running = Animator.StringToHash("Running");
     internal readonly int Jump = Animator.StringToHash("Jumping");
     private readonly int Crouch = Animator.StringToHash("Crouching");
-    private int Attacking => Animator.StringToHash("Attacking");
+    internal readonly int Dashing = Animator.StringToHash("Dashing");
+    internal readonly int AirDashing = Animator.StringToHash("Dashing");
+
+    internal int Attacking => Animator.StringToHash("Attacking");
     private int Light => Animator.StringToHash("Light");
+    private int Heavy => Animator.StringToHash("Heavy");
     private int Medium => Animator.StringToHash("Medium");
     internal int left = Animator.StringToHash("Left");
     internal int right = Animator.StringToHash("Right");
@@ -51,7 +55,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     #region PlayerActions
     public Action OnJump;
-    public Action<InputReader.AttackInputResult> PlayerAttackAction;
+    public  Action<InputReader.AttackType> PlayerAttackAction;
     #endregion
     
     #region Attack Check Variables
@@ -104,11 +108,15 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     [SerializeField]  internal float Health;
     [SerializeField]  internal bool AtBorder;
     [SerializeField]  internal bool DashMarcoActive;
-
+    [SerializeField] private float MinDashHeight;
+     
     #endregion
+
+    internal bool isDead; 
 
     private void Awake()
     {
+        MinDashHeight = 1.487012f;
         PlayerKnockBack = GetComponent<PlayerKnockBack>();
         PlayerHitDetection = GetComponentInChildren<HitDetection>();
         _playerStateManager = GetComponent<PlayerStateManager>();
@@ -117,8 +125,13 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         InputReader = GetComponent<InputReader>();
         Animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
-        RaycastDistance = 2.0231f;
+        RaycastDistance = 1.807687f;
         HitDetection.OnDeath += OnPlayerDeath;
+    }
+
+    private void Start()
+    {
+        PauseManager.Instance.RegisterPlayer(this);
     }
 
     public void InitializePlayer(InputDevice device)
@@ -132,17 +145,14 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         _playerActions.Run.canceled += OnRun;
         _playerActions.DashMacro.performed += OnDashMacro;
         _playerActions.DashMacro.canceled += OnDashMacro;
-
         _playerActions.Dash.performed += OnDash;
         _playerActions.Move.performed += OnMove;
         _playerActions.Move.canceled += OnMove;
         _playerActions.Light.performed += OnLight;
         _playerActions.Medium.performed += OnMedium;
-        _playerActions.Heavy.performed += OnLight; // I don't need to explain this comment
-
+        _playerActions.Heavy.performed += OnHeavy; // I don't need to explain this comment
         _playerActions.Jumping.performed += OnJumping;
         _playerActions.SuperJump.performed += OnSuperJump;
-
         OnEnablePlayer();
 //        print(gameObject.gameObject.name);
         SetUpCharacterVariables();
@@ -160,10 +170,23 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     private void OnPlayerDeath()
     {
+        
         InputReader.enabled = false;
-        HitDetection.OnDeath -= OnPlayerDeath;
-        OnDisablePlayer();
         _playerStateManager.ResetStateMachine();
+        StopAllCoroutines();
+        _playerActions.RemoveCallbacks(this);
+        HitDetection.OnDeath -= OnPlayerDeath;
+        _playerActions.Disable();
+        PauseManager.Instance?.UnregisterPlayer(this);
+    }
+
+    private void OnDestroy()
+    {
+        _playerActions.RemoveCallbacks(this);
+        HitDetection.OnDeath -= OnPlayerDeath;
+        _playerActions.Disable();
+        PauseManager.Instance?.UnregisterPlayer(this);
+
     }
 
 
@@ -184,45 +207,47 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         //This may need to change to separate ones for each attack
         // This is used at the end of each animation 
         IsAttacking = false;
-        Animator.ResetTrigger(Attacking);
-        Animator.ResetTrigger(Light);
-        Animator.ResetTrigger(Medium);
-        Animator.SetBool(left, false);
-        Animator.SetBool(right, false);
+        Animator?.ResetTrigger(StartUp);
+        Animator?.ResetTrigger(Attacking);
+        Animator?.ResetTrigger(Light);
+        Animator?.ResetTrigger(Medium);
+        Animator?.SetBool(left, false);
+        Animator?.SetBool(right, false);
+        Animator?.SetBool(Active,false);
     }
 
     public void SetUpStartupFrame()
     {
-        Animator.SetBool(StartUp,true);
+        Animator?.SetBool(StartUp,true);
     }
 
     public void SetUpActiveFrame()
     {
-        Animator.SetBool(Active,true);
-        Animator.SetBool(StartUp,false);
+        Animator?.SetBool(Active,true);
+        Animator?.SetBool(StartUp,false);
 
     }
 
     public void SetUpRecoveryFrame()
     {
-        Animator.SetBool(Recovery,true);
-        Animator.SetBool(Active,false);
+        Animator?.SetBool(Recovery,true);
+        Animator?.SetBool(Active,false);
 
     }
 
     public void ResetRecoveryFrame()
     {
-        Animator.SetBool(Recovery,false);
+        Animator?.SetBool(Recovery,false);
     }
     private void OnCollisionStay(Collision collision)
     {
         IsGrounded = GravityManager.CheckGrounded(this);
 
         //this needs to be rework (current anti head landing )
-        PreventHeadLanding(collision);
+      //  PreventHeadLanding(collision);
     }
 
-    private void PreventHeadLanding(Collision collision)
+    /*private void PreventHeadLanding(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player") && collision.gameObject != gameObject && !IsGrounded)
         {
@@ -231,11 +256,11 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
             {
                 if (gameObject.transform.position.x < collision.gameObject.GetComponent<Collider>().bounds.center.x)
                 {
-                    rb.AddForce(-13, 1.5f, 0);
+                    rb.AddForce(-5, 1.5f, 0);
                 }
                 else
                 {
-                    rb.AddForce(13, 1.5f, 0);
+                    rb.AddForce(5, 1.5f, 0);
                 }
             }
             else
@@ -250,7 +275,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
                 }
             }
         }
-    }
+    }*/
 
     private void OnCollisionExit(Collision other)
     {
@@ -260,34 +285,43 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     private void Update()
     {
         // sets animator booleans
-        Animator.SetBool(airborne, !IsGrounded);
+        Animator?.SetBool(airborne, !IsGrounded);
         switch (IsGrounded)
         {
             case true:
                 IsCrouching = PlayerMove.y < 0;
-                Animator.SetBool(Crouch, IsCrouching);
-                Animator.SetBool(Walking, IsWalking);
-                Animator.SetBool(Running, IsRunning);
+               Animator?.SetBool(Crouch, IsCrouching);
+               Animator?.SetBool(Walking, IsWalking);
+               Animator?.SetBool(Running, IsRunning);
                 break;
             case false:
-                Animator.SetBool(Crouch, false);
-                Animator.SetBool(Walking, false);
-                Animator.SetBool(Running, false);
+               Animator?.SetBool(Crouch, false);
+               Animator?.SetBool(Walking, false);
+               Animator?.SetBool(Running, false);
                 break;
         }
-
-        IsActiveFrame = Animator.GetBool(Active);
-        if (transform.localPosition.y > JumpHeight / 2)
+        if (Animator is not null) IsActiveFrame = Animator.GetBool(Active);
+//        print(GravityManager.RaycastHit.distance);
+//        print(JumpHeight / 2);
+        if (!IsGrounded && transform.localPosition.y > MinDashHeight)
         {
+//            Debug.Log(transform.transform.localPosition.y  );
+//            Debug.Log(JumpHeight / 2);
             AtDashHeight = true;
+        }
+        else
+        {
+            AtDashHeight = false;
         }
     }
 
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        //Turns off running and walking when player releases context or player stops 
+        //Turns off running and walking when player releases context or player stops F
         //default till running begins
+        // if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
+        //     return;
         PlayerMove = context.ReadValue<Vector3>();
         if (!IsRunning &&
             _playerStateManager.currentState !=
@@ -305,47 +339,56 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     public void OnLight(InputAction.CallbackContext context)
     {
-        PlayerAttackAction?.Invoke(InputReader.AttackInputResult.Light);
+        // if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
+        //     return;
+        PlayerAttackAction?.Invoke(InputReader.AttackType.Light);
      
         if (OnAttackCoolDown || IsAttacking || !context.performed) return;
         IsAttacking = true;
-        Animator.SetTrigger(Attacking);
-        Animator.SetTrigger(Light);
+       Animator?.SetTrigger(Attacking);
+       Animator?.SetTrigger(Light);
     }
 
     public void OnMedium(InputAction.CallbackContext context)
     {
-        PlayerAttackAction?.Invoke(InputReader.AttackInputResult.Medium);
+        // if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
+        //     return;
+        PlayerAttackAction?.Invoke(InputReader.AttackType.Medium);
         if (OnAttackCoolDown || IsAttacking || !context.performed) return;
         IsAttacking = true;
-        Animator.SetTrigger(Attacking);
-        Animator.SetTrigger(Medium);
+        Animator?.SetTrigger(Attacking);
+        Animator?.SetTrigger(Medium);
     }
 
     public void OnHeavy(InputAction.CallbackContext context)
     {
-        PlayerAttackAction?.Invoke(InputReader.AttackInputResult.Heavy);
+        // if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
+        //     return;
+        PlayerAttackAction?.Invoke(InputReader.AttackType.Heavy);
         if (OnAttackCoolDown || IsAttacking || !context.performed) return;
         IsAttacking = true;
-        Animator.SetTrigger(Attacking);
+        Animator?.SetTrigger(Attacking);
+        Animator?.SetTrigger(Heavy);
     }
     
 
     public void OnDashMacro(InputAction.CallbackContext context)
     {
+        // if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
+        //     return;
         //shortcut for dash 
         print("entered dash Marco");
         DashMarcoActive = true;
         switch (context.performed)
         {
-            case true when InputReader.CurrentMoveInput is not (InputReader.MovementInputResult.Forward
-                or InputReader.MovementInputResult.None) && IsGrounded:
+            case true when InputReader.CurrentMoveInput is not (InputReader.MovementInputResult.Forward or InputReader.MovementInputResult.None) && IsGrounded:
                 print("dash back");
                 PerformDash();
                 break;
             case true when !IsGrounded:
                 print("air dash");
-                PerformDash();
+                if (IsDashing || IsGrounded || JumpCharges == 0 || !AtDashHeight) break;
+                PerformDash(true);
                 break;
             case true:
             {
@@ -363,9 +406,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         DashMarcoActive = false;
     }
 
-    private void PerformDash()
+    private void PerformDash(bool isAirDashing = false)
     {
-        if(!IsDashing)
         IsDashing = true;
         DashDir = InputReader.CurrentMoveInput;
         IsRunning = false;
@@ -374,13 +416,15 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     public void OnDash(InputAction.CallbackContext context)
     {
+        // if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
+        //     return;
         switch (IsGrounded)
         {
             case false:
             {
-                if (IsDashing || IsGrounded || JumpCharges <= 0) return;
+                if (IsDashing || IsGrounded || JumpCharges == 0 || !AtDashHeight) break;
                 print("entered dash");
-                PerformDash();
+                PerformDash(true);
                 break;
             }
             case true:
@@ -394,7 +438,9 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     }
     public void OnRun(InputAction.CallbackContext context)
     {
-        if (context.performed && InputReader.GetValidMoveInput() is not (InputReader.MovementInputResult.Backward or InputReader.MovementInputResult.None or InputReader.MovementInputResult.Down) && IsGrounded)
+        // if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
+        //     return;
+        if (context.performed && InputReader.GetValidMoveInput() is not (InputReader.MovementInputResult.Backward or InputReader.MovementInputResult.None or InputReader.MovementInputResult.Down) && IsGrounded && !IsRunning)
         {
 //            print(InputReader.CurrentMoveInput);
             IsRunning = true;
@@ -408,6 +454,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     public void OnJumping(InputAction.CallbackContext context)
     {
+        // if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
+        //     return;
         if (context.performed)
         {
             OnJump?.Invoke();
@@ -416,6 +464,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     public void OnSuperJump(InputAction.CallbackContext context)
     {
+        // if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
+        //     return;
         SuperJumpActive = true;
     }
     

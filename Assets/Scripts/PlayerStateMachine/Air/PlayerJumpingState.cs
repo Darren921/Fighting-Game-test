@@ -3,6 +3,7 @@ using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
+[Serializable]
 public class PlayerJumpingState : PlayerBaseState
 {
     #region Standard Jump Variables
@@ -11,12 +12,13 @@ public class PlayerJumpingState : PlayerBaseState
 
     #endregion
 
-    private float xJumpVal; // check Try jump method for changes 
+    private float xJumpVal; // check Try  jump method for changes 
     private Collider collider;
     private bool jumpTriggered;
     private bool atJumpHeight;
     private bool doubleJumpReady ;
-
+    private bool atAirDashHeight;
+    
     private Coroutine jumpCoroutine;
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player)
     {
@@ -54,9 +56,10 @@ public class PlayerJumpingState : PlayerBaseState
                 player.Animator.SetBool(player.Jump, true);
                 break;
         }
-
+        
         doubleJumpReady =  player.JumpCharges > 0 && !player.SuperJumpActive;
     
+     //   atAirDashHeight = 
         //Transitioning states 
         if (!player.IsGrounded)
         {
@@ -75,7 +78,6 @@ public class PlayerJumpingState : PlayerBaseState
         }
         else
         {
-            if(!player.AtDashHeight) return;
             playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Neutral | PlayerStateManager.PlayerStateTypes.Walking | PlayerStateManager.PlayerStateTypes.Crouching | PlayerStateManager.PlayerStateTypes.Jumping | PlayerStateManager.PlayerStateTypes.Walking );
             if (!player.IsGrounded)
             {

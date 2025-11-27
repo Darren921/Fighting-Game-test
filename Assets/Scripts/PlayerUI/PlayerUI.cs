@@ -14,6 +14,11 @@ public class PlayerUI : MonoBehaviour
         HitDetection.OnPlayerHit += UpdateHealth;
     }
 
+    private void OnDestroy()
+    {
+        HitDetection.OnPlayerHit -= UpdateHealth;    
+    }
+
     private void Start()
     {
         _playerController = GetComponent<PlayerController>();

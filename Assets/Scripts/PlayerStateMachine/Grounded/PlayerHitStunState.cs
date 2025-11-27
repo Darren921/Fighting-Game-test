@@ -8,7 +8,6 @@ public class PlayerHitStunState : PlayerBaseState
 {
     private static readonly int Hit = Animator.StringToHash("Hit");
 
-
     internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player)
     {
         //player.CharacterData.
@@ -21,14 +20,15 @@ public class PlayerHitStunState : PlayerBaseState
 
     private IEnumerator WaitForHitStun(PlayerController player)
     {
+        var ogSpeed = player.Animator.speed;
         player.OnDisablePlayer();
         player.HitStun = true;
-        Time.timeScale = 0f;
-        Debug.Log("HitStun");
-        yield return new WaitForSecondsRealtime(0.3f);
-        Debug.Log("HitStun complete");
+        player.Animator.speed = 0;
+  //      Debug.Log("HitStun");
+        yield return new WaitForSecondsRealtime(player.PlayerHitDetection.otherPlayer.CharacterData.characterAttacks.ReturnAttackData(player.PlayerHitDetection.otherPlayer.InputReader.LastAttackInput,player.PlayerHitDetection.otherPlayer.InputReader.curState).HitStun);
+//        Debug.Log("HitStun complete");
         player.OnEnablePlayer();
-        Time.timeScale = 1f;
+        player.Animator.speed = ogSpeed;
         player.HitStun = false;
     }
 
@@ -47,6 +47,7 @@ public class PlayerHitStunState : PlayerBaseState
 
     internal override void ExitState(PlayerStateManager playerStateManager, PlayerController player)
     {
+//        Debug.Log("Exit State");
         player.PlayerHitDetection._hit = false;
         player.Animator.SetBool(Hit,false);
 

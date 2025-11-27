@@ -1,31 +1,55 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
-    public class ReadOnlyAttribute : PropertyAttribute { }
-    [SerializeField] private PlayerController[] players;
+    public class ReadOnlyAttribute : PropertyAttribute { } 
+    [SerializeField] internal List<PlayerController> players;
    [SerializeField] private CharacterSODataBase characterDatabase;
+   private readonly List<InputDevice> _availableDevices = new (); 
+   private const int MinDistance = 1;
 
-    private readonly List<InputDevice> _availableDevices = new ();
-
-    private const int MinDistance = 1;
+   [Header ("Win Screen Settings")]
+   [SerializeField] private GameObject GameOverScreen;
+   [SerializeField] private Sprite _p1WinSprite, _p2WinSprite; 
+   [SerializeField] private Image WinSplashScreen;
+    
+   [Header("Round Timer")]
+   [SerializeField] private TextMeshProUGUI timerText;
+   [SerializeField] private bool isLowTime;
+   private float _roundTimer = 90;
+   private float _currentRoundTimer;
+   private int _roundTimerInt; 
+   private Action LowTimeAction;
+   private bool activated;
+   [SerializeField] private TMP_ColorGradient normal, lowTime;
 
 
     private void Awake()
     {
+        _currentRoundTimer = _roundTimer;
+        StartCoroutine(StartTimer());
         // CHANGE THIS TO ACCEPT INPUT FROM CHARACTER SELECTION, THIS HURTS TO LEAVE
         foreach (var player in players)
         {
             player.CharacterData = characterDatabase.defaultCharacterSo;
         }
 
+        UpdateRoundTimer();
         Time.timeScale = 1;
         
-        HitDetection.OnDeath += OnPlayerDeath;
+        HitDetection.OnDeath += OnRoundEnd;
         Application.targetFrameRate = 60;
+        LowTimeAction += SwapColor;
+        
     //    Time.timeScale = 0.1f;
     
         // temp method to add devices to a pool in order to connect them to a player 
@@ -49,23 +73,72 @@ public class GameManager : MonoBehaviour
                 case InputDeviceChange.Removed:
                     break;
                 case InputDeviceChange.Disconnected:
+                    OnDisconnect();
                     break;
             }
         };
     }
 
-    private void OnPlayerDeath()
+
+    private void SwapColor()
+    {
+        timerText.colorGradientPreset = lowTime;
+        LowTimeAction -= SwapColor;
+    }
+
+    private IEnumerator StartTimer()
+    {
+        while (_currentRoundTimer > 0)
+        {
+            _currentRoundTimer -= Time.deltaTime;
+            UpdateRoundTimer();
+            yield return null;
+
+        }
+        OnRoundEnd();
+     
+
+    }
+
+    private void UpdateRoundTimer()
+    {
+        timerText.text =  Mathf.RoundToInt( _currentRoundTimer).ToString();
+        if (_currentRoundTimer <= 10 && !activated)
+        {
+            activated = true;
+            print("nice");
+            LowTimeAction?.Invoke();
+        }
+    }
+
+
+    private void OnDestroy()
+    {
+        HitDetection.OnDeath -= OnRoundEnd;
+        
+    }
+    
+    private void OnRoundEnd()
     {
         foreach (var player in players)
         {
             if(player.Animator is not null)  player.Animator.enabled = false;
             player.hitBox.SetActive(false);
-            if (player.Health <= 0)
+            if (player.isDead)
             {
                 player.gameObject.SetActive(false);
             }
-            SceneManager.LoadScene("LogicTest");
         }
+        DisplayEndScreen();
+
+    }
+
+    private void DisplayEndScreen()
+    {
+        var winner = players.Where(player => player.Health > 0 ).OrderByDescending(player => player.Health).FirstOrDefault();
+        GameOverScreen.gameObject.SetActive(true);
+        WinSplashScreen.sprite = winner == players[0] ? _p1WinSprite : _p2WinSprite;
+        Time.timeScale = 0;
     }
 
 
@@ -85,9 +158,17 @@ public class GameManager : MonoBehaviour
         ConnectPlayer();
     }
 
+    private void OnDisconnect()
+    {
+        foreach (var player in players)
+        {
+    //        if(player)
+        }
+    }
+
     private void ConnectPlayer()
     {
-        for (var i = 0; i < players.Length; i++)
+        for (var i = 0; i < players.Count; i++)
         {
             if (i < _availableDevices.Count)
             {

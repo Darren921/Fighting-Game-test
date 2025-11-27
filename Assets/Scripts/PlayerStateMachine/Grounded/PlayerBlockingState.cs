@@ -23,7 +23,7 @@ public class PlayerBlockingState : PlayerBaseState
 
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
-        if (player.InputReader.CurrentMoveInput != InputReader.MovementInputResult.Backward)
+        if (player.PlayerHitDetection.Blocking == false)
         {
             playerStateManager.SwitchToLastState();
         }
@@ -32,6 +32,7 @@ public class PlayerBlockingState : PlayerBaseState
     private IEnumerator BlockDuration(PlayerStateManager playerStateManager, PlayerController player)
     {
         yield return new WaitForSeconds(0.2f);
+        player.PlayerHitDetection.Blocking = false;
         playerStateManager.SwitchToLastState();
     }
 
@@ -48,5 +49,6 @@ public class PlayerBlockingState : PlayerBaseState
     {
         if (_blockCoroutine != null) player.StopCoroutine(_blockCoroutine);
         player.Animator.SetBool(player.blocking, false);
+        player.PlayerHitDetection._hit = false;
     }
 }

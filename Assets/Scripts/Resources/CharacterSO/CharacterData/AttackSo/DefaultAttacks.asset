@@ -1,0 +1,108 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf439b2ac4ad1744185dc9fc1e52cbd5, type: 3}
+  m_Name: DefaultAttacks
+  m_EditorClassIdentifier: 
+  DefaultLightAttacks:
+  - Attack:
+      Move: 0
+      Type: 1
+    Tag: 1
+    State: 0
+    Damage: 5
+    Knockback: 5
+    HitStun: 0.1
+    BlockStun: 0
+  - Attack:
+      Move: 0
+      Type: 1
+    Tag: 0
+    State: 2
+    Damage: 5
+    Knockback: 5
+    HitStun: 0.1
+    BlockStun: 0
+  - Attack:
+      Move: 0
+      Type: 1
+    Tag: 2
+    State: 1
+    Damage: 5
+    Knockback: 5
+    HitStun: 0.1
+    BlockStun: 0
+  DefaultMedAttacks:
+  - Attack:
+      Move: 0
+      Type: 2
+    Tag: 1
+    State: 0
+    Damage: 10
+    Knockback: 7
+    HitStun: 0.5
+    BlockStun: 0
+  - Attack:
+      Move: 0
+      Type: 2
+    Tag: 0
+    State: 2
+    Damage: 10
+    Knockback: 7
+    HitStun: 0.5
+    BlockStun: 0
+  - Attack:
+      Move: 0
+      Type: 2
+    Tag: 2
+    State: 1
+    Damage: 10
+    Knockback: 7
+    HitStun: 0.5
+    BlockStun: 0
+  DefaultHeavyAttacks:
+  - Attack:
+      Move: 0
+      Type: 3
+    Tag: 1
+    State: 0
+    Damage: 20
+    Knockback: 10
+    HitStun: 1
+    BlockStun: 0
+  - Attack:
+      Move: 0
+      Type: 3
+    Tag: 0
+    State: 2
+    Damage: 20
+    Knockback: 10
+    HitStun: 1
+    BlockStun: 0
+  - Attack:
+      Move: 0
+      Type: 3
+    Tag: 2
+    State: 1
+    Damage: 20
+    Knockback: 10
+    HitStun: 1
+    BlockStun: 0
+  Attacks:
+  - Attack:
+      Move: 3
+      Type: 1
+    Tag: 1
+    State: 0
+    Damage: 5
+    Knockback: 5
+    HitStun: 0.1
+    BlockStun: 0
