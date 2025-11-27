@@ -29,7 +29,18 @@ public class PlayerAirDashState : PlayerDashState
             InputReader.MovementInputResult.UpRight => Vector3.right,
             _ => DashDir
         };
-        player.Animator.SetFloat(DashingDir1, DashDir == Vector3.left ? 0 : 1);
+
+        if (!player.Reversed)
+        {
+            player.Animator.SetFloat(DashingDir1,DashDir == Vector3.left  ? 0 : 1 );  
+        }
+        else
+        {
+            player.Animator.SetFloat(DashingDir1,DashDir == Vector3.left  ? 1 : 0);
+        }
+     
+        
+        
         player. Animator?.SetTrigger(player.AirDashing);
 
         
