@@ -7,12 +7,12 @@ public class ChangeScene : MonoBehaviour
     
     public void LoadGame()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene("CombatScene");
        if(Time.timeScale == 0) Time.timeScale = 1;
     }
     public void LoadMenu()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene("MainMenu");
     }
     public void StartGame()
     {
