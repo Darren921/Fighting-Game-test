@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class PlayerUI : MonoBehaviour
 {
-    internal PlayerController _playerController;
+    private PlayerController _playerController;
 
     [SerializeField] private Slider _slider;
 
@@ -12,6 +12,8 @@ public class PlayerUI : MonoBehaviour
     private void Awake()
     {
         HitDetection.OnPlayerHit += UpdateHealth;
+        _playerController = GetComponent<PlayerController>();
+      
     }
 
     private void OnDestroy()
@@ -21,15 +23,12 @@ public class PlayerUI : MonoBehaviour
 
     private void Start()
     {
-        _playerController = GetComponent<PlayerController>();
         _slider.maxValue = _playerController.CharacterData.health;
         _slider.value = _playerController.CharacterData.health;
-    }
-
-    private void Update()
-    {
         UpdateHealth();
     }
+
+
 
     private void UpdateHealth()
     {

@@ -65,9 +65,10 @@ public class InputReader : MonoBehaviour
     public MovementInputResult CurrentMoveInput { get; private set; }
     public Attack CurrentAttackInput { get; private set; }
     public int CurrentAttackFrame { get; private set; }
-
     public Attack LastAttackInput { get; private set; }
-    public int LastAttackInputFrame { get; private set; }
+    
+    
+    private int LastAttackInputFrame { get; set; }
 
     public AttackData.States curState; 
     private readonly List<BufferedInput<MovementInputResult>> _movementBuffer = new();
@@ -93,18 +94,7 @@ public class InputReader : MonoBehaviour
         }
     }
 
-    /*public void AddInput<T>(T input,Queue<bufferedInput<T>> inputBuffer) where T : struct
-    {
-        var frame = Time.frameCount;
-        if (inputBuffer.Count < bufferCap)
-        {
-            if(input.GetType() == typeof(MovementInputResult))
-            {
-
-            }
-            inputBuffer.Enqueue(new bufferedInput<T>(input, frame));
-        }
-    }*/
+  
     private void AddMovementInput(MovementInputResult result)
     {
         if (_movementBuffer.Count >= _bufferCap)
@@ -114,8 +104,7 @@ public class InputReader : MonoBehaviour
 
     private void AddAttackInput(AttackType type)
     {
-        var Input = new Attack();
-        Input = ReturnAttack(type, CurrentMoveInput);
+         var Input = ReturnAttack(type, CurrentMoveInput);
         if (_attackBuffer.Count >= _bufferCap)
             _attackBuffer.RemoveAt(0);
         if (type != AttackType.None) 
@@ -155,7 +144,7 @@ public class InputReader : MonoBehaviour
 
     private void Update()
     {
-        if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
+        if (PauseManager.Instance && PauseManager.Instance.IsPaused)
             return;
         curState = CheckState(_player._playerStateManager.currentState);
         CheckMovementInput();
@@ -209,7 +198,6 @@ public class InputReader : MonoBehaviour
             [(1, -1)] = MovementInputResult.DownRight,
             [(-1, -1)] = MovementInputResult.DownLeft
         };
-//            print(playerInput);
         AddMovementInput(lookup[(_player.PlayerMove.x, _player.PlayerMove.y)]);
     }
 

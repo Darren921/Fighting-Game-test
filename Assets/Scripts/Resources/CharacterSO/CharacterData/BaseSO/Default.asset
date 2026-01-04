@@ -21,7 +21,6 @@ MonoBehaviour:
   jumpHeight: 3.5
   airDashCharges: 2
   jumpCharges: 2
-  damage: 0
-  lightKnockback: 7
-  medKnockback: 14
-  heavyKnockback: 17
+  dashDistance: 2
+  dashTime: 0.3
+  dashVertHeight: 4.75

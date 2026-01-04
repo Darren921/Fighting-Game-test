@@ -11,7 +11,7 @@ public class PlayerAirDashState : PlayerDashState
         _airDashCharges = player.CharacterData.airDashCharges;
         _airDashCharges--;
         player.StartCoroutine(AirDash(player));
-
+        SetUpDash(player);
 //      Debug.Log(newDashVelo);
     }
 
@@ -42,34 +42,14 @@ public class PlayerAirDashState : PlayerDashState
         
         
         player. Animator?.SetTrigger(player.AirDashing);
-
+        GetDashValues(player);
         
-        Debug.Log(DashDir);
-            NewDashVelo = DashDir * (2 * (DashDistance / DashTime));
+        // Debug.Log(DashDir);
+            NewDashVelo = DashDir * (1.25f * (DashDistance / DashTime));
        
      
     }
-
-    /*switch (Dir)
-           {
-               case InputReader.MovementInputResult.None or InputReader.MovementInputResult.Forward or InputReader.MovementInputResult.Up :
-                   DashDir = !player.Reversed ? new Vector3(2f, 0, 0) : new Vector3(-2f, 0, 0);
-                   //          Debug.Log(dashDir);
-                   break;
-               case InputReader.MovementInputResult.Backward :
-                   DashDir = !player.Reversed ? new Vector3(-2f, 0f, 0) : new Vector3(2f, 0f, 0);
-                   //          Debug.Log(dashDir);
-                   break;
-               case InputReader.MovementInputResult.UpLeft:
-                   if(player.DashMarcoActive)   DashDir =  new Vector3(-2f, 0, 0);
-                   else DashDir = !player.Reversed ? new Vector3(2f, 0, 0) : new Vector3(-2f, 0, 0);
-                   break;
-               case InputReader.MovementInputResult.UpRight:
-                   if(player.DashMarcoActive)   DashDir = new Vector3(2f, 0, 0);
-                   else DashDir = !player.Reversed ? new Vector3(-2f, 0, 0) : new Vector3(2f, 0, 0);
-                   break;
-
-           }*/
+    
     private IEnumerator AirDash(PlayerController player)
     {
         //    Debug.Log("PlayerDashState Dash");
@@ -82,7 +62,6 @@ public class PlayerAirDashState : PlayerDashState
         player.GravityManager.ResetVelocity();
         player.rb.useGravity = true;
         IsDashing = false;
-        player.IsDashing = false;
     }
 
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)

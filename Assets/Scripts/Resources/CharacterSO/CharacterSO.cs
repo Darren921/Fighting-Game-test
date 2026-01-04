@@ -15,12 +15,19 @@ public class CharacterSO : ScriptableObject
     public int health;
     [Header ("Misc")]
     public string characterName;
-    [Header("Movement")]
+    [Header("Walk and Run Speed")]
     public int walkSpeed;
     public int runSpeed;
+    
+    
     public float jumpHeight;
     public int airDashCharges;
     public int jumpCharges;
+
+    public float dashDistance;
+    public float dashTime; 
+    public float dashVertHeight;
+    
     
     private void OnValidate()
     {

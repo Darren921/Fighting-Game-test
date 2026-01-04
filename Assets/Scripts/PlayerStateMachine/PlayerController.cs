@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     internal readonly int Dashing = Animator.StringToHash("Dashing");
     internal readonly int AirDashing = Animator.StringToHash("Dashing");
 
-    internal int Attacking => Animator.StringToHash("Attacking");
+    private int Attacking => Animator.StringToHash("Attacking");
     private int Light => Animator.StringToHash("Light");
     private int Heavy => Animator.StringToHash("Heavy");
     private int Medium => Animator.StringToHash("Medium");
@@ -28,6 +28,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     private int StartUp = Animator.StringToHash("StartUp");
     private int Active = Animator.StringToHash("Active");
     private int Recovery = Animator.StringToHash("Recovery");
+    internal readonly int WalkDir = Animator.StringToHash("WalkDir");
+
     #endregion
 
     #region Class references
@@ -95,7 +97,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     #endregion
 
     #region Decelerating Variables
-    [SerializeField]  private float DecelerationDuration = 0.7f;
+    [SerializeField]  private float DecelerationDuration ;
     [SerializeField] internal bool Decelerating;
     [SerializeField]   private float _elapsedTime;
     [SerializeField]  internal bool DecelActive;
@@ -109,24 +111,30 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     [SerializeField]  internal bool AtBorder;
     [SerializeField]  internal bool DashMarcoActive;
     [SerializeField] private float MinDashHeight;
-     
+    private BoxCollider FrictionBox;
     #endregion
 
-    internal bool isDead; 
+    public bool isDead { get; private set; } 
 
     private void Awake()
     {
+        GetOnObjectComponents();
         MinDashHeight = 1.487012f;
+        IsGrounded = true;
+        RaycastDistance = 1.807687f;
+        HitDetection.OnDeath += OnPlayerDeath;
+    }
+
+    private void GetOnObjectComponents()
+    {
+        FrictionBox = GetComponent<BoxCollider>();
         PlayerKnockBack = GetComponent<PlayerKnockBack>();
         PlayerHitDetection = GetComponentInChildren<HitDetection>();
         _playerStateManager = GetComponent<PlayerStateManager>();
         GravityManager = GetComponent<GravityManager>();
-        IsGrounded = true;
         InputReader = GetComponent<InputReader>();
         Animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
-        RaycastDistance = 1.807687f;
-        HitDetection.OnDeath += OnPlayerDeath;
     }
 
     private void Start()
@@ -141,6 +149,13 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         //creates a new set of controls for the chosen device 
         _controls.devices = new[] { device };
         _playerActions = device != null ? _controls.Player : new Controls.PlayerActions();
+        SetUpCallBacks();
+        OnEnablePlayer();
+        SetUpCharacterVariables();
+    }
+
+    private void SetUpCallBacks()
+    {
         _playerActions.Run.performed += OnRun;
         _playerActions.Run.canceled += OnRun;
         _playerActions.DashMacro.performed += OnDashMacro;
@@ -150,14 +165,11 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         _playerActions.Move.canceled += OnMove;
         _playerActions.Light.performed += OnLight;
         _playerActions.Medium.performed += OnMedium;
-        _playerActions.Heavy.performed += OnHeavy; // I don't need to explain this comment
+        _playerActions.Heavy.performed += OnHeavy; 
         _playerActions.Jumping.performed += OnJumping;
         _playerActions.SuperJump.performed += OnSuperJump;
-        OnEnablePlayer();
-//        print(gameObject.gameObject.name);
-        SetUpCharacterVariables();
     }
- 
+
     public void OnEnablePlayer()
     {
         _playerActions.Enable();
@@ -170,7 +182,11 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
 
     private void OnPlayerDeath()
     {
-        
+        if (Health <= 0)
+        {
+            isDead = true;
+            gameObject.SetActive(false);
+        }
         InputReader.enabled = false;
         _playerStateManager.ResetStateMachine();
         StopAllCoroutines();
@@ -202,6 +218,216 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     }
 
 
+ 
+    private void OnCollisionStay(Collision collision)
+    {
+        IsGrounded = GravityManager.CheckGrounded(this);
+        if (!collision.gameObject.CompareTag("Player")) return;
+        if(IsGrounded) SetFrictionBox(true);
+    }
+
+   
+    private void OnCollisionExit(Collision other)
+    {
+        IsGrounded = false;
+        SetFrictionBox(false);
+    }
+
+    private void Update()
+    {
+        // sets animator booleans
+        Animator?.SetBool(airborne, !IsGrounded);
+        
+        switch (IsGrounded)
+        {
+            case true:
+               Animator?.SetBool(Crouch, IsCrouching);
+               Animator?.SetBool(Walking, IsWalking);
+               Animator?.SetBool(Running, IsRunning);
+                break;
+            case false:
+               Animator?.SetBool(Crouch, false);
+               Animator?.SetBool(Walking, false);
+               Animator?.SetBool(Running, false);
+               SetFrictionBox(false);
+                break;
+        }
+        if (Animator) IsActiveFrame = Animator.GetBool(Active);
+        AtDashHeight = !IsGrounded && transform.localPosition.y > MinDashHeight;
+
+    }
+
+   
+
+
+    // Contains onMove, onDash,etc.
+    #region Control contexts 
+    public void OnMove(InputAction.CallbackContext context)
+    {
+        //Turns off running and walking when player releases context or player stops F
+        //default till running begins
+       
+        PlayerMove = context.ReadValue<Vector3>();
+        if (!IsRunning &&
+            _playerStateManager.currentState !=
+            _playerStateManager.States[PlayerStateManager.PlayerStateTypes.Running] && PlayerMove.x != 0)
+        {
+            IsWalking = true;
+        }
+        else if (PlayerMove.x == 0)
+        {
+            IsWalking = false;
+        }
+        IsCrouching = PlayerMove.y < 0;
+
+    }
+    public void OnDash(InputAction.CallbackContext context)
+    {
+        switch (IsGrounded)
+        {
+            case false:
+            {
+                if (IsDashing || IsGrounded || JumpCharges == 0 || !AtDashHeight) break;
+                print("entered dash");
+                PerformDash(true);
+                break;
+            }
+            case true:
+            {
+                if (IsDashing || InputReader.CurrentMoveInput == InputReader.MovementInputResult.Forward) return;
+                print("entered dash");
+                PerformDash();
+                break;
+            }
+        }
+    }
+    public void OnRun(InputAction.CallbackContext context)
+    {
+     
+        if (context.performed && InputReader.GetValidMoveInput() is not (InputReader.MovementInputResult.Backward or InputReader.MovementInputResult.None or InputReader.MovementInputResult.Down) && IsGrounded && !IsRunning)
+        {
+            StartRun();
+        }
+        if (!IsRunning || !context.canceled || PlayerMove.x == 0 || _playerStateManager.currentState == _playerStateManager.States[PlayerStateManager.PlayerStateTypes.Running]) return;
+        StopRun(true);
+    }
+    
+    public void OnLight(InputAction.CallbackContext context)
+    {
+        ReadAttackInput(context, InputReader.AttackType.Light, Light);
+    }
+    
+    public void OnMedium(InputAction.CallbackContext context)
+    {
+        ReadAttackInput(context,InputReader.AttackType.Medium,Medium);
+    }
+
+    public void OnHeavy(InputAction.CallbackContext context)
+    {
+        ReadAttackInput(context, InputReader.AttackType.Heavy, Heavy);
+    }
+    public void OnJumping(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            OnJump?.Invoke();
+        }
+    }
+
+    public void OnSuperJump(InputAction.CallbackContext context)
+    {
+        SuperJumpActive = true;
+    }
+
+    #endregion
+   
+    private void ReadAttackInput(InputAction.CallbackContext context,InputReader.AttackType type ,int AnimatorHash  )
+    {
+        PlayerAttackAction?.Invoke(type);
+        if (OnAttackCoolDown || IsAttacking || !context.performed) return;
+        IsAttacking = true;
+        Animator?.SetTrigger(Attacking);
+        Animator?.SetTrigger(AnimatorHash);
+    }
+  
+    public void SetFrictionBox(bool value)
+    {
+        FrictionBox.enabled = value;
+    }
+    #region Run/Dash
+    private void PerformDash(bool isAirDashing = false)
+    {
+        IsDashing = true;
+        DashDir = InputReader.CurrentMoveInput;
+        IsRunning = false;
+        IsWalking = false;
+    }
+    private void StartRun()
+    {
+        IsRunning = true;
+        IsWalking = false;
+    }
+    private void StopRun(bool startWalk)
+    {
+        IsRunning = false;
+        if (startWalk) IsWalking = true;
+    }
+
+
+    public void OnDashMacro(InputAction.CallbackContext context)
+    {
+   
+        //shortcut for dash 
+        print("entered dash Marco");
+        DashMarcoActive = true;
+        switch (context.performed)
+        {
+            case true when InputReader.CurrentMoveInput is not (InputReader.MovementInputResult.Forward or InputReader.MovementInputResult.None) && IsGrounded:
+                print("dash back");
+                PerformDash();
+                break;
+            case true when !IsGrounded:
+                print("air dash");
+                if (IsDashing || IsGrounded || JumpCharges == 0 || !AtDashHeight) break;
+                PerformDash(true);
+                break;
+            case true:
+            {
+                print("sprinting");
+                StartRun();
+                if (!context.canceled) return;
+                print("sprint cancel ");
+                StopRun(false);
+                break;
+            }
+        }
+
+        if (!context.canceled) return;
+        DashMarcoActive = false;
+    }
+
+  
+    internal IEnumerator DecelerationCurve(PlayerController player)
+    {
+        Decelerating = true;
+
+        while (_elapsedTime < DecelerationDuration && player.DecelActive)
+        {
+            player.rb.linearVelocity = Vector3.Lerp(player.rb.linearVelocity, new Vector3(0f, 0, 0), DecelerationDuration);
+            _elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        Decelerating = false;
+        _elapsedTime = 0f;
+    }
+    
+
+    #endregion
+ 
+
+    #region Attack Animations System
+
     public void ResetAttackingTrigger()
     {
         //This may need to change to separate ones for each attack
@@ -211,6 +437,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         Animator?.ResetTrigger(Attacking);
         Animator?.ResetTrigger(Light);
         Animator?.ResetTrigger(Medium);
+        Animator?.ResetTrigger(Heavy);
         Animator?.SetBool(left, false);
         Animator?.SetBool(right, false);
         Animator?.SetBool(Active,false);
@@ -241,256 +468,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     {
         Animator?.SetBool(Recovery,false);
     }
-    private void OnCollisionStay(Collision collision)
-    {
-        IsGrounded = GravityManager.CheckGrounded(this);
 
-        //this needs to be rework (current anti head landing )
-      //  PreventHeadLanding(collision);
-    }
-
-    /*private void PreventHeadLanding(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Player") && collision.gameObject != gameObject && !IsGrounded)
-        {
-            if (gameObject.GetComponent<Collider>().bounds.min.y >
-                collision.gameObject.GetComponent<Collider>().bounds.max.y - 0.001)
-            {
-                if (gameObject.transform.position.x < collision.gameObject.GetComponent<Collider>().bounds.center.x)
-                {
-                    rb.AddForce(-5, 1.5f, 0);
-                }
-                else
-                {
-                    rb.AddForce(5, 1.5f, 0);
-                }
-            }
-            else
-            {
-                if (gameObject.transform.position.x < collision.gameObject.GetComponent<Collider>().bounds.center.x)
-                {
-                    rb.AddForce(-1, -5f, 0, ForceMode.VelocityChange);
-                }
-                else
-                {
-                    rb.AddForce(1, -5f, 0, ForceMode.VelocityChange);
-                }
-            }
-        }
-    }*/
-
-    private void OnCollisionExit(Collision other)
-    {
-        IsGrounded = false;
-    }
-
-    private void Update()
-    {
-        // sets animator booleans
-        Animator?.SetBool(airborne, !IsGrounded);
-        switch (IsGrounded)
-        {
-            case true:
-                IsCrouching = PlayerMove.y < 0;
-               Animator?.SetBool(Crouch, IsCrouching);
-               Animator?.SetBool(Walking, IsWalking);
-               Animator?.SetBool(Running, IsRunning);
-                break;
-            case false:
-               Animator?.SetBool(Crouch, false);
-               Animator?.SetBool(Walking, false);
-               Animator?.SetBool(Running, false);
-                break;
-        }
-        if (Animator is not null) IsActiveFrame = Animator.GetBool(Active);
-//        print(GravityManager.RaycastHit.distance);
-//        print(JumpHeight / 2);
-        if (!IsGrounded && transform.localPosition.y > MinDashHeight)
-        {
-//            Debug.Log(transform.transform.localPosition.y  );
-//            Debug.Log(JumpHeight / 2);
-            AtDashHeight = true;
-        }
-        else
-        {
-            AtDashHeight = false;
-        }
-    }
-
-
-    public void OnMove(InputAction.CallbackContext context)
-    {
-        //Turns off running and walking when player releases context or player stops F
-        //default till running begins
-        // if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
-        //     return;
-        PlayerMove = context.ReadValue<Vector3>();
-        if (!IsRunning &&
-            _playerStateManager.currentState !=
-            _playerStateManager.States[PlayerStateManager.PlayerStateTypes.Running] && PlayerMove.x != 0)
-        {
-//            print("walking");
-            IsWalking = true;
-        }
-        else if (PlayerMove.x == 0)
-        {
-            //           print("stop walking");
-            IsWalking = false;
-        }
-    }
-
-    public void OnLight(InputAction.CallbackContext context)
-    {
-        // if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
-        //     return;
-        PlayerAttackAction?.Invoke(InputReader.AttackType.Light);
-     
-        if (OnAttackCoolDown || IsAttacking || !context.performed) return;
-        IsAttacking = true;
-       Animator?.SetTrigger(Attacking);
-       Animator?.SetTrigger(Light);
-    }
-
-    public void OnMedium(InputAction.CallbackContext context)
-    {
-        // if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
-        //     return;
-        PlayerAttackAction?.Invoke(InputReader.AttackType.Medium);
-        if (OnAttackCoolDown || IsAttacking || !context.performed) return;
-        IsAttacking = true;
-        Animator?.SetTrigger(Attacking);
-        Animator?.SetTrigger(Medium);
-    }
-
-    public void OnHeavy(InputAction.CallbackContext context)
-    {
-        // if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
-        //     return;
-        PlayerAttackAction?.Invoke(InputReader.AttackType.Heavy);
-        if (OnAttackCoolDown || IsAttacking || !context.performed) return;
-        IsAttacking = true;
-        Animator?.SetTrigger(Attacking);
-        Animator?.SetTrigger(Heavy);
-    }
-    
-
-    public void OnDashMacro(InputAction.CallbackContext context)
-    {
-        // if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
-        //     return;
-        //shortcut for dash 
-        print("entered dash Marco");
-        DashMarcoActive = true;
-        switch (context.performed)
-        {
-            case true when InputReader.CurrentMoveInput is not (InputReader.MovementInputResult.Forward or InputReader.MovementInputResult.None) && IsGrounded:
-                print("dash back");
-                PerformDash();
-                break;
-            case true when !IsGrounded:
-                print("air dash");
-                if (IsDashing || IsGrounded || JumpCharges == 0 || !AtDashHeight) break;
-                PerformDash(true);
-                break;
-            case true:
-            {
-                print("sprinting");
-                IsRunning = true;
-                IsWalking = false;
-                if (!context.canceled) return;
-                print("sprint cancel ");
-                IsRunning = false;
-                break;
-            }
-        }
-
-        if (!context.canceled) return;
-        DashMarcoActive = false;
-    }
-
-    private void PerformDash(bool isAirDashing = false)
-    {
-        IsDashing = true;
-        DashDir = InputReader.CurrentMoveInput;
-        IsRunning = false;
-        IsWalking = false;
-    }
-
-    public void OnDash(InputAction.CallbackContext context)
-    {
-        // if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
-        //     return;
-        switch (IsGrounded)
-        {
-            case false:
-            {
-                if (IsDashing || IsGrounded || JumpCharges == 0 || !AtDashHeight) break;
-                print("entered dash");
-                PerformDash(true);
-                break;
-            }
-            case true:
-            {
-                if (IsDashing || InputReader.CurrentMoveInput == InputReader.MovementInputResult.Forward) return;
-                print("entered dash");
-                PerformDash();
-                break;
-            }
-        }
-    }
-    public void OnRun(InputAction.CallbackContext context)
-    {
-        // if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
-        //     return;
-        if (context.performed && InputReader.GetValidMoveInput() is not (InputReader.MovementInputResult.Backward or InputReader.MovementInputResult.None or InputReader.MovementInputResult.Down) && IsGrounded && !IsRunning)
-        {
-//            print(InputReader.CurrentMoveInput);
-            IsRunning = true;
-            IsWalking = false;
-        }
-        if (!IsRunning || !context.canceled || PlayerMove.x == 0 || _playerStateManager.currentState == _playerStateManager.States[PlayerStateManager.PlayerStateTypes.Running]) return;
-        print("canceled run");
-        IsRunning = false;
-        IsWalking = true;
-    }
-
-    public void OnJumping(InputAction.CallbackContext context)
-    {
-        // if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
-        //     return;
-        if (context.performed)
-        {
-            OnJump?.Invoke();
-        }
-    }
-
-    public void OnSuperJump(InputAction.CallbackContext context)
-    {
-        // if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
-        //     return;
-        SuperJumpActive = true;
-    }
-    
-    
-
-  
-
-    internal IEnumerator DecelerationCurve(PlayerController player)
-    {
-        Decelerating = true;
-
-        while (_elapsedTime < DecelerationDuration && player.DecelActive)
-        {
-            //    var decelerationCurve = player.decelerationCurve.Evaluate(elapsedTime / decelerationDuration);
-            player.rb.linearVelocity =
-                Vector3.Lerp(player.rb.linearVelocity, new Vector3(0f, 0, 0), DecelerationDuration);
-//          Debug.Log( player.rb.linearVelocity.magnitude);
-            _elapsedTime += Time.deltaTime;
-//            Debug.Log(elapsedTime);
-            yield return null;
-        }
-
-        Decelerating = false;
-        _elapsedTime = 0f;
-    }
+    #endregion
+   
 }

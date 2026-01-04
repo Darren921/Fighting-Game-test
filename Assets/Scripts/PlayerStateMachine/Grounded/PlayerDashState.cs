@@ -6,8 +6,8 @@ public class PlayerDashState : PlayerMovingState
     [field: SerializeField] protected InputReader.MovementInputResult Dir;
     [field: SerializeField] protected  Vector3 DashDir;
     [field: SerializeField] protected Vector3 NewDashVelo;
-    [field: SerializeField]  protected  float DashTime = 0.3f;
-    [field: SerializeField] protected  float DashDistance = 1.5f;
+    [field: SerializeField]  protected  float DashTime ;
+    [field: SerializeField] protected  float DashDistance;
     [field: SerializeField]  protected bool IsDashing;
    private float _jumpVelocity;
      private Coroutine _dashCoroutine;
@@ -16,27 +16,34 @@ public class PlayerDashState : PlayerMovingState
     {
         Debug.Log("Entering Dash State");
         player. Animator?.SetTrigger(player.Dashing);
+        GetDashValues(player);
         SetUpDash(player);
         player.StartCoroutine(Dash(player));
     }
+
+    protected void GetDashValues(PlayerController player)
+    {
+        DashTime = player.CharacterData.dashTime;
+        DashDistance = player.CharacterData.dashDistance;
+        _jumpVelocity = player.CharacterData.dashVertHeight;
+        
+    }
+    
 
     protected virtual void SetUpDash(PlayerController player)
     {
         Dir  = player.DashDir;
         Debug.Log(Dir);
         Debug.Log("PlayerDashState EnterState");
-        switch (Dir)
+
+        if (Dir != InputReader.MovementInputResult.Backward)
         {
-            case InputReader.MovementInputResult.None or  InputReader.MovementInputResult.Forward  :
-                DashDir =  !player.Reversed ? new Vector3(2, 0, 0 ) : new Vector3(-2, 0, 0);
-                _jumpVelocity = 0;
-                break;
-            case InputReader.MovementInputResult.Backward :
-                DashDir =  !player.Reversed ? new Vector3(-1, 0f, 0 ) : new Vector3(1, 0f, 0);
-                _jumpVelocity = 5 ;
-                break;
+            Debug.Log(Dir);
+            return;
         }
+        DashDir =  !player.Reversed ? Vector3.left: Vector3.right;
       
+        
         NewDashVelo = DashDir * (DashDistance / DashTime);
     }
 

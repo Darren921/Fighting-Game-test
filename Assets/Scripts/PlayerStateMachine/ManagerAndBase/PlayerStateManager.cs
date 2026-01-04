@@ -5,6 +5,15 @@ using UnityEngine;
 [Serializable]
 public class PlayerStateManager : MonoBehaviour
 {
+    
+    internal Dictionary<PlayerStateTypes, PlayerBaseState> States;
+    public string CurrentStateName => currentState?.GetType().Name;
+
+    [field:SerializeField] public PlayerBaseState currentState { get; private set; }
+    [field:SerializeField] internal PlayerBaseState lastState { get; private set; }
+ 
+    private PlayerController _player;
+
     [Flags]
     public enum PlayerStateTypes
     {
@@ -22,35 +31,17 @@ public class PlayerStateManager : MonoBehaviour
         Blocking = 1 << 10, //NEW, FOR BLOCKING
     }
 
-    internal Dictionary<PlayerStateTypes, PlayerBaseState> States;
-    public string CurrentStateName => currentState?.GetType().Name;
-
-    [SerializeReference] internal PlayerBaseState currentState;
-    [SerializeReference] internal PlayerBaseState lastState;
-    private PlayerController _player;
-
+ 
+    #region StatesList
     public PlayerBaseState[] AirborneStates { get; private set; }
     public PlayerBaseState[] StandingStates { get; private set; }
 
     public PlayerBaseState[] CrouchingStates { get; private set; }
-
-    void Awake()
+    #endregion
+    
+    #region States
+    private void SortStates()
     {
-        //This dictionary makes it that each state is available and not duped 
-        States = new()
-        {
-            { PlayerStateTypes.Neutral, new PlayerNeutralState() },
-            { PlayerStateTypes.Crouching, new PlayerCrouchingState() },
-            { PlayerStateTypes.Jumping, new PlayerJumpingState() },
-            { PlayerStateTypes.Walking, new PlayerWalkingState() },
-            { PlayerStateTypes.Running, new PlayerRunningState() }, /////
-            { PlayerStateTypes.Attack, new PlayerAttackState() },
-            { PlayerStateTypes.CrouchMove, new PlayerCrouchMoveState() },
-            { PlayerStateTypes.Dash, new PlayerDashState() },
-            { PlayerStateTypes.AirDash, new PlayerAirDashState() },
-            { PlayerStateTypes.HitStun, new PlayerHitStunState() },
-            { PlayerStateTypes.Blocking, new PlayerBlockingState() }, //NEW, FOR BLOCKING
-        };
         AirborneStates = new[]
         {
             States[PlayerStateTypes.AirDash],
@@ -69,17 +60,37 @@ public class PlayerStateManager : MonoBehaviour
         };
     }
 
+    private void CreateStatesList()
+    {
+        //This dictionary makes it that each state is available and not duped 
+        States = new Dictionary<PlayerStateTypes, PlayerBaseState>
+        {
+            { PlayerStateTypes.Neutral, new PlayerNeutralState() },
+            { PlayerStateTypes.Crouching, new PlayerCrouchingState() },
+            { PlayerStateTypes.Jumping, new PlayerJumpingState() },
+            { PlayerStateTypes.Walking, new PlayerWalkingState() },
+            { PlayerStateTypes.Running, new PlayerRunningState() }, /////
+            { PlayerStateTypes.Attack, new PlayerAttackState() },
+            { PlayerStateTypes.CrouchMove, new PlayerCrouchMoveState() },
+            { PlayerStateTypes.Dash, new PlayerDashState() },
+            { PlayerStateTypes.AirDash, new PlayerAirDashState() },
+            { PlayerStateTypes.HitStun, new PlayerHitStunState() },
+            { PlayerStateTypes.Blocking, new PlayerBlockingState() }, //NEW, FOR BLOCKING
+        };
+    }
+
+    #endregion
+ 
+    void Awake()
+    {
+        CreateStatesList();
+        SortStates();
+    }
     void Start()
     {
         _player = GetComponent<PlayerController>();
         ResetStateMachine();
     }
-
-    public void ResetStateMachine()
-    {
-        currentState = States[PlayerStateTypes.Neutral];
-    }
-
     void Update()
     {
         currentState.UpdateState(this, _player);
@@ -89,6 +100,8 @@ public class PlayerStateManager : MonoBehaviour
     {
         currentState.FixedUpdateState(this, _player);
     }
+   
+  
 
     public void SwitchState(PlayerStateTypes newType)
     {
@@ -101,25 +114,33 @@ public class PlayerStateManager : MonoBehaviour
             currentState?.EnterState(this, _player);
         }
     }
+    
+    public void ResetStateMachine()
+    {
+        currentState = States[PlayerStateTypes.Neutral];
+    }
+
 
     public void CheckForTransition(PlayerStateTypes transitionType)
     {
-        if (transitionType.HasFlag(PlayerStateTypes.Neutral))
-            if (_player.PlayerMove == Vector3.zero && _player.IsGrounded)
-            {
-                SwitchState(PlayerStateTypes.Neutral);
-            }
-
+       
         if (transitionType.HasFlag(PlayerStateTypes.AirDash))
+        {
             if (_player.IsDashing && _player.AtDashHeight)
                 SwitchState(PlayerStateTypes.AirDash);
-
+            return;
+        }
         if (transitionType.HasFlag(PlayerStateTypes.Jumping))
             if (_player.PlayerMove.y > 0)
                 SwitchState(PlayerStateTypes.Jumping);
-
+        if (transitionType.HasFlag(PlayerStateTypes.Neutral))
+            if (_player.PlayerMove == Vector3.zero && _player.IsGrounded)
+            {
+                SwitchState(PlayerStateTypes.Neutral); 
+            }
+       
         if (transitionType.HasFlag(PlayerStateTypes.Walking))
-            if (_player.PlayerMove.x != 0)
+            if (_player.PlayerMove.x != 0 && !_player.IsRunning)
                 SwitchState(PlayerStateTypes.Walking);
 
         if (transitionType.HasFlag(PlayerStateTypes.Running))
@@ -127,8 +148,7 @@ public class PlayerStateManager : MonoBehaviour
                 SwitchState(PlayerStateTypes.Running);
 
         if (transitionType.HasFlag(PlayerStateTypes.Dash))
-            if (_player.IsDashing && _player.IsGrounded &&
-                _player.InputReader.GetValidMoveInput() != InputReader.MovementInputResult.Forward)
+            if (_player.IsDashing && _player.IsGrounded && _player.InputReader.GetValidMoveInput() != InputReader.MovementInputResult.Forward)
                 SwitchState(PlayerStateTypes.Dash);
 
         if (transitionType.HasFlag(PlayerStateTypes.Attack))

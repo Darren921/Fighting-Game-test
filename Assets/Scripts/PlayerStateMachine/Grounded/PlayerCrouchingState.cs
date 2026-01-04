@@ -1,9 +1,12 @@
+using UnityEngine;
+
 [System.Serializable]
 public class PlayerCrouchingState : PlayerBaseState
 {
     internal override void EnterState(PlayerStateManager playerStateManager,PlayerController player)
     {
      //   Debug.Log("Entering PlayerCrouchingState");
+     player.rb.linearVelocity = Vector3.zero;
     }
 
     internal override void UpdateState(PlayerStateManager playerStateManager,PlayerController player)
@@ -11,10 +14,8 @@ public class PlayerCrouchingState : PlayerBaseState
     
         // swap states 
         playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Neutral | PlayerStateManager.PlayerStateTypes.Attack | PlayerStateManager.PlayerStateTypes.Jumping );
-        if (!player.IsCrouching && player.IsWalking)
-        {
-         playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Walking);
-        }
+        if (!player.IsCrouching && player.IsWalking) playerStateManager.SwitchState(PlayerStateManager.PlayerStateTypes.Walking);
+        
     }
 
     internal override void FixedUpdateState(PlayerStateManager playerStateManager,PlayerController playerController)
