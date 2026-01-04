@@ -223,6 +223,7 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     {
         IsGrounded = GravityManager.CheckGrounded(this);
         if (!collision.gameObject.CompareTag("Player")) return;
+        Debug.Log(collision.gameObject.name);
         if(IsGrounded) SetFrictionBox(true);
     }
 

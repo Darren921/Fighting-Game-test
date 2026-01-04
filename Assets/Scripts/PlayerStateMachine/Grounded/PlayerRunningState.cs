@@ -24,7 +24,7 @@ public class PlayerRunningState : PlayerMovingState
             }
         }
 
-        playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Attack);
+        playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Attack | PlayerStateManager.PlayerStateTypes.Jumping);
 
     var backWardDir = player.Reversed ? 1f : -1f;
         if (player.InputReader.CurrentMoveInput == InputReader.MovementInputResult.Backward &&  Mathf.Approximately(player.PlayerMove.x, backWardDir) && !player.Decelerating && player.DecelActive)

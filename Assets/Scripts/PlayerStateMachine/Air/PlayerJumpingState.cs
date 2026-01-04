@@ -58,7 +58,7 @@ public class PlayerJumpingState : PlayerBaseState
         
         doubleJumpReady =  player.JumpCharges > 0 && !player.SuperJumpActive;
     
-     //   atAirDashHeight = 
+  
         //Transitioning states 
         if (!player.IsGrounded)
         {
@@ -137,7 +137,7 @@ public class PlayerJumpingState : PlayerBaseState
         // }
 
         player.Animator.SetBool(player.Jump, false);
-        player.GravityManager.ResetVelocity();
+     if(player.IsGrounded)   player.GravityManager.ResetVelocity();
         xJumpVal = 0f;
         atJumpHeight = false;
         jumpTriggered =  false;
