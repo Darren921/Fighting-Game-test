@@ -21,6 +21,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     private int Light => Animator.StringToHash("Light");
     private int Heavy => Animator.StringToHash("Heavy");
     private int Medium => Animator.StringToHash("Medium");
+    private int Special => Animator.StringToHash("Special");
+    
     internal int left = Animator.StringToHash("Left");
     internal int right = Animator.StringToHash("Right");
     internal int airborne = Animator.StringToHash("Airborne");
@@ -165,7 +167,8 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         _playerActions.Move.canceled += OnMove;
         _playerActions.Light.performed += OnLight;
         _playerActions.Medium.performed += OnMedium;
-        _playerActions.Heavy.performed += OnHeavy; 
+        _playerActions.Heavy.performed += OnHeavy;
+        _playerActions.Special.performed += OnSpecial;
         _playerActions.Jumping.performed += OnJumping;
         _playerActions.SuperJump.performed += OnSuperJump;
     }
@@ -336,6 +339,12 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
     public void OnHeavy(InputAction.CallbackContext context)
     {
         ReadAttackInput(context, InputReader.AttackType.Heavy, Heavy);
+    }
+    
+    public void OnSpecial(InputAction.CallbackContext context)
+    {
+        //ReadAttackInput(context, InputReader.AttackType.Special, Special);
+        Debug.Log("Special attack triggered");
     }
     public void OnJumping(InputAction.CallbackContext context)
     {

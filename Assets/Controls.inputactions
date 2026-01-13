@@ -42,6 +42,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "Special",
+                    "type": "Button",
+                    "id": "715377da-294f-4ee3-a0ef-441ace4fa010",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
                     "name": "DashMacro",
                     "type": "PassThrough",
                     "id": "23375423-81af-449e-823d-5e5e16ffc24a",
@@ -624,6 +633,28 @@
                     "processors": "",
                     "groups": ";Gamepad",
                     "action": "Heavy",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e8cf1a2f-3c19-4f61-bafe-d36abd8b41f1",
+                    "path": "<Keyboard>/comma",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Special",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3e0e7595-7457-43ae-a122-601eb2d30dd5",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Special",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
