@@ -18475,7 +18475,7 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_SelectedColor: {r: 0.6981132, g: 0.6981132, b: 0.6981132, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -18507,7 +18507,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 2081171009}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UIController, Assembly-CSharp
         m_MethodName: DeselectObject
         m_Mode: 2
@@ -25366,7 +25366,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 2081171009}
+      - m_Target: {fileID: 6418475053931931943, guid: ea096222a48080147bc8075a6de13475, type: 3}
         m_TargetAssemblyTypeName: UIController, Assembly-CSharp
         m_MethodName: SelectObject
         m_Mode: 2
@@ -27197,7 +27197,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 2081171009}
+      - m_Target: {fileID: 6418475053931931943, guid: ea096222a48080147bc8075a6de13475, type: 3}
         m_TargetAssemblyTypeName: UIController, Assembly-CSharp
         m_MethodName: SelectObject
         m_Mode: 2
@@ -27373,6 +27373,63 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!1001 &1948289590
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 983931978823208246, guid: ea096222a48080147bc8075a6de13475, type: 3}
+      propertyPath: m_Name
+      value: UIController
+      objectReference: {fileID: 0}
+    - target: {fileID: 2373057995027469373, guid: ea096222a48080147bc8075a6de13475, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 640.83844
+      objectReference: {fileID: 0}
+    - target: {fileID: 2373057995027469373, guid: ea096222a48080147bc8075a6de13475, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 244.13905
+      objectReference: {fileID: 0}
+    - target: {fileID: 2373057995027469373, guid: ea096222a48080147bc8075a6de13475, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 11.785248
+      objectReference: {fileID: 0}
+    - target: {fileID: 2373057995027469373, guid: ea096222a48080147bc8075a6de13475, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2373057995027469373, guid: ea096222a48080147bc8075a6de13475, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2373057995027469373, guid: ea096222a48080147bc8075a6de13475, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2373057995027469373, guid: ea096222a48080147bc8075a6de13475, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2373057995027469373, guid: ea096222a48080147bc8075a6de13475, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2373057995027469373, guid: ea096222a48080147bc8075a6de13475, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2373057995027469373, guid: ea096222a48080147bc8075a6de13475, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ea096222a48080147bc8075a6de13475, type: 3}
 --- !u!43 &1955928208
 Mesh:
   m_ObjectHideFlags: 0
@@ -27625,7 +27682,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 2081171009}
+      - m_Target: {fileID: 6418475053931931943, guid: ea096222a48080147bc8075a6de13475, type: 3}
         m_TargetAssemblyTypeName: UIController, Assembly-CSharp
         m_MethodName: SelectObject
         m_Mode: 2
@@ -29089,51 +29146,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2079291978}
   m_CullTransparentMesh: 1
---- !u!1 &2081171008
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2081171010}
-  - component: {fileID: 2081171009}
-  m_Layer: 0
-  m_Name: UIController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2081171009
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2081171008}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 75d5d00bed93f144498d502f2fa65e06, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  eventSystem: {fileID: 0}
---- !u!4 &2081171010
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2081171008}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 640.83844, y: 244.13905, z: 11.785248}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2082975280
 GameObject:
   m_ObjectHideFlags: 0
@@ -30640,4 +30652,4 @@ SceneRoots:
   - {fileID: 725914609}
   - {fileID: 492127217}
   - {fileID: 1719439316}
-  - {fileID: 2081171010}
+  - {fileID: 1948289590}

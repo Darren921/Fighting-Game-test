@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
    [SerializeField] private GameObject GameOverScreen;
    [SerializeField] private Sprite _p1WinSprite, _p2WinSprite; 
    [SerializeField] private Image WinSplashScreen;
-   
+   [SerializeField] private Button restartButton;
 
    #endregion
  
@@ -130,6 +130,7 @@ public class GameManager : MonoBehaviour
         var winner = players.FirstOrDefault(player => !player.isDead);
         GameOverScreen.gameObject.SetActive(true);
         WinSplashScreen.sprite = winner == players[0] ? _p1WinSprite : _p2WinSprite;
+       if(UIController.instance) UIController.instance?.SelectObject(restartButton);
         Time.timeScale = 0;
     }
     

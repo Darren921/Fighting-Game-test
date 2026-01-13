@@ -170,6 +170,16 @@ public class PlayerController : MonoBehaviour, Controls.IPlayerActions
         _playerActions.SuperJump.performed += OnSuperJump;
     }
 
+    public void DisablePlayerUI()
+    {
+        _controls.UI.Disable();
+    }
+
+    public void EnablePlayerUI()
+    {
+        _controls.UI.Enable();
+    }
+
     public void OnEnablePlayer()
     {
         _playerActions.Enable();
