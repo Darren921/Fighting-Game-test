@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class InputReader : MonoBehaviour
@@ -18,14 +18,28 @@ public class InputReader : MonoBehaviour
         DownLeft,
         DownRight,
     }
+    [Flags]
     public enum AttackType
     {
-        None,
-        Light,
-        Medium,
-        Heavy,
-        Special,
+        None = 0,
+        Light = 1 << 0,
+        Medium = 1 << 1,
+        Heavy = 1 << 2,
+        Special = 1 << 3,
+        Grab = Light | Medium ,
     }
+
+    public static readonly Dictionary<AttackType, int> Attackpriority = new()
+    {
+        [AttackType.Grab] = 5,
+        [AttackType.Special] = 4, 
+        [AttackType.Heavy] = 3,      
+        [AttackType.Medium] = 2,      
+        [AttackType.Light] = 1, 
+        [AttackType.None] = -1,
+
+       
+    };
     
     [Serializable]
     public struct Attack : IEquatable<Attack>
@@ -66,20 +80,19 @@ public class InputReader : MonoBehaviour
     public Attack CurrentAttackInput { get; private set; }
     public int CurrentAttackFrame { get; private set; }
     public Attack LastAttackInput { get; private set; }
-    
-    
     private int LastAttackInputFrame { get; set; }
 
     public AttackData.States curState; 
     private readonly List<BufferedInput<MovementInputResult>> _movementBuffer = new();
     private readonly List<BufferedInput<Attack>> _attackBuffer = new();
-
-    private int _bufferTime;
-
+    
     [SerializeField] internal List<string> movementInputsVisual = new();
     [SerializeField] internal List<string> attackInputsVisual = new();
 
     private int _bufferCap;
+    private int _bufferTime;
+
+   // private AttackType _currentFrameAttackInputs; 
 
     private struct BufferedInput<T>
     {
@@ -104,18 +117,15 @@ public class InputReader : MonoBehaviour
 
     private void AddAttackInput(AttackType type)
     {
-         var Input = ReturnAttack(type, CurrentMoveInput);
+        if(type == AttackType.None) return;
+        var input = ReturnAttack(type, CurrentMoveInput);
+
         if (_attackBuffer.Count >= _bufferCap)
             _attackBuffer.RemoveAt(0);
-        if (type != AttackType.None) 
-        {
-            LastAttackInput = Input;
-            LastAttackInputFrame = Time.frameCount;
-        }
-        _attackBuffer.Add(new BufferedInput<Attack>(Input, Time.frameCount));
 
-        
+        _attackBuffer.Add(new BufferedInput<Attack>(input, Time.frameCount));
     }
+
 
     private AttackData.States CheckState(PlayerBaseState lastState)
     {
@@ -151,6 +161,59 @@ public class InputReader : MonoBehaviour
         UpdateInputBuffers();
     }
 
+    public Attack GetBufferedAttack()
+    {
+        var curFrame = Time.frameCount;
+        var newAttack = new Attack();
+
+        for (var i = _attackBuffer.Count - 1; i >= 0; i--)
+        {
+            var input = _attackBuffer[i];
+
+            if (_attackBuffer[^1].CurFrame - input.CurFrame > 5)
+                break;
+            newAttack.Type |= input.Input.Type;
+           
+            if (newAttack.Type != AttackType.None) newAttack.Type = GetAttackPriority(newAttack.Type);
+            if (newAttack.Move == MovementInputResult.None)
+                newAttack.Move = input.Input.Move;
+        }
+
+        if (newAttack.Type != AttackType.None)
+        {
+            LastAttackInput = newAttack;
+            LastAttackInputFrame = curFrame;
+        }
+      
+        return newAttack;
+    }
+
+    public AttackType GetAttackPriority(AttackType type)
+    {
+        var activeFlags = Enum.GetValues(typeof(AttackType)).Cast<AttackType>().Where(x => x != AttackType.None && (type & x) == x);
+        
+        var priorityAttack = -2000;
+        var output = AttackType.None;
+        
+        foreach (var flag in activeFlags)
+        {
+            Debug.Log(flag.ToString());
+            if (Attackpriority.TryGetValue(flag, out var priority) &&  priority > priorityAttack)
+            {
+                priorityAttack = priority;
+                output = flag;
+            }
+        }
+        if (output == AttackType.None)
+        {
+            Debug.LogError("Attack priority unknown");
+        }
+
+        Debug.Log(output.ToString());
+        return output;
+        
+    } 
+
 
     private void UpdateInputBuffers()
     {
@@ -159,7 +222,7 @@ public class InputReader : MonoBehaviour
         _attackBuffer.RemoveAll(i => curFrame - i.CurFrame > _bufferTime);
 
         CurrentMoveInput = _movementBuffer.Count > 0 ? _movementBuffer[^1].Input : MovementInputResult.None;
-        CurrentAttackInput = _attackBuffer.Count > 0 ? _attackBuffer[^1].Input : new Attack();
+        CurrentAttackInput = _attackBuffer.Count > 0 ? GetBufferedAttack() : new Attack();
         CurrentAttackFrame = _attackBuffer.Count > 0 ? _attackBuffer[^1].CurFrame : 0;
 
         if (curFrame - LastAttackInputFrame > _bufferTime && !_player.IsAttacking)

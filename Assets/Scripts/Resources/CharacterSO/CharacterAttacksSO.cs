@@ -35,15 +35,19 @@ using UnityEngine.Serialization;
 
         public AttackData ReturnAttackData(InputReader.Attack attack, AttackData.States state)
         {
-            var attackUsed = Attacks.Find( data => data.Attack.Move == attack.Move && data.Attack.Type == attack.Type && data.State == state) ;
+            Debug.Log(attack.Type);
+//            Debug.Log(state);
+            var attackUsed = Attacks.Find( data => data.Attack.Move == attack.Move && (attack.Type & data.Attack.Type) == attack.Type && data.State == state) ;
             if (attackUsed.Equals(new AttackData()))
             {
+//                Debug.Log(attackUsed.Attack.Type);
                 attackUsed = attack.Type switch
                 {
                     InputReader.AttackType.Light => DefaultLightAttacks.FirstOrDefault((data => data.State == state)),
                     InputReader.AttackType.Medium => DefaultMedAttacks.FirstOrDefault((data => data.State == state)),
                     InputReader.AttackType.Heavy => DefaultHeavyAttacks.FirstOrDefault((data => data.State == state)),
-                    _ => throw new ArgumentOutOfRangeException()
+                    InputReader.AttackType.Grab =>  DefaultLightAttacks.FirstOrDefault((data => data.State == state)),
+                    _ => throw new ArgumentOutOfRangeException(nameof(attack),"check the following" )
                 };
             }
             return attackUsed; 
@@ -88,8 +92,7 @@ using UnityEngine.Serialization;
         }
         public bool Equals(AttackData other)
         {
-            return Attack.Equals(other.Attack) && Tag == other.Tag && Damage.Equals(other.Damage) &&
-                   Knockback.Equals(other.Knockback) && HitStun.Equals(other.HitStun) && BlockStun.Equals(other.BlockStun) && State.Equals(other.State);
+            return Attack.Equals(other.Attack) && Tag == other.Tag && Damage.Equals(other.Damage) && Knockback.Equals(other.Knockback) && HitStun.Equals(other.HitStun) && BlockStun.Equals(other.BlockStun) && State.Equals(other.State);
         }
 
         public override bool Equals(object obj)
