@@ -85,7 +85,7 @@ Material:
     - _smoothness: 0
     - _strength: 0
     m_Colors:
-    - _Color: {r: 0.3490566, g: 0.3490566, b: 0.3490566, a: 0}
+    - _Color: {r: 1, g: 1, b: 1, a: 0}
     - _Vector3: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

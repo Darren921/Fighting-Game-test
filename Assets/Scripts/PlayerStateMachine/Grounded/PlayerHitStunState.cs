@@ -20,26 +20,21 @@ public class PlayerHitStunState : PlayerBaseState
 
     private IEnumerator WaitForHitStun(PlayerController player)
     {
-        var ogSpeed = player.Animator.speed;
-        player.OnDisablePlayer();
-        player.HitStun = true;
-        player.Animator.speed = 0;
-  //      Debug.Log("HitStun");
+        var originalSpeed = SetHitStun(player);
+        //      Debug.Log("HitStun");
         yield return new WaitForSecondsRealtime(player.PlayerHitDetection.otherPlayer.CharacterData.characterAttacks.ReturnAttackData(player.PlayerHitDetection.otherPlayer.InputReader.LastAttackInput,player.PlayerHitDetection.otherPlayer.InputReader.curState).HitStun);
 //        Debug.Log("HitStun complete");
-        player.OnEnablePlayer();
-        player.Animator.speed = ogSpeed;
-        player.HitStun = false;
+        DisableHitStun(player, originalSpeed);
     }
+
+
 
     internal override void UpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
-        if(player.HitStun )player.Animator.SetBool(Hit,true);
-        if (!player.HitStun && !player.PlayerHitDetection.otherPlayer.IsActiveFrame)
-        {
-            playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Neutral | PlayerStateManager.PlayerStateTypes.Attack | PlayerStateManager.PlayerStateTypes.Crouching | PlayerStateManager.PlayerStateTypes.Dash | PlayerStateManager.PlayerStateTypes.Jumping | PlayerStateManager.PlayerStateTypes.Walking);
-        }
+        if (player.HitStun) player.Animator.SetBool(Hit, true);
+        if (!player.HitStun && !player.PlayerHitDetection.otherPlayer.IsActiveFrame) playerStateManager.CheckForTransition(PlayerStateManager.PlayerStateTypes.Neutral | PlayerStateManager.PlayerStateTypes.Attack | PlayerStateManager.PlayerStateTypes.Crouching | PlayerStateManager.PlayerStateTypes.Dash | PlayerStateManager.PlayerStateTypes.Jumping | PlayerStateManager.PlayerStateTypes.Walking);
     }
+
 
     internal override void FixedUpdateState(PlayerStateManager playerStateManager, PlayerController player)
     {
@@ -50,7 +45,6 @@ public class PlayerHitStunState : PlayerBaseState
 //        Debug.Log("Exit State");
         player.PlayerHitDetection._hit = false;
         player.Animator.SetBool(Hit,false);
-
     }
     
     
@@ -66,5 +60,22 @@ public class PlayerHitStunState : PlayerBaseState
 
         public override bool keepWaiting => Time.frameCount < _targetFrameCount;
     }
+    private static float SetHitStun(PlayerController player)
+    {
+        var originalSpeed = player.Animator.speed;
+        player.OnDisablePlayer();
+        player.HitStun = true;
+        player.Animator.speed = 0;
+        return originalSpeed;
+    }
+
+    private static void DisableHitStun(PlayerController player, float originalSpeed)
+    {
+        player.OnEnablePlayer();
+        player.Animator.speed = originalSpeed;
+        player.HitStun = false;
+    }
+
+
     
 }

@@ -12,7 +12,7 @@ public class PlayerNeutralState : PlayerBaseState
     {
         if(player is  null) return;
         _idleCoroutine = player?.StartCoroutine(CheckIfIdle(player));
-        player.rb.linearVelocity = Vector3.zero;
+    if(playerStateManager.lastState != playerStateManager.States[PlayerStateTypes.Running])    player.rb.linearVelocity = Vector3.zero;
 //        Debug.Log("Entered PlayerNeutralState");
     }
 

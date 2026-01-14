@@ -27,7 +27,6 @@ public class PlayerJumpingState : PlayerBaseState
         //apply jump immediately when entering state to prevent update glitches   
         collider = player.GetComponent<Collider>();
         player.Animator.SetBool(player.Jump, true);
-        player.IsRunning = false;
         TryJump(player);       
         player.JumpCharges--;
         player.OnJump += HandleJumpInput; 
@@ -59,7 +58,7 @@ public class PlayerJumpingState : PlayerBaseState
         
         doubleJumpReady =  player.JumpCharges > 0 && !player.SuperJumpActive;
     
-     //   atAirDashHeight = 
+  
         //Transitioning states 
         if (!player.IsGrounded)
         {
@@ -101,7 +100,7 @@ public class PlayerJumpingState : PlayerBaseState
         // jumping based off on custom  gravity to ensure the player jumps to same height each time 
         velocity = player.GravityManager.SetJumpVelocity(player);
         var moveInput = player.InputReader.GetValidMoveInput();
-        Debug.Log(player.InputReader.CurrentMoveInput);
+//        Debug.Log(player.InputReader.CurrentMoveInput);
 
         
         xJumpVal = moveInput switch
@@ -138,6 +137,7 @@ public class PlayerJumpingState : PlayerBaseState
         // }
 
         player.Animator.SetBool(player.Jump, false);
+     if(player.IsGrounded)   player.GravityManager.ResetVelocity();
         xJumpVal = 0f;
         atJumpHeight = false;
         jumpTriggered =  false;

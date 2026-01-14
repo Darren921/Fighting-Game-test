@@ -1,5 +1,6 @@
 using UnityEditor;
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(PlayerStateManager))]
 public class PlayerStateManagerInspector : Editor
 {
@@ -14,3 +15,4 @@ public class PlayerStateManagerInspector : Editor
 
     }
 }
+#endif

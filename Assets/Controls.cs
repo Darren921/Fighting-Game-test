@@ -128,6 +128,15 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
+                    ""name"": ""Special"",
+                    ""type"": ""Button"",
+                    ""id"": ""715377da-294f-4ee3-a0ef-441ace4fa010"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
                     ""name"": ""DashMacro"",
                     ""type"": ""PassThrough"",
                     ""id"": ""23375423-81af-449e-823d-5e5e16ffc24a"",
@@ -712,6 +721,28 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""action"": ""Heavy"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e8cf1a2f-3c19-4f61-bafe-d36abd8b41f1"",
+                    ""path"": ""<Keyboard>/comma"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Special"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3e0e7595-7457-43ae-a122-601eb2d30dd5"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Special"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -732,7 +763,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""name"": ""Submit"",
                     ""type"": ""Button"",
                     ""id"": ""7607c7b6-cd76-4816-beef-bd0341cfe950"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -741,7 +772,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""name"": ""Cancel"",
                     ""type"": ""Button"",
                     ""id"": ""15cef263-9014-4fd5-94d9-4e4a6234a6ef"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -1265,41 +1296,8 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         {
             ""name"": ""Archive"",
             ""id"": ""48ab29e2-3218-475e-822b-ad3c67dc39f2"",
-            ""actions"": [
-                {
-                    ""name"": ""RunOrDash"",
-                    ""type"": ""Button"",
-                    ""id"": ""45d8f6d4-ea3d-42f3-a1f5-7df13212694b"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                }
-            ],
-            ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""37c72f40-e80a-4421-9740-d9fc85f198cf"",
-                    ""path"": ""<Keyboard>/a"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""RunOrDash"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""f9e33a26-3a3d-4b64-82e5-9acd9c790cb8"",
-                    ""path"": ""<Keyboard>/d"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""RunOrDash"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                }
-            ]
+            ""actions"": [],
+            ""bindings"": []
         }
     ],
     ""controlSchemes"": [
@@ -1371,6 +1369,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         m_Player_Light = m_Player.FindAction("Light", throwIfNotFound: true);
         m_Player_Medium = m_Player.FindAction("Medium", throwIfNotFound: true);
         m_Player_Heavy = m_Player.FindAction("Heavy", throwIfNotFound: true);
+        m_Player_Special = m_Player.FindAction("Special", throwIfNotFound: true);
         m_Player_DashMacro = m_Player.FindAction("DashMacro", throwIfNotFound: true);
         m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
         m_Player_Jumping = m_Player.FindAction("Jumping", throwIfNotFound: true);
@@ -1391,7 +1390,6 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         m_UI_Pause = m_UI.FindAction("Pause", throwIfNotFound: true);
         // Archive
         m_Archive = asset.FindActionMap("Archive", throwIfNotFound: true);
-        m_Archive_RunOrDash = m_Archive.FindAction("RunOrDash", throwIfNotFound: true);
     }
 
     ~@Controls()
@@ -1478,6 +1476,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Light;
     private readonly InputAction m_Player_Medium;
     private readonly InputAction m_Player_Heavy;
+    private readonly InputAction m_Player_Special;
     private readonly InputAction m_Player_DashMacro;
     private readonly InputAction m_Player_Dash;
     private readonly InputAction m_Player_Jumping;
@@ -1510,6 +1509,10 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/Heavy".
         /// </summary>
         public InputAction @Heavy => m_Wrapper.m_Player_Heavy;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Special".
+        /// </summary>
+        public InputAction @Special => m_Wrapper.m_Player_Special;
         /// <summary>
         /// Provides access to the underlying input action "Player/DashMacro".
         /// </summary>
@@ -1568,6 +1571,9 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @Heavy.started += instance.OnHeavy;
             @Heavy.performed += instance.OnHeavy;
             @Heavy.canceled += instance.OnHeavy;
+            @Special.started += instance.OnSpecial;
+            @Special.performed += instance.OnSpecial;
+            @Special.canceled += instance.OnSpecial;
             @DashMacro.started += instance.OnDashMacro;
             @DashMacro.performed += instance.OnDashMacro;
             @DashMacro.canceled += instance.OnDashMacro;
@@ -1606,6 +1612,9 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @Heavy.started -= instance.OnHeavy;
             @Heavy.performed -= instance.OnHeavy;
             @Heavy.canceled -= instance.OnHeavy;
+            @Special.started -= instance.OnSpecial;
+            @Special.performed -= instance.OnSpecial;
+            @Special.canceled -= instance.OnSpecial;
             @DashMacro.started -= instance.OnDashMacro;
             @DashMacro.performed -= instance.OnDashMacro;
             @DashMacro.canceled -= instance.OnDashMacro;
@@ -1864,7 +1873,6 @@ public partial class @Controls: IInputActionCollection2, IDisposable
     // Archive
     private readonly InputActionMap m_Archive;
     private List<IArchiveActions> m_ArchiveActionsCallbackInterfaces = new List<IArchiveActions>();
-    private readonly InputAction m_Archive_RunOrDash;
     /// <summary>
     /// Provides access to input actions defined in input action map "Archive".
     /// </summary>
@@ -1876,10 +1884,6 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// Construct a new instance of the input action map wrapper class.
         /// </summary>
         public ArchiveActions(@Controls wrapper) { m_Wrapper = wrapper; }
-        /// <summary>
-        /// Provides access to the underlying input action "Archive/RunOrDash".
-        /// </summary>
-        public InputAction @RunOrDash => m_Wrapper.m_Archive_RunOrDash;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1906,9 +1910,6 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_ArchiveActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_ArchiveActionsCallbackInterfaces.Add(instance);
-            @RunOrDash.started += instance.OnRunOrDash;
-            @RunOrDash.performed += instance.OnRunOrDash;
-            @RunOrDash.canceled += instance.OnRunOrDash;
         }
 
         /// <summary>
@@ -1920,9 +1921,6 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// <seealso cref="ArchiveActions" />
         private void UnregisterCallbacks(IArchiveActions instance)
         {
-            @RunOrDash.started -= instance.OnRunOrDash;
-            @RunOrDash.performed -= instance.OnRunOrDash;
-            @RunOrDash.canceled -= instance.OnRunOrDash;
         }
 
         /// <summary>
@@ -2057,6 +2055,13 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnHeavy(InputAction.CallbackContext context);
         /// <summary>
+        /// Method invoked when associated input action "Special" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSpecial(InputAction.CallbackContext context);
+        /// <summary>
         /// Method invoked when associated input action "DashMacro" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
@@ -2184,12 +2189,5 @@ public partial class @Controls: IInputActionCollection2, IDisposable
     /// <seealso cref="ArchiveActions.RemoveCallbacks(IArchiveActions)" />
     public interface IArchiveActions
     {
-        /// <summary>
-        /// Method invoked when associated input action "RunOrDash" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnRunOrDash(InputAction.CallbackContext context);
     }
 }

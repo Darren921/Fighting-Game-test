@@ -20,10 +20,11 @@ public class CameraDistance : MonoBehaviour
     [SerializeField] Transform P2wallL;
 
     [SerializeField] Transform WallStartPos;
-
-
     [SerializeField] GameObject Tracker1;
     [SerializeField] GameObject Tracker2;
+
+
+    public float distance; 
     void Start()
     {
         cam = GetComponent<Camera>();
@@ -36,20 +37,20 @@ public class CameraDistance : MonoBehaviour
             
             playerView1 = cam.WorldToViewportPoint(Player1.transform.position);
             playerView2 = cam.WorldToViewportPoint(Player2.transform.position);
-            float dis = Vector3.Distance(Player1.transform.position, Player2.transform.position);
-            if (playerView1.x <= 0.08 && dis > 20)
+            distance = Vector3.Distance(Player1.transform.position, Player2.transform.position);
+            if (playerView1.x <= 0.08 && distance > 20)
             {
                 wall.transform.position = P1wallL.transform.position;
             }
-            else if (playerView1.x >= 0.1 && dis < 20) 
+            else if (playerView1.x >= 0.1 && distance < 20) 
             {
                 wall.transform.position = WallStartPos.transform.position;
             }
-            if (playerView1.x >0.9f && dis > 20)
+            if (playerView1.x >0.9f && distance > 20)
             {
                 wall2.transform.position = P1wallR.transform.position;
             }
-            else if (playerView1.x <= 0.9 && dis < 20)
+            else if (playerView1.x <= 0.9 && distance < 20)
             {
                 wall2.transform.position = WallStartPos.transform.position;
             }   

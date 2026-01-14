@@ -6,23 +6,36 @@ public class PlayerWalkingState : PlayerMovingState
 {
     protected override float MoveSpeed => Player.WalkSpeed;
     private float temp;
+    internal override void EnterState(PlayerStateManager playerStateManager, PlayerController player)
+    {
+        base.EnterState(playerStateManager, player);
+        player.IsWalking = true;
+    }
+
     protected override void ApplyVelocity(PlayerController player)
     {
         var velocity = new Vector3(player.PlayerMove.x * MoveSpeed, player.rb.linearVelocity.y);
         player.rb.linearVelocity = velocity;
         if (!player.Animator.GetCurrentAnimatorStateInfo(0).IsName("Walking")) return;
-        temp = player.rb.linearVelocity.x switch
+        switch (player.rb.linearVelocity.x)
         {
-            < 0 when player.Reversed => 1,
-            > 0 when player.Reversed => 0,
-            _ => player.rb.linearVelocity.x switch
-            {
-                > 0 => 1,
-                < 0 => 0,
-                _ => player.rb.linearVelocity.x
-            }
-        };
-        player.Animator.SetFloat("WalkDir", temp);
+            case < 0 when player.Reversed:
+                temp = 1;
+                break;
+            case > 0 when player.Reversed:
+                temp = 0;
+                break;
+            default:
+                temp = player.rb.linearVelocity.x switch
+                {
+                    > 0 => 1,
+                    < 0 => 0,
+                    _ => player.rb.linearVelocity.x
+                };
+                break;
+        }
+
+        player.Animator.SetFloat(player.WalkDir, temp);
 
 
     }

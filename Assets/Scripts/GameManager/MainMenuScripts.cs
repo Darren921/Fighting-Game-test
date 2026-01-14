@@ -25,6 +25,8 @@ public class MainMenuScripts : MonoBehaviour
     {
         Character1.SetActive(true);
         Character2.SetActive(true);
+        UIAnim = GameObject.Find("Canvas").GetComponent<Animator>();
+        WorldUIanim = GameObject.Find("SceneCanvas").GetComponent<Animator>();
     }
 
     // Update is called once per frame
