@@ -52,28 +52,25 @@ public class UIController : MonoBehaviour
 
     private void ActionOnperformed(InputAction.CallbackContext ctx)
     {
-        Debug.Log(ctx.phase);
+         Debug.Log(ctx.phase);
+         Debug.Log(ctx.ReadValue<Vector2>());
         if (ctx.ReadValue<Vector2>() != Vector2.zero)
         {
             if (eventSystem.currentSelectedGameObject && LastselectedObject != eventSystem.currentSelectedGameObject)
             {
                 LastselectedObject = eventSystem.currentSelectedGameObject;
             }
-            lastInput = ctx.ReadValue<Vector2>();
-        }
-        else if (ctx.ReadValue<Vector2>() == Vector2.zero)
-        {
             var Nullcheck = CheckForNextTarget();
             if(!Nullcheck && LastselectedObject);
             {
-                print("Other target found");
+//                print("Other target found");
                 
-               nextTarget = CheckForNextTarget();
-               Debug.Log(nextTarget);
+                nextTarget = CheckForNextTarget();
+                Debug.Log(nextTarget);
             }
-          if(nextTarget)  eventSystem.SetSelectedGameObject(nextTarget);
-         
+            if(nextTarget)  eventSystem.SetSelectedGameObject(nextTarget);
         }
+      
     }
 
     private GameObject CheckForNextTarget()
@@ -85,10 +82,10 @@ public class UIController : MonoBehaviour
         return LastselectedObject;
     }
 
-    public  void SelectObject(Selectable selectable)
+    public void SelectObject(Selectable selectable)
     {
         print(selectable.name);
-        instance.eventSystem.SetSelectedGameObject(selectable.gameObject);
+        nextTarget = selectable.gameObject;
     }
 
     public  void DeselectObject()
