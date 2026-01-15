@@ -29,7 +29,7 @@ public class InputReader : MonoBehaviour
         Grab = Light | Medium ,
     }
 
-    public static readonly Dictionary<AttackType, int> Attackpriority = new()
+    private static readonly Dictionary<AttackType, int> Attackpriority = new()
     {
         [AttackType.Grab] = 5,
         [AttackType.Special] = 4, 
